@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Activities.login_activity"
+    android:background="@color/fragment_background">
+
+    <TextView
+        android:id="@+id/signUpPrefyTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="P R E F Y"
+        android:textColor="@color/text_color"
+        android:textSize="50sp" />
+    <!--
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/signUpUsernameConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/signUpNextMaterialButton"
+        android:layout_marginBottom="20dp">
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/signUpleftGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".1"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/signUprightGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".9"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Hi! Let's get to know each other?"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintWidth_percent=".8"
+            app:layout_constraintStart_toStartOf="@id/signUpleftGuideLine"
+            app:layout_constraintEnd_toEndOf="@id/signUprightGuideLine"
+            app:layout_constraintBottom_toTopOf="@id/usernameEditText"
+            android:layout_marginBottom="18dp"/>
+        <EditText
+            android:id="@+id/usernameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
+            app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_percent=".8"
+            android:textColor="@color/grey"
+            android:textColorHint="@color/grey"
+            android:hint="Enter your username"
+            android:inputType="text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    !-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/signUpFragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/login_nav_graph" />
+    <RelativeLayout
+        android:id="@+id/SignUpLoginTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/signUpFragmentContainerView"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/signUpAlreadyHaveanAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account?"
+            android:textColor="@color/grey" />
+
+        <TextView
+            android:id="@+id/SignUplogInButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/signUpAlreadyHaveanAccount"
+            android:text=" Log In"
+            android:textColor="@color/red" />
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/loginBottomImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:adjustViewBounds="true"
+        android:background="@android:color/transparent"
+        android:cropToPadding="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/registration_bottom_view"/>
+
+
+</RelativeLayout>

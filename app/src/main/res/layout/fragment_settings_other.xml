@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Settings.Other.SettingsOtherFragment"
+    android:background="@color/fragment_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/SettingsOtherTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/SettingsOtherTopBarBack"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:tint="@color/text_color"
+            android:src="@drawable/thin_left_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/SettingsOtherTopBarCommentsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/SettingsOtherContinueGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".95" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/SettingsOtherTermsConditions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/SettingsOtherTopBar"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/transparent"
+        android:drawableRight="@drawable/right_arrow"
+        android:drawableTint="@color/text_color"
+        android:gravity="start|center_vertical"
+        android:text="Terms &amp; Conditions"
+        android:textAllCaps="false"
+        android:textColor="@color/text_color" />
+    <Button
+        android:id="@+id/SettingsOtherPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:drawableRight="@drawable/right_arrow"
+        android:drawableTint="@color/text_color"
+        android:textColor="@color/text_color"
+        android:text="Privacy Policy"
+        android:gravity="start|center_vertical"
+        android:textAllCaps="false"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/SettingsOtherTermsConditions"/>
+
+
+
+</RelativeLayout>

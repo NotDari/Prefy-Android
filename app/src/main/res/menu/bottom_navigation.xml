@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/popularPageHostFragment"
+        android:title="Popular"
+        android:icon="@drawable/popular_selector"/>
+
+    <item android:id="@+id/exploreHostFragment"
+        android:title="Explore"
+        android:icon="@drawable/heart_selector" />
+
+    <item android:id="@+id/submitPostDialog"
+        android:title=""
+        android:icon="@drawable/plus" />
+
+    <item android:id="@+id/activityFragment"
+     android:title="Activity"
+     android:icon="@drawable/fire_selector" />
+
+    <item android:id="@+id/Profile_fragment"
+        android:title="Profile"
+        android:icon="@drawable/profile_selector"/>
+
+
+</menu>

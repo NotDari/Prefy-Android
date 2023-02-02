@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/TopBarRelLay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ProfileBackButton"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/thin_left_arrow"
+            app:tint="@color/text_color"/>
+
+        <TextView
+            android:id="@+id/ProfilePageUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Username"
+            android:textColor="@color/grey" />
+
+        <ImageButton
+            android:id="@+id/ProfileSettingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_settings_24"
+            app:tint="@color/grey" />
+
+    </RelativeLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/TopBarRelLay"/>
+
+
+    <TextView
+        android:id="@+id/AccountNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileImageView"
+        android:layout_marginTop="5dp"
+        android:text="Account Name"
+        android:textColor="@color/text_color"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/ProfilePageVerifiedImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/AccountNameText"
+        app:layout_constraintBottom_toBottomOf="@id/AccountNameText"
+        android:layout_marginStart="8dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toEndOf="@id/AccountNameText"
+        android:src="@drawable/ic_verified_svg"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/ProfileBio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/AccountNameText"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+
+        />
+    <LinearLayout
+        android:id="@+id/profileIconsLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ProfileBio"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+        <ImageButton
+            android:id="@+id/ProfileVKButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/vk"
+            android:background="@android:color/transparent"
+            app:tint="@color/grey"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"/>
+        <ImageButton
+            android:id="@+id/ProfileInstagramButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/instagram"
+            android:background="@android:color/transparent"
+            app:tint="@color/grey"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"/>
+        <ImageButton
+            android:id="@+id/ProfileTwitterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/twitter"
+            android:background="@android:color/transparent"
+            app:tint="@color/grey"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ProfileNumbersConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileIconsLinearLayout"
+        android:layout_marginTop="20dp">
+
+        <RelativeLayout
+            android:id="@+id/ProfilePostsNumberRelLay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/ProfileVotesNumberRelLay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/ProfilePostsNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="0"
+                android:textColor="@color/text_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ProfilePostsNumber"
+                android:text="posts"
+                android:textColor="@color/grey" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ProfileVotesNumberRelLay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/ProfileVotesNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="0"
+                android:textColor="@color/text_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ProfileVotesNumber"
+                android:text="votes"
+                android:textColor="@color/grey" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ProfilePreferencesNumberRelLay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ProfileVotesNumberRelLay"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/ProfilePreferencesNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="0"
+                android:textColor="@color/text_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ProfilePreferencesNumber"
+                android:text="preferences"
+                android:textColor="@color/grey" />
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/ProfileBoundaryView"
+        android:layout_width="match_parent"
+        android:layout_height="3px"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/ProfileNumbersConstraintLayout"
+        android:layout_marginTop="10dp"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

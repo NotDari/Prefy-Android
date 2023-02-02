@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/fragment_background">
+
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SearchItemImageTopGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <ImageView
+        android:id="@+id/SearchItemProfileImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/SearchItemImageTopGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/SearchItemImageBottomGuideline"
+        android:backgroundTint="@color/grey"
+        android:padding="8dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SearchItemImageBottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <TextView
+        android:id="@+id/SearchItemUsernameText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:scrollHorizontally="false"
+        android:ellipsize="end"
+        android:textColor="@color/text_color"
+        app:layout_constraintStart_toEndOf="@id/SearchItemProfileImageView"
+        app:layout_constraintTop_toTopOf="@id/SearchItemImageTopGuideline"
+        app:layout_constraintEnd_toStartOf="@id/SearchItemNumbersRel"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/SearchItemBioText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:scrollHorizontally="false"
+        android:ellipsize="end"
+        android:textColor="@color/grey"
+        app:layout_constraintStart_toEndOf="@id/SearchItemProfileImageView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/SearchItemNumbersRel"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/SearchItemFullnameText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:scrollHorizontally="false"
+        android:ellipsize="end"
+        android:textColor="@color/grey"
+        app:layout_constraintStart_toEndOf="@id/SearchItemProfileImageView"
+        app:layout_constraintBottom_toTopOf="@id/SearchItemBioText"
+        app:layout_constraintEnd_toStartOf="@id/SearchItemNumbersRel"
+        app:layout_constraintTop_toBottomOf="@id/SearchItemUsernameText"
+        android:layout_marginBottom="10dp"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SearchItemRightTextBottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/SearchItemNumbersRel"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/SearchItemRightTextBottomGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/SearchItemVotesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Votes"
+            android:textColor="#858585"
+            android:fontFamily="@font/inter_medium"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/SearchItemPrefsCount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="30dp"/>
+
+        <TextView
+            android:id="@+id/SearchItemPrefsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SearchItemVotesCount"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/inter_medium"
+            android:text="Votes"
+            android:textColor="#858585"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SearchItemVotesCount"
+            android:layout_marginEnd="30dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/SearchItemProfileImageView"
+        android:background="#F1F1F1"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

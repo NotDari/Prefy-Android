@@ -1,0 +1,641 @@
+package com.example.prefy.SubmitPost;
+
+import static android.app.Activity.RESULT_OK;
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultCaller;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.prefy.Activities.MainActivity;
+import com.example.prefy.Explore.ExplorePostSet;
+import com.example.prefy.R;
+import com.example.prefy.Utils.CustomJsonMapper;
+import com.example.prefy.Utils.NoInternetDropDown;
+import com.example.prefy.Utils.ServerAdminSingleton;
+import com.example.prefy.Utils.Utils;
+import com.example.prefy.Utils.GetInternet;
+import com.example.prefy.customClasses.FullPost;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.Executors;
+
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class SubmitPostDialog {
+    private Context context;
+    private String category;
+    ImageView normalSelector, duelSelector, beforeAfterSelector, crazySelector;
+    private static SubmitPostDialog instance = null;
+    private final int CODE_IMG_GALLERY = 1;
+    private Activity activity;
+    private ImageView PostDialogLeftClickerView, PostDialogRightClickerView, leftButton, rightButton;
+    private Integer imageSelected;
+    private final String UCROP_IMAGE_FILE_NAME = "UCROP_IMAGE_FILE";
+    private Boolean leftImageSelected, rightImageSelected;
+    private AppCompatButton leftRemove, rightRemove;
+    private ImageView sendButton;
+    private EditText questionEdit;
+    private StorageReference fStorageReference;
+    private FirebaseDatabase database;
+
+
+    private FlexboxLayout flexboxLayout;
+    private ArrayList<Boolean> categoryActiveList;
+    private ArrayList<String> categoriesList;
+    private Integer categoryHeight = 0;
+    private MaterialButton moreCategories;
+    private Boolean allCategories;
+
+
+
+
+    public static synchronized SubmitPostDialog getInstance(Activity activity) {
+        if(instance == null)
+            instance = new SubmitPostDialog(activity);
+
+
+        return instance;
+    }
+
+
+    private SubmitPostDialog(Activity activity) {
+        this.activity = activity;
+    }
+
+    public void displaySheet(Context context){
+        this.context = context;
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
+        bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        bottomSheetDialog.setContentView(R.layout.post_bottom_dialog);
+        getViews(bottomSheetDialog);
+        //handleCategorySelector(bottomSheetDialog);
+        handleClose(bottomSheetDialog);
+        handleButtonsPressed(bottomSheetDialog);
+        initImageRemoveButtons();
+        initFlex(bottomSheetDialog);
+        bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetDialog.show();
+        bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                instance = null;
+            }
+        });
+    }
+
+    private void getViews(BottomSheetDialog bottomSheetDialog){
+        imageSelected = 0;
+        PostDialogLeftClickerView = bottomSheetDialog.findViewById(R.id.PostDialogLeftClickerView);
+        PostDialogRightClickerView = bottomSheetDialog.findViewById(R.id.PostDialogRightClickerView);
+        leftRemove = bottomSheetDialog.findViewById(R.id.PostDialogLeftImageRemoveButton);
+        rightRemove = bottomSheetDialog.findViewById(R.id.PostDialogRightImageRemoveButton);
+        leftButton = bottomSheetDialog.findViewById(R.id.PostDialogLeftUploadButton);
+        rightButton = bottomSheetDialog.findViewById(R.id.PostDialogRightUploadButton);
+        sendButton = bottomSheetDialog.findViewById(R.id.PostDialogSendButton);
+        questionEdit = bottomSheetDialog.findViewById(R.id.PostDialogQuestionEdit);
+        flexboxLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoriesLayout);
+        moreCategories = bottomSheetDialog.findViewById(R.id.PostDialogMoreCategories);
+    }
+
+    private void handleButtonsPressed(BottomSheetDialog bottomSheetDialog){
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostDialogLeftClickerView.setImageDrawable(null);
+                imageSelected = 1;
+                attemptToGetPost();
+                //GetImageChoiceDialog dialog = new GetImageChoiceDialog(context);
+                //dialog.initDialog();
+            }
+        });
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageSelected = 2;
+                attemptToGetPost();
+                //GetImageChoiceDialog dialog = new GetImageChoiceDialog(context);
+                //dialog.initDialog();
+            }
+        });
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initSendButton();
+            }
+        });
+    }
+
+    private void handleClose(BottomSheetDialog bottomSheetDialog){
+        ImageView closeButton = bottomSheetDialog.findViewById(R.id.PostDialogCloseButton);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+    }
+    /**
+    private void handleCategorySelector(BottomSheetDialog bottomSheetDialog){
+        category = "Normal";
+        RelativeLayout normalLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryNormalLayout);
+        RelativeLayout duelLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryDuelLayout);
+        RelativeLayout beforeAfterLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryBeforeAfterLayout);
+        RelativeLayout crazyLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryCrazyLayout);
+        normalSelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryNormalSelector);
+        duelSelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryDuelSelector);
+        beforeAfterSelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryBeforeAfterSelector);
+        crazySelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryCrazySelector);
+        normalLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!category.equals("Normal")){
+                    category = "Normal";
+                    alterSelectorVisibility(category);
+                }
+            }
+        });
+        duelLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!category.equals("Duel")){
+                    category = "Duel";
+                    alterSelectorVisibility(category);
+                }
+            }
+        });
+        beforeAfterLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!category.equals("BeforeAfter")){
+                    category = "BeforeAfter";
+                    alterSelectorVisibility(category);
+                }
+            }
+        });
+        crazyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!category.equals("Crazy")){
+                    category = "Crazy";
+                    alterSelectorVisibility(category);
+                }
+            }
+        });
+
+    }
+
+    private void alterSelectorVisibility(String category){
+        if (!category.equals("Normal")){
+            normalSelector.setVisibility(View.GONE);
+        } else {
+            normalSelector.setVisibility(View.VISIBLE);
+        }
+        if (!category.equals("Duel")){
+            duelSelector.setVisibility(View.GONE);
+        }else {
+            duelSelector.setVisibility(View.VISIBLE);
+        }
+        if (!category.equals("BeforeAfter")){
+            beforeAfterSelector.setVisibility(View.GONE);
+        }else {
+            beforeAfterSelector.setVisibility(View.VISIBLE);
+        }
+        if (!category.equals("Crazy")){
+            crazySelector.setVisibility(View.GONE);
+        }else {
+            crazySelector.setVisibility(View.VISIBLE);
+        }
+    }
+     */
+
+    private void attemptToGetPost(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        if (activity instanceof MainActivity){
+            ((MainActivity) activity).getPostImage(intent);
+        }
+    }
+
+
+
+    public void OnImageActivityResult(Activity activity, int resultCode, @Nullable Intent data){
+        if (resultCode == RESULT_OK && data != null & data.getData() != null){
+            Uri imageUri = data.getData();
+            initUCrop(activity, imageUri);
+        }
+    }
+
+    public void OnUcropActivityResult(Activity activity, int resultCode, @Nullable Intent data){
+        if (resultCode == RESULT_OK) {
+            final Uri resultUri = UCrop.getOutput(data);
+
+            displayImage(activity,resultUri);
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+        }
+    }
+
+    private void initUCrop(Activity activity ,Uri sourceUri){
+        String destinationName = UCROP_IMAGE_FILE_NAME + ".png";
+        UCrop.Options UcropOptions = new UCrop.Options();
+        File file = new File(activity.getCacheDir(), destinationName);
+        UcropOptions.setStatusBarColor(ContextCompat.getColor(activity, R.color.black));
+        Intent intent = UCrop
+                .of(sourceUri, Uri.fromFile(file))
+                .withAspectRatio(8, 16)
+                .withOptions(UcropOptions)
+                .getIntent(activity);
+        if (activity instanceof MainActivity){
+            ((MainActivity) activity).getPostCrop(intent);
+        }
+
+
+
+
+    }
+
+    private void displayImage(Activity activity,Uri resultUri){
+        if (imageSelected == 1){
+            Glide.with(activity)
+                    .load(resultUri)
+                    .fitCenter()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy((DiskCacheStrategy.NONE))
+                    .into(PostDialogLeftClickerView);
+            leftImageSelected = true;
+            leftRemove.setVisibility(View.VISIBLE);
+            leftButton.setVisibility(View.GONE);
+            imageSelected = 0;
+        } else if (imageSelected == 2){
+            Glide.with(activity)
+                    .load(resultUri)
+                    .fitCenter()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy((DiskCacheStrategy.NONE))
+                    .into(PostDialogRightClickerView);
+            rightImageSelected = true;
+            rightRemove.setVisibility(View.VISIBLE);
+            rightButton.setVisibility(View.GONE);
+            imageSelected = 0;
+        } else{
+            Toast.makeText(activity, ("Error " + imageSelected), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void initImageRemoveButtons(){
+        leftRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostDialogLeftClickerView.setImageDrawable(null);
+                leftImageSelected = false;
+                leftRemove.setVisibility(View.GONE);
+                leftButton.setVisibility(View.VISIBLE);
+            }
+        });
+        rightRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostDialogRightClickerView.setImageDrawable(null);
+                rightImageSelected = false;
+                rightRemove.setVisibility(View.GONE);
+                rightButton.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void initSendButton(){
+        if (PostDialogLeftClickerView.getDrawable() != null && PostDialogRightClickerView.getDrawable() != null ){
+            String question = questionEdit.getText().toString();
+            if (question != null && !question.isEmpty()){
+                database = FirebaseDatabase.getInstance();
+                fStorageReference = FirebaseStorage.getInstance().getReference("test-posts");
+                Bitmap postBitmap = combineBitmaps(PostDialogLeftClickerView, PostDialogRightClickerView);
+                initSendPost(question, postBitmap);
+            } else {
+                Toast.makeText(activity, "Please provide a question", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(activity, "Please select both images", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+
+    private void initSendPost(String question, Bitmap image){
+        imageCompresser imageCompresser = new imageCompresser();
+
+        Bitmap scaled = imageCompresser.compressBitmap(image);
+        ByteArrayOutputStream blob = new ByteArrayOutputStream();
+        scaled.compress(Bitmap.CompressFormat.JPEG, 80 /* Ignored for PNGs */, blob);
+        byte[] bitmapdata = blob.toByteArray();
+
+
+
+        String uniqueID = UUID.randomUUID().toString();
+        StorageReference fileReference = fStorageReference.child(uniqueID);
+        Long longTime = System.currentTimeMillis();
+        System.out.println("Sdad uploadId originaltime: " + longTime);
+        Double time= (double) System.currentTimeMillis();
+        System.out.println("Sdad uploadId time: " + time);
+        Double date = time / 1000;
+        Long finalTime = date.longValue();
+        ArrayList<String> categories = new ArrayList<>();
+        for (int i = 0; i < categoryActiveList.size(); i++){
+            if (categoryActiveList.get(i) == true){
+                categories.add(categoriesList.get(i));
+            }
+        }
+        if (categories.size() == 0){
+            categories.add("none");
+        }
+        fileReference.putBytes(bitmapdata).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> result = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Executors.newSingleThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                String photoLink = uri.toString();
+                                OkHttpClient client = new OkHttpClient();
+                                HttpUrl.Builder httpBuilder = HttpUrl.parse(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Posts/SubmitPost").newBuilder();
+                                try {
+                                    JSONObject jsonObject = new JSONObject();
+                                    jsonObject.put("allVotes", 0);
+                                    jsonObject.put("category", new JSONArray(categories));
+                                    jsonObject.put("commentsNumber", 0);
+                                    jsonObject.put("creationDate", finalTime);
+                                    jsonObject.put("featured", false);
+                                    jsonObject.put("popular", false);
+                                    jsonObject.put("imageURL", photoLink);
+                                    jsonObject.put("leftVotes", 0);
+                                    jsonObject.put("question", question);
+                                    jsonObject.put("rightVotes", 0);
+                                    jsonObject.put("userId", ServerAdminSingleton.getInstance().getLoggedInId());
+                                    RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                    Request request = new Request.Builder()
+                                            .url(httpBuilder.build())
+                                            .method("POST", body)
+                                            .addHeader("Content-Type", "application/json")
+                                            .addHeader("Authorization", ServerAdminSingleton.getInstance().getServerAuthToken())
+                                            .build();
+                                    try {
+                                        Response response = client.newCall(request).execute();
+                                        if (response.isSuccessful()) {
+                                            initPostActions(photoLink);
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(context, "Post Successful", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            fileReference.delete();
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(context, "Failed to upload Image", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        }
+
+                                    } catch (IOException e) {
+                                        fileReference.delete();
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(context, "Failed to upload Image", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                    }
+                                } catch (JSONException e){
+                                    fileReference.delete();
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(context, "Failed to upload Image", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        fileReference.delete();
+                        System.out.println("Sdad e:" + e);
+                        Toast.makeText(context, "Failed to upload Image", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                NoInternetDropDown dropDown = NoInternetDropDown.getInstance(activity);
+                dropDown.showDropDown();
+                System.out.println("Sdad e:" + e);
+                Toast.makeText(activity, "Image Upload Failed " + e, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+
+    private Bitmap combineBitmaps(ImageView leftImageView, ImageView rightImageView){
+        Bitmap leftBitmap = ((BitmapDrawable)PostDialogLeftClickerView.getDrawable()).getBitmap();
+        Bitmap rightBitmap = ((BitmapDrawable)PostDialogRightClickerView.getDrawable()).getBitmap();
+        Bitmap combinedBitmap;
+
+        int width, height = 0;
+
+        if(leftBitmap.getWidth() > rightBitmap.getWidth()) {
+            width = leftBitmap.getWidth() + rightBitmap.getWidth();
+            height = leftBitmap.getHeight();
+        } else {
+            width = rightBitmap.getWidth() + rightBitmap.getWidth();
+            height = leftBitmap.getHeight();
+        }
+
+        combinedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas comboImage = new Canvas(combinedBitmap);
+
+        comboImage.drawBitmap(leftBitmap, 0f, 0f, null);
+        comboImage.drawBitmap(rightBitmap, leftBitmap.getWidth(), 0f, null);
+        return combinedBitmap;
+    }
+
+
+    private void initPostActions(String photoLink){
+        Glide.with(context)
+                .load(photoLink)
+                .preload();
+        Utils utils = new Utils(context);
+        utils.saveLong(context.getString(R.string.save_postCount_pref), (utils.loadLong(context.getString(R.string.save_postCount_pref), 0) + 1));
+    }
+
+    private void initFlex(BottomSheetDialog bottomSheetDialog){
+        Context applicationContext = bottomSheetDialog.getContext().getApplicationContext();
+        String[] categoriesArrayList = applicationContext.getResources().getStringArray(R.array.post_categories);
+        categoriesList = new ArrayList<>(Arrays.asList(categoriesArrayList));
+        Integer verticalpadding = 16;
+        allCategories = false;
+        categoryActiveList = new ArrayList<>();
+        for (int i = 0; i < categoriesArrayList.length; i ++){
+            categoryActiveList.add(false);
+            TextView textView = new TextView(bottomSheetDialog.getContext());
+            textView.setText(categoriesArrayList[i]);
+            textView.setBackgroundResource(R.drawable.newpost_categories_background);
+            textView.setTextColor(Color.parseColor("#858585"));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+            textView.setPadding(20, 10, 20, 10);
+            flexboxLayout.addView(textView);
+            ViewGroup.MarginLayoutParams marginparams = (ViewGroup.MarginLayoutParams) textView.getLayoutParams();
+            marginparams.setMargins(15, (verticalpadding/2), 15, (verticalpadding/2));
+            int finalI = i;
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CategoryClicked(textView, finalI);
+                }
+            });
+            if (finalI == 0){
+                textView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+                {
+                    @Override
+                    public boolean onPreDraw()
+                    {
+                        if (textView.getViewTreeObserver().isAlive())
+                            textView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        categoryHeight = textView.getMeasuredHeight();
+                        ViewGroup.LayoutParams lp = flexboxLayout.getLayoutParams();
+                        lp.height = (categoryHeight + verticalpadding);
+                        flexboxLayout.setLayoutParams(lp);
+                        return true;
+                    }
+                });
+            }
+
+        }
+        moreCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer temporaryHeight;
+                if (!allCategories){
+                    moreCategories.setCompoundDrawablesWithIntrinsicBounds(null, null, AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_arrow_upward_24), null);
+                    moreCategories.setText("Less");
+                    temporaryHeight = (flexboxLayout.getFlexLines().size()) * (categoryHeight + verticalpadding);
+                } else {
+                    moreCategories.setCompoundDrawablesWithIntrinsicBounds(null, null, AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_arrow_downward_24),null);
+                    moreCategories.setText("More");
+                    temporaryHeight = (categoryHeight + verticalpadding);
+                }
+                allCategories = !allCategories;
+                ViewGroup.LayoutParams lp = flexboxLayout.getLayoutParams();
+                lp.height = (temporaryHeight);
+                flexboxLayout.setLayoutParams(lp);
+            }
+        });
+
+
+    }
+
+    private void CategoryClicked(TextView textView,Integer position){
+        Boolean selected = categoryActiveList.get(position);
+        if (!selected){
+            textView.setBackgroundResource(R.drawable.newpost_categories_selected_background);
+            textView.setTextColor(Color.parseColor("#FFFFFF"));
+        } else {
+            textView.setBackgroundResource(R.drawable.newpost_categories_background);
+            textView.setTextColor(Color.parseColor("#858585"));
+        }
+        categoryActiveList.set(position, !selected);
+    }
+
+
+}

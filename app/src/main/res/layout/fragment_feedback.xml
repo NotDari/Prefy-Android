@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Settings.Feedback.FeedbackFragment"
+    android:background="@color/fragment_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/FeedbackTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/FeedbackTopBarBack"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            app:tint="@color/text_color"
+            android:src="@drawable/thin_left_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/FeedbackTopBarFeedbackText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feedback"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="18sp"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/FeedbackContinueGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".95"/>
+
+        <TextView
+            android:id="@+id/FeedbackContinueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/FeedbackContinueGuideLine"
+            android:textColor="@color/text_color"
+            android:text="Continue"
+            android:textSize="17sp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/SettingDarkLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_below="@id/FeedbackTopBar">
+
+        <TextView
+            android:id="@+id/FeedbackTopText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Please feel free to share your thoughts or comments with us"
+            android:textColor="@color/text_color"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/FeedbackMiddleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey"
+            android:text="Allow us to make in app changes for you!"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="14sp"
+            android:layout_below="@id/FeedbackTopText"/>
+
+        <EditText
+            android:id="@+id/FeedBackEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/FeedbackMiddleText"
+            android:backgroundTint="@color/grey"
+            android:hint="Enter your message"
+            android:textColor="@color/text_color" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

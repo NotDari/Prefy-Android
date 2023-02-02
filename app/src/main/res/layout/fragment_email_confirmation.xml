@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.login_fragments.EmailConfirmationFragment">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent=".6">
+        <TextView
+            android:id="@+id/EmailConfFragTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" Confirm Your Email"
+            android:textSize="20sp"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"/>
+        <TextView
+            android:id="@+id/EmailConfFragText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" An email has been sent to the email you provided, please follow the instructions in the email."
+            android:textSize="15sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_below="@id/EmailConfFragTitle"
+            android:layout_marginBottom="18dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/EmailConfFragConfirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/EmailConfFragText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/red"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Email Confirmed"
+            android:textColor="@color/white"
+            app:cornerRadius="10dp" />
+        <TextView
+            android:id="@+id/EmailConfFragResend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resend email"
+            android:textSize="12sp"
+            android:textColor="#0000EE"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/EmailConfFragConfirmButton" />
+            
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

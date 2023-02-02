@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Profile.HomeProfileFragment"
+    android:background="@color/fragment_background"
+    android:id="@+id/ProfileSwipeRefreshlayout"
+    >
+    <!-- overscrollmode stops bounciness android:overScrollMode="never"!-->
+
+
+   <!-- <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/ProfileScrollView"
+        android:fillViewport="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/TopBarRelLay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:id="@+id/ProfileBackButton"
+                    android:layout_width="@dimen/back_button_size"
+                    android:layout_height="@dimen/back_button_size"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/thin_left_arrow"
+                    app:tint="@color/text_color"/>
+
+                <TextView
+                    android:id="@+id/ProfilePageUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Username"
+                    android:textColor="@color/grey" />
+
+                <ImageButton
+                    android:id="@+id/ProfileSettingsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_baseline_settings_24"
+                    app:tint="@color/grey" />
+
+            </RelativeLayout>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_below="@id/TopBarRelLay"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp" />
+
+
+            <TextView
+                android:id="@+id/AccountNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profileImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Account Name"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/ProfilePageVerifiedImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profileImageView"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/AccountNameText"
+                android:src="@drawable/ic_baseline_verified_24"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/ProfileBio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:textSize="12sp"
+                android:layout_below="@id/AccountNameText"
+                android:gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+
+                />
+            <LinearLayout
+                android:id="@+id/profileIconsLinearLayout"
+                android:layout_below="@id/ProfileBio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+                <ImageButton
+                    android:id="@+id/ProfileVKButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vk"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/grey"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="center_vertical"/>
+                <ImageButton
+                    android:id="@+id/ProfileInstagramButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/instagram"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/grey"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="center_vertical"/>
+                <ImageButton
+                    android:id="@+id/ProfileTwitterButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/twitter"
+                    android:background="@android:color/transparent"
+                    app:tint="@color/grey"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ProfileNumbersConstraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profileIconsLinearLayout"
+                android:layout_marginTop="20dp">
+
+                <RelativeLayout
+                    android:id="@+id/ProfilePostsNumberRelLay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/ProfileVotesNumberRelLay">
+
+                    <TextView
+                        android:id="@+id/ProfilePostsNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="0"
+                        android:textColor="@color/text_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ProfilePostsNumber"
+                        android:text="posts"
+                        android:textColor="@color/grey" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ProfileVotesNumberRelLay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:id="@+id/ProfileVotesNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="0"
+                        android:textColor="@color/text_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ProfileVotesNumber"
+                        android:text="votes"
+                        android:textColor="@color/grey" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ProfilePreferencesNumberRelLay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ProfileVotesNumberRelLay">
+
+                    <TextView
+                        android:id="@+id/ProfilePreferencesNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="0"
+                        android:textColor="@color/text_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ProfilePreferencesNumber"
+                        android:text="preferences"
+                        android:textColor="@color/grey" />
+                </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/ProfileBoundaryView"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/grey"
+                android:layout_below="@id/ProfileNumbersConstraintLayout"
+                android:layout_marginTop="10dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/ProfileBoundaryView">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/ProfileFragmentPostsRecView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:id="@+id/ProfileFragmentNoPosts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone">
+                    <ImageView
+                        android:id="@+id/ProfileFragmentNoPostsImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/photo_camera"
+                        app:tint="@color/text_color"
+                        android:layout_centerHorizontal="true"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ProfileFragmentNoPostsImage"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/text_color"
+                        android:text="This user has no posts"/>
+                </RelativeLayout>
+                <ProgressBar
+                    android:id="@+id/ProfileFragmentProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:indeterminateTint="@color/text_color"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    !-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ProfileRecView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/ProfileAdditionalItems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ProfileRecView">
+
+        <TextView
+            android:id="@+id/ProfileNoInternet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:lines="2"
+            android:text="@string/error_string"
+            android:textColor="@color/grey"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/ProfileProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/text_color"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/ProfileFragmentNoPosts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/ProfileFragmentNoPostsImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/photo_camera"
+                app:tint="@color/text_color"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ProfileFragmentNoPostsImage"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/text_color"
+                android:text="This user has no posts"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

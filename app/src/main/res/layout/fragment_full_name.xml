@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.login_fragments.Full_name_fragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signUpFullNameConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/signUpleftGuideLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".1"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/signUprightGuideLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".9"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Great! And what is your name?"
+                android:textSize="20sp"
+                android:textColor="@color/text_color"
+                android:textStyle="bold"
+                app:layout_constraintWidth_percent=".8"
+                app:layout_constraintStart_toStartOf="@id/signUpleftGuideLine"
+                app:layout_constraintEnd_toEndOf="@id/signUprightGuideLine"
+                app:layout_constraintBottom_toTopOf="@id/FullNameEditText"
+                android:layout_marginBottom="18dp"/>
+            <EditText
+                android:id="@+id/FullNameEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
+                app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintWidth_percent=".8"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/grey"
+                android:hint="Full name"
+                android:inputType="textPersonName" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signUpFullNameNextMaterialButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/signUpFullNameConstraintLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/red"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="Next"
+            android:textColor="@color/white"
+            app:cornerRadius="10dp" />
+    </RelativeLayout>
+
+</FrameLayout>

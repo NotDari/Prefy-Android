@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Explore.ExploreHostFragment"
+    android:background="@color/fragment_background"
+    android:id="@+id/ExploreHostSwipeRefresh"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ExploreRecView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+        <RelativeLayout
+            android:id="@+id/ExploreAdditionalItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/ExploreRecView">
+
+            <TextView
+                android:id="@+id/ExploreNoInternet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:lines="2"
+                android:text="@string/error_string"
+                android:textColor="@color/grey"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                android:id="@+id/ExploreProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/text_color"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

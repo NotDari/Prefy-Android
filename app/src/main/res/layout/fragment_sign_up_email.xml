@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.login_fragments.sign_up_email_fragment"
+    android:background="@color/fragment_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signUpEmailConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/signUpleftGuideLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".1"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/signUprightGuideLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".9"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Let's make your account safer?"
+                android:textSize="20sp"
+                android:textColor="@color/text_color"
+                android:textStyle="bold"
+                app:layout_constraintWidth_percent=".8"
+                app:layout_constraintStart_toStartOf="@id/signUpleftGuideLine"
+                app:layout_constraintEnd_toEndOf="@id/signUprightGuideLine"
+                app:layout_constraintBottom_toTopOf="@id/EmailEditText"
+                android:layout_marginBottom="18dp"/>
+            <EditText
+                android:id="@+id/EmailEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
+                app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
+                app:layout_constraintBottom_toTopOf="@id/passwordEditText"
+                app:layout_constraintWidth_percent=".8"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/grey"
+                android:hint="Email address"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
+                app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
+                app:layout_constraintTop_toBottomOf="@id/EmailEditText"
+                app:layout_constraintWidth_percent=".8"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/grey"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:drawableRight="@drawable/ic_baseline_visibility_24"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signUpCreateAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/signUpEmailConstraintLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/red"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="Create Account"
+            android:textColor="@color/white"
+            app:cornerRadius="10dp" />
+    </RelativeLayout>
+
+</FrameLayout>

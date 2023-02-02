@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Settings.Preferences.PreferencesFragment"
+    android:background="@color/fragment_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PreferencesTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/PreferencesTopBarBack"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/thin_left_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/PreferencesTopBarTextBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textColor="@color/grey"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@id/PreferencesTopBarBack"
+            app:layout_constraintStart_toEndOf="@id/PreferencesTopBarBack"
+            app:layout_constraintTop_toTopOf="@id/PreferencesTopBarBack" />
+
+        <TextView
+            android:id="@+id/PreferencesTopBarCommentsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preferences"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PreferencesContinueGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".95" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/SettingDarkLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/PreferencesTopBar">
+
+        <ImageButton
+            android:id="@+id/DarkModeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="30dp"
+            android:background="@color/fragment_background"
+            android:clickable="false"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_dark_mode_icon"
+            app:tint="@color/text_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/DarkModeImage"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Dark Theme"
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/settingsDarkMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:checked="false"
+            android:thumbTint="@color/text_color"
+            android:trackTint="@color/grey" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/SettingAutoScrollLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/SettingDarkLayout">
+
+        <ImageButton
+            android:id="@+id/AutoScrollImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="30dp"
+            android:background="@color/fragment_background"
+            android:clickable="false"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_baseline_arrow_downward_24"
+            app:tint="@color/text_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/AutoScrollImage"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Auto Scroll"
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/settingsAutoScroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:checked="false"
+            android:thumbTint="@color/text_color"
+            android:trackTint="@color/grey" />
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

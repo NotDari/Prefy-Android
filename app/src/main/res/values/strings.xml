@@ -1,0 +1,120 @@
+<resources>
+    <string name="app_name">Prefy</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment</string>
+
+
+
+    <string name="Server_base_address">http://100.68.142.52:8090</string>
+
+    <!-- http://100.68.142.3:8090
+
+      !-->
+
+    <!-- Usually it would be http://10.0.2.2:8090  , but it has be changed to allow external !-->
+
+
+    <!-- Strings that are re-used !-->
+
+
+    <!-- String for when data couldn't be got from firebase !-->
+    <string name="error_string">"No Internet Connection \n Tap to retry...</string>
+
+    <string name="save_email_pref">email_save</string>
+    <string name="save_username_pref">username_save</string>
+    <string name="save_fullname_pref">fullname_save</string>
+    <string name="save_instagram_pref">instagram_save</string>
+    <string name="save_twitter_pref">twitter_save</string>
+    <string name="save_vk_pref">vk_save</string>
+    <string name="save_password_pref">password_save</string>
+    <string name="save_profileP_pref">profileP_save</string>
+    <string name="save_prefCount_pref">prefCount_save</string>
+    <string name="save_voteCount_pref">voteCount_save</string>
+    <string name="save_postCount_pref">postCount_save</string>
+    <string name="save_verified_pref">verified_save</string>
+    <string name="save_bio_pref">profileBio_save</string>
+    <string name="save_auth_token_pref">authToken_save</string>
+    <string name="dark_mode_pref">dark_mode</string>
+    <string name="auto_scroll_pref">auto_scroll</string>
+    <string name="no_saved_cache_pref">No_Cache_Pref</string>
+    <string name="load_first_time">first_time_save</string>
+    <string name="save_user_id">user_id_value</string>
+
+
+    <!-- Sizes !-->
+    <string name="Search_Load_Count">18</string>
+    <string name="Explore_Load_Count">18</string>
+
+
+    <!-- Post Categories !-->
+    <string-array name="post_categories">
+        <item>Video games</item>
+        <item>Movies</item>
+        <item>Trivia</item>
+        <item>Shopping</item>
+        <item>Toys</item>
+        <item>Fashion</item>
+        <item>Comedy</item>
+        <item>Sports</item>
+        <item>Travel</item>
+        <item>Technology</item>
+        <item>Animals</item>
+        <item>Vehicles</item>
+        <item>Politics</item>
+        <item>People</item>
+        <item>Celebrities</item>
+        <item>Before/ After</item>
+    </string-array>
+
+    <!-- Settings personal details!-->
+    <string-array name="personal_details">
+        <item>Profile Image</item>
+        <item>Username</item>
+        <item>FullName</item>
+        <item>Bio</item>
+    </string-array>
+
+    <string-array name="social_media">
+        <item>Instagram</item>
+        <item>Twitter</item>
+        <item>VK</item>
+    </string-array>
+
+    <string-array name="email_password">
+        <item>Email</item>
+        <item>Password</item>
+    </string-array>
+
+
+    <!-- Post Category images !-->
+    <array name="post_category_images">
+        <item>@drawable/category_videogames</item>
+        <item>@drawable/category_movies</item>
+        <item>@drawable/category_trivia</item>
+        <item>@drawable/category_shopping</item>
+        <item>@drawable/category_toys</item>
+        <item>@drawable/category_fashion</item>
+        <item>@drawable/category_comedy</item>
+        <item>@drawable/category_sport</item>
+        <item>@drawable/category_travel</item>
+        <item>@drawable/category_technology</item>
+        <item>@drawable/category_pets</item>
+        <item>@drawable/category_vehicle</item>
+        <item>@drawable/ic_politics_svg</item>
+        <item>@drawable/ic_people_svg</item>
+        <item>@drawable/ic_celebrities_svg</item>
+        <item>@drawable/ic_before__after_svg</item>
+
+    </array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

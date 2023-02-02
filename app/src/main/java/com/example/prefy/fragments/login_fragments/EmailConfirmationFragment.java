@@ -1,0 +1,205 @@
+package com.example.prefy.fragments.login_fragments;
+
+import android.content.Intent;
+import android.content.res.Resources;
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.os.CountDownTimer;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.prefy.Activities.MainActivity;
+import com.example.prefy.R;
+import com.example.prefy.Utils.CustomJsonMapper;
+import com.example.prefy.Utils.ErrorStorage;
+import com.example.prefy.Utils.ServerAdminSingleton;
+import com.example.prefy.Utils.SharedPrefs;
+import com.example.prefy.customClasses.CustomError;
+import com.google.android.material.button.MaterialButton;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.Executors;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+
+public class EmailConfirmationFragment extends Fragment {
+    private TextView resendEmail;
+    private MaterialButton emailConfirmedButton;
+    private Boolean resendEmailButtonActive, emailConfirmedButtonActive;
+    private Integer buttonResetCooldownTime;
+    private String email, password;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_email_confirmation, container, false);
+        email = (String) getArguments().get("email");
+        password = (String) getArguments().get("password");
+        resendEmailButtonActive = false;
+        emailConfirmedButtonActive = false;
+        buttonResetCooldownTime = 0;
+        getViews(view);
+        initTasks();
+        return view;
+    }
+
+    private void getViews(View view){
+        resendEmail = view.findViewById(R.id.EmailConfFragResend);
+        emailConfirmedButton = view.findViewById(R.id.EmailConfFragConfirmButton);
+    }
+
+    private void initTasks(){
+        setResendEmail();
+        emailConfirmed();
+    }
+
+    private void setResendEmail(){
+        resendEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!resendEmailButtonActive){
+                    if (buttonResetCooldownTime == 00) {
+                        resendEmailButtonActive = true;
+                        Countdown();
+                        Executors.newSingleThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                OkHttpClient client = new OkHttpClient();
+                                Request request = new Request.Builder()
+                                        .url(getActivity().getString(R.string.Server_base_address) + "/prefy/v1/Registration/ResendConfirmation?login=\"" + email + "\"")
+                                        .method("GET", null)
+                                        .addHeader("Content-Type", "application/json")
+                                        .build();
+                                try {
+                                    Response response = client.newCall(request).execute();
+                                    if (response.isSuccessful()) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getContext(), "Email sent", Toast.LENGTH_SHORT).show();
+                                                resendEmailButtonActive = false;
+                                            }
+                                        });
+                                    } else {
+                                        resendEmailButtonActive = false;
+                                        //requestfailed();
+                                    }
+                                } catch (IOException e) {
+                                    resendEmailButtonActive = false;
+                                    //requestfailed();
+                                }
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), ("Please wait " + buttonResetCooldownTime + " seconds"), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+        });
+    }
+
+    private void emailConfirmed(){
+        emailConfirmedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!emailConfirmedButtonActive){
+                    emailConfirmedButtonActive = true;
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            OkHttpClient client = new OkHttpClient();
+                            JsonObject jsonObject = new JsonObject();
+                            jsonObject.addProperty("username", email);
+                            jsonObject.addProperty("password", password);
+                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                            Request request = new Request.Builder()
+                                    .url(getActivity().getString(R.string.Server_base_address) + "/login")
+                                    .method("POST", body)
+                                    .addHeader("Content-Type", "application/json")
+                                    .build();
+                            try {
+                                Response response = client.newCall(request).execute();
+                                if (response.isSuccessful()) {
+                                    emailConfirmedButtonActive = false;
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            String token = response.header("Authorization");
+                                            SharedPrefs sharedPrefs = new SharedPrefs(getContext());
+                                            sharedPrefs.putStringSharedPref(getString(R.string.save_auth_token_pref), token);
+                                            try {
+                                                String responseString = response.body().string();
+                                                JSONObject jsonObject = new JSONObject(responseString);
+                                                sharedPrefs.putLongSharedPref(getString(R.string.save_user_id), jsonObject.getLong("Id"));
+                                                ServerAdminSingleton.getInstance().alterLoggedInUser(getContext());
+                                                System.out.println("Sdad setId" + ServerAdminSingleton.getInstance().getLoggedInId());
+                                            } catch (JSONException | IOException e){
+
+                                            }
+                                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+
+                                        }
+                                    });
+                                } else {
+                                    CustomError customError = CustomJsonMapper.getCustomError(response);
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            switch (customError.getCustomCode()){
+                                                case (3):
+                                                    Toast.makeText(getContext(), "Email not verified", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                                default:
+                                                    System.out.println("Sdad customError:" + customError.getCustomCode() + customError.getMessage());
+                                                    Toast.makeText(getContext(), "Unknown error", Toast.LENGTH_SHORT).show();
+                                                    break;
+                                            }
+                                        }
+                                    });
+
+
+                                    emailConfirmedButtonActive = false;
+                                }
+                            } catch (IOException e) {
+                                emailConfirmedButtonActive = false;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void Countdown(){
+        buttonResetCooldownTime = 45;
+        new CountDownTimer((buttonResetCooldownTime * 1000) , 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                buttonResetCooldownTime -=1;
+                // logic to set the EditText could go here
+            }
+
+            public void onFinish() {
+            }
+
+        }.start();
+    }
+}

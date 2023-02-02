@@ -1,0 +1,10 @@
+<resources>
+    <!-- Fragment Background Colour !-->
+    <color name="fragment_background">#121212</color>
+    <color name="text_color">#FFFFFFFF</color>
+
+    <color name="search_bar_colour">#212121</color>
+    <color name="explore_bar_colour">#161616</color>
+
+
+</resources>

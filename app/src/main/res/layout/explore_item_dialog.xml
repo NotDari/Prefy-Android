@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ExploreItemDialogCloseLeftGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.86"
+        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ExploreItemDialogCloseTopGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.03"
+        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ExploreItemDialogCloseRightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"
+        app:layout_constraintStart_toStartOf="parent" />
+    <ImageView
+        android:id="@+id/ExploreDialogCloseButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="@id/ExploreItemDialogCloseLeftGuideline"
+        app:layout_constraintEnd_toEndOf="@id/ExploreItemDialogCloseRightGuideline"
+        android:src="@drawable/ic_baseline_close_24"
+        app:layout_constraintTop_toTopOf="@id/ExploreItemDialogCloseTopGuideline"
+        app:tint="@color/white"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ExploreItemDialogTopGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ExploreItemDialogBottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/ExploreItemDialogTopGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/ExploreItemDialogBottomGuideline"
+        android:background="@drawable/curved_background"
+        android:backgroundTint="@color/fragment_background"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ExploreDialogItemTopBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="15dp">
+            <ImageView
+                android:id="@+id/ExploreDialogItemUserImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"/>
+            <TextView
+                android:id="@+id/ExploreDialogItemUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/ExploreDialogItemUserImage"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="username"
+                android:textColor="@color/text_color"
+                android:layout_marginStart="5dp"/>
+            <TextView
+                android:id="@+id/ExploreDialogItemPostDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/ExploreDialogItemUsername"
+                app:layout_constraintStart_toEndOf="@id/ExploreDialogItemUserImage"
+                android:text="x months ago"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/grey"/>
+            <TextView
+                android:id="@+id/ExploreDialogItemTotalVotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="x Votes"
+                android:textColor="@color/text_color"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/ExploreDialogItemQuestionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:text="Question"
+            app:layout_constraintTop_toBottomOf="@id/ExploreDialogItemTopBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/text_color"/>
+        <ImageView
+            android:id="@+id/ExploreDialogItemQuestionImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/ExploreDialogItemQuestionText"
+            app:layout_constraintBottom_toTopOf="@id/ExploreDialogItemBottomBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            android:layout_marginBottom="15dp"
+            />
+        <View
+            android:id="@+id/ExploreDialogItemImageCentreDivider"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintBottom_toBottomOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintStart_toStartOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintEnd_toEndOf="@id/ExploreDialogItemQuestionImage"
+            android:background="@android:color/transparent"/>
+        <RelativeLayout
+            android:id="@+id/ExploreDialogItemImageLeftClicker"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintBottom_toBottomOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintStart_toStartOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintEnd_toEndOf="@id/ExploreDialogItemImageCentreDivider"
+            android:background="@android:color/transparent">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ExploreDialogItemImageLeftClickerText"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true">
+
+                <com.example.prefy.Votes.VoteCircleShape
+                    android:id="@+id/ExploreDialogItemImageLeftClickerProgressCircle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/ExploreDialogItemImageLeftClickerVoteMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vote_mark"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
+
+
+            <View
+                android:id="@+id/ExploreDialogItemImageLeftClickerBar"
+                android:layout_width="10dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/ExploreDialogItemImageLeftClickerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ExploreDialogItemImageLeftClickerBar"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/poppins_medium"
+                />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/ExploreDialogItemImageRightClicker"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintBottom_toBottomOf="@id/ExploreDialogItemQuestionImage"
+            app:layout_constraintStart_toStartOf="@id/ExploreDialogItemImageCentreDivider"
+            app:layout_constraintEnd_toEndOf="@id/ExploreDialogItemQuestionImage"
+            android:background="@android:color/transparent">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ExploreDialogItemImageRightClickerText"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true">
+
+                <com.example.prefy.Votes.VoteCircleShape
+                    android:id="@+id/ExploreDialogItemImageRightClickerProgressCircle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/ExploreDialogItemImageRightClickerVoteMark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vote_mark"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
+
+
+            <View
+                android:id="@+id/ExploreDialogItemImageRightClickerBar"
+                android:layout_width="10dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/ExploreDialogItemImageRightClickerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/ExploreDialogItemImageRightClickerBar"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/poppins_medium"
+                />
+        </RelativeLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ExploreDialogItemBottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">
+            <TextView
+                android:id="@+id/ExploreDialogItemCommentsButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintDimensionRatio="1:1"
+                android:background="@drawable/comments9"
+                android:text="0"
+                android:textColor="@color/text_color"
+                android:gravity="center"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/text_color"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ExploreDialogItemCommentsButton"
+                android:text="Comments"
+                android:textColor="@color/text_color"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/ExploreDialogItemOptionsButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:src="@drawable/more"
+                android:background="@android:color/transparent"
+                app:tint="@color/text_color"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

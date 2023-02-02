@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/ExploreCategorySelectorItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="20dp">
+
+    <RelativeLayout
+        android:id="@+id/ExploreCategoryImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ExploreCategorySelectorImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:shapeAppearanceOverlay="@style/slightlyroundedImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        />
+    <TextView
+        android:id="@+id/ExploreCategorySelectorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ExploreCategorySelectorImage"
+        />
+
+    </RelativeLayout>
+
+</FrameLayout>

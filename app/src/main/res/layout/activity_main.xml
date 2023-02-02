@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.MainActivity">
+
+
+
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Activities.MainActivity">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/FragmentContainerView"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/BottomNav"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/BottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_navigation"/>
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/ActivityNoInternetTextGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".10"/>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/ActivityNoInternetText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/no_internet_text_drawable"
+        android:backgroundTint="@color/red"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="No Internet Connection"
+        android:fontFamily="@font/poppins_medium"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/ActivityNoInternetTextGuideline"/>
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

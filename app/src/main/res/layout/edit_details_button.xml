@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/DetailsEditGatewayButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="30dp"
+    android:background="@android:color/transparent"
+    android:drawableRight="@drawable/right_arrow"
+    android:drawableTint="@color/text_color"
+    android:gravity="start|center_vertical"
+    android:textAllCaps="false"
+    android:textColor="@color/text_color">
+
+
+</Button>

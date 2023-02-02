@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/PostDiaFullLay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/popdialog"
+    android:backgroundTint="@color/fragment_background"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingBottom="30dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PostDialogSaveLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/PostDialogSaveImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/PostDialogSaveImageGuideline"
+            android:src="@drawable/report" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogSaveImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogSaveTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+        <TextView
+            android:id="@+id/PostDialogSaveText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/PostDialogSaveImage"
+            android:autoSizeTextType="uniform"
+            android:text="Save"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/PostDialogSaveTextGuideline"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E2E2E2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PostDialogProfileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageView
+            android:id="@+id/PostDialogProfileImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/report"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/PostDialogProfileImageGuideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogProfileImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogProfileTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+        <TextView
+            android:id="@+id/PostDialogProfileText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/PostDialogProfileImage"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="Profile"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/PostDialogProfileTextGuideline"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E2E2E2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PostDialogReportLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/PostDialogReportImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/report"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/PostDialogReportImageGuideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogReportImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogReportTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+        <TextView
+            android:id="@+id/PostDialogReportText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/PostDialogReportImage"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="Report"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/PostDialogReportTextGuideline"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/PostDialogDeleteView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E2E2E2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PostDialogDeleteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/PostDialogDeleteImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/report"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/PostDialogDeleteImageGuideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogDeleteImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogDeleteTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+        <TextView
+            android:id="@+id/PostDialogDeleteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/PostDialogDeleteImage"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="Delete"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/PostDialogDeleteTextGuideline"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

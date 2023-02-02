@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Search.SearchFragment">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SearchTopGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".03"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/SearchTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/SearchTopGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/SearchBottomGuideLine">
+
+        <ImageView
+            android:id="@+id/SearchTopBarBack"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/thin_left_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_color"/>
+
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/SearchEditText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:hint="Enter your search"
+            android:textColorHint="@color/grey"
+            app:layout_constraintStart_toEndOf="@id/SearchTopBarBack"
+            app:layout_constraintTop_toTopOf="@id/SearchTopBarBack"
+            app:layout_constraintBottom_toBottomOf="@id/SearchTopBarBack"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="@color/search_bar_colour"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:background="@drawable/tendp_curved_background"
+            android:paddingStart="10dp"
+            />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SearchBottomGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".077"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/SearchRecyclerTopGuideLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".1"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/SearchRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/SearchRecyclerTopGuideLine"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/SearchProgressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/SearchTopBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:indeterminateTint="@color/text_color"
+        />
+
+    <TextView
+        android:id="@+id/SearchNoResultsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey"
+        android:text="This search has no results"
+        app:layout_constraintTop_toBottomOf="@id/SearchTopBar"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/SearchNoInternet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey"
+        android:text="@string/error_string"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:lines="2"
+        android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

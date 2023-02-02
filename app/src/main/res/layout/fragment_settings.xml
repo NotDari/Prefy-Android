@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Settings.SettingsFragment"
+    android:background="@color/fragment_background"
+    android:fillViewport="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/SettingsTopBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/SettingsTopBarBack"
+                android:layout_width="@dimen/back_button_size"
+                android:layout_height="@dimen/back_button_size"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/thin_left_arrow"
+                app:tint="@color/text_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/SettingTopBarCommentsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="@color/text_color"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/SettingsOtherContinueGuideLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".95" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/SettingsPersonalInformationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsTopBar"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/SettingsPersonalInformationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Personal Information"
+                android:textColor="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/settings_button_box"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/SettingsAccountDetailsButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/username"
+                    android:drawableTint="@color/grey"
+                    android:background="@android:color/transparent"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:textColor="@color/text_color"
+                    android:text="Account Details"
+                    android:gravity="start|center_vertical"
+                    android:textAllCaps="false"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey"/>
+
+                <Button
+                    android:id="@+id/SettingsSocialNetworksButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/instagram"
+                    android:drawableTint="@color/grey"
+                    android:background="@android:color/transparent"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:textColor="@color/text_color"
+                    android:text="Social Networks"
+                    android:gravity="start|center_vertical"
+                    android:textAllCaps="false"/>
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/SettingsPrivacySecurityLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsPersonalInformationLayout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/SettingsPrivacySecurityTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Privacy and Security"
+                android:textColor="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/settings_button_box"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/SettingsEmailPasswordButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/lock"
+                    android:drawableTint="@color/grey"
+                    android:background="@android:color/transparent"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:textColor="@color/text_color"
+                    android:text="Email &amp; Password"
+                    android:gravity="start|center_vertical"
+                    android:textAllCaps="false"/>
+
+
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/SettingsSupportLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsPrivacySecurityLayout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/SettingsSupportTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Support"
+                android:textColor="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/settings_button_box"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/SettingsFeedbackButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/lifebuoy"
+                    android:drawableTint="@color/grey"
+                    android:background="@android:color/transparent"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:textColor="@color/text_color"
+                    android:text="Feedback"
+                    android:gravity="start|center_vertical"
+                    android:textAllCaps="false"/>
+
+
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/SettingsAboutLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsSupportLayout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/SettingsAboutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="About Prefy"
+                android:textColor="@color/grey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/settings_button_box"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/SettingsRatePrefyButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/rate_prefy_heart"
+                    android:drawableTint="@color/grey"
+                    android:gravity="start|center_vertical"
+                    android:text="Rate prefy"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_color" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey"/>
+
+                <Button
+                    android:id="@+id/SettingsOtherButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/bio"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:drawableTint="@color/grey"
+                    android:gravity="start|center_vertical"
+                    android:text="Other"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_color" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/SettingsPreferencesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsAboutLayout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/SettingPreferencesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
+                android:text="Preferences"
+                android:textColor="@color/grey" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/settings_button_box"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/SettingsPreferencesButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/ic_setting_icon"
+                    android:drawableTint="@color/grey"
+                    android:background="@android:color/transparent"
+                    android:drawableRight="@drawable/right_arrow"
+                    android:textColor="@color/text_color"
+                    android:text="Preferences"
+                    android:gravity="start|center_vertical"
+                    android:textAllCaps="false"/>
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/SettingsLogoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsPreferencesLayout"
+            android:layout_marginTop="30dp"
+            android:backgroundTint="#FA4646"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:text="Log out"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:cornerRadius="10dp" />
+
+    </RelativeLayout>
+
+
+</ScrollView>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey">#939499</color>
+    <color name="dark_grey_transparentish">#B34a494b</color>
+    <color name="white_transparentish">#B3FFFFFF</color>
+    <color name="red">#fc0313</color>
+    <color name="very_transparent_red">#40fc0313</color>
+    <color name="fully_transparent">#00ff0000</color>
+    <color name="kinda_transparent_red">#BFfc0313</color>
+    <color name="very_transparent_white">#40FFFFFF</color>
+    <color name="kinda_transparent_white">#BFFFFFFF</color>
+    <color name="light_green">#90ee90</color>
+    <color name="dark_grey">#a9a9a9</color>
+    <color name="toast_background">#A603DAC5</color>
+    <color name="black_highOpacity">#D9000000</color>
+    <color name="black_lowOpacity">#40000000</color>
+    <color name="search_bar_colour">#F5F5F5</color>
+    <color name="explore_bar_colour">#F2F2F2</color>
+
+    <!-- Fragment Background Colour !-->
+    <color name="fragment_background">#FFFFFFFF</color>
+    <color name="text_color">#FF000000</color>
+
+</resources>
