@@ -55,7 +55,7 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
     private StandardPost post;
     private Boolean replyActive;
     private String replyUsername;
-    private Long replyId;
+    private Long replyId, subParentId;
     private ConstraintLayout replyLay;
 
     @Override
@@ -118,8 +118,8 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
 
                     comment.setText(text);
                     comment.setReplyID(replyId);
-                    System.out.println("Sdad replyId:" + replyId);
                     comment.setReplyUsername(replyUsername);
+                    comment.setSubReplyID(subParentId);
                     comment.setCreationDate(date);
                     comment.setPostId(post.getPostId());
                     comment.setUserId(ServerAdminSingleton.getInstance().getLoggedInId());
@@ -244,12 +244,13 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         });
     }
 
-    private void setReplyLay(String replyUsername, Long replyId){
+    private void setReplyLay(String replyUsername, Long replyId, Long subParentID){
         replyLay.setVisibility(View.VISIBLE);
         replyActive = true;
 
         this.replyId = replyId;
         this.replyUsername = replyUsername;
+        this.subParentId = subParentID;
         TextView textView = replyLay.findViewById(R.id.CommentsReplyLayText);
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append("Reply : ");
@@ -264,6 +265,7 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         replyActive = false;
         replyId = null;
         replyUsername = null;
+        subParentId = null;
         replyLay.setVisibility(View.GONE);
     }
 
@@ -278,8 +280,14 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
 
 
     @Override
-    public void clicked(String replyUsername, Long replyId) {
+    public void mainReplyClicked(String replyUsername, Long replyId) {
         replyActive = true;
-        setReplyLay(replyUsername, replyId);
+        setReplyLay(replyUsername, replyId, null);
+    }
+
+    @Override
+    public void subReplyClicked(String replyUsername, Long parentID, Long subParentID) {
+        replyActive = true;
+        setReplyLay(replyUsername, parentID, subParentID);
     }
 }

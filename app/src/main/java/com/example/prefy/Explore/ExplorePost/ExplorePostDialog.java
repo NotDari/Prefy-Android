@@ -14,9 +14,13 @@ import android.widget.TextView;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.example.prefy.DeleteDialog.DeleteDelegate;
+import com.example.prefy.Explore.ExploreViewModel;
 import com.example.prefy.PostDropDownDialog;
+import com.example.prefy.PostDropDownDialogDelegate;
 import com.example.prefy.Profile.User;
 import com.example.prefy.R;
+import com.example.prefy.Utils.ItemDeleter;
 import com.example.prefy.Utils.Utils;
 import com.example.prefy.Utils.dateSinceSystem;
 import com.example.prefy.Votes.VoteImageHandler;
@@ -26,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import okhttp3.internal.Util;
 
-public class ExplorePostDialog {
+public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDelegate {
     private Dialog dialog;
     private Context context;
     private FullPost fullFeaturedPost;
@@ -170,12 +174,25 @@ public class ExplorePostDialog {
                 fullPost.setStandardPost(fullFeaturedPost.getStandardPost());
                 fullPost.setUser(fullFeaturedPost.getUser());
                 Boolean loggedUserPost = fullFeaturedPost.getUser().getId().equals(utils.loadLong(parentActivity.getString(R.string.save_user_id), 0));
-                PostDropDownDialog dialog = new PostDropDownDialog(v.getContext(), loggedUserPost, parentActivity,fullPost);
+                PostDropDownDialog dialog = new PostDropDownDialog(v.getContext(), loggedUserPost, parentActivity,fullPost, ExplorePostDialog.this, ExplorePostDialog.this);
                 Integer bottomNavHeight = parentActivity.findViewById(R.id.BottomNav).getHeight();
                 dialog.setCoordinates(0, bottomNavHeight);
                 dialog.setImageDrawable(postImage.getDrawable());
                 dialog.initDialog();
             }
         });
+    }
+
+    @Override
+    public void replyClicked() {
+        if (dialog.isShowing()){
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    public void itemDeleted() {
+        FullPost fullPost = new FullPost(fullFeaturedPost.getStandardPost(), fullFeaturedPost.getUser());
+        ItemDeleter.deleteItem(fullPost, context.getApplicationContext());
     }
 }

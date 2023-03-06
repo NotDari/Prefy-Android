@@ -79,17 +79,19 @@ public class ExploreCategoriesPostFragment extends Fragment implements ExploreCa
 
     @Override
     public void Completed(Boolean successful, ExplorePostSet explorePostSet) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setVisibility(View.GONE);
-                if (successful){
-                    gateway.updateData(explorePostSet.getPostList());
-                } else {
-                    noInternet();
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                    if (successful) {
+                        gateway.updateData(explorePostSet.getPostList());
+                    } else {
+                        noInternet();
+                    }
                 }
-            }
-        });
+            });
+        }
 
     }
 }

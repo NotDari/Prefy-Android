@@ -5,11 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.prefy.Activity.ActivityRepository;
 import com.example.prefy.Activity.Comment.CommentActivity;
 import com.example.prefy.Activity.Votes.VoteActivity;
+import com.example.prefy.Explore.ExplorePostSet;
 import com.example.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsRetreiver.ProfileHandlerInt;
 import com.example.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.example.prefy.Utils.ServerAdminSingleton;
+import com.example.prefy.customClasses.FullPost;
+import com.example.prefy.customClasses.StandardPost;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentUserRepository implements ProfileHandlerInt {
@@ -29,6 +33,17 @@ public class CurrentUserRepository implements ProfileHandlerInt {
 
     public static Boolean isInstanceNull(){
         return (instance == null);
+    }
+
+    public void deleteItem(StandardPost standardPost){
+        WholeProfile wholeProfile = wholeProfileMutable.getValue();
+        ArrayList<StandardPost> postList = wholeProfile.getPostListContainer().getPostList();
+        for (int i = 0; i < postList.size(); i ++){
+            if (standardPost.getPostId().equals(postList.get(i).getPostId())){
+                postList.remove(postList.get(i));
+            }
+        }
+        wholeProfileMutable.setValue(wholeProfile);
     }
 
     public void getCurrentUserData(){

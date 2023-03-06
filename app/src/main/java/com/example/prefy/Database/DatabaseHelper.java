@@ -38,7 +38,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlstatement);
         sqlstatement = "Create TABLE UploadActivityClear(Type String)";
         db.execSQL(sqlstatement);
-        sqlstatement = "Create TABLE UploadComments(PostId Long, ReplyId Long, ReplyUsername String, text String, UserId Long, CreationDate Double, replyCount Integer)";
+        sqlstatement = "Create TABLE UploadReports(Type String, postId Long, userId Long, commentId Long, repCategory String, creationDate Double)";
+        db.execSQL(sqlstatement);
+        sqlstatement = "Create TABLE UploadComments(PostId Long, ReplyId Long, subReplyID Long, ReplyUsername String, text String, UserId Long, CreationDate Double, replyCount Integer)";
+        db.execSQL(sqlstatement);
+        sqlstatement = "Create TABLE UploadDeleteTable(ItemId Long, Type String, UserId Long)";
         db.execSQL(sqlstatement);
         InitDatabaseTasks.init(db);
         //db.close();

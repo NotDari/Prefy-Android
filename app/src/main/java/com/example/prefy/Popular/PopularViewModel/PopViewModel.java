@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.prefy.Popular.PopularActivity;
 import com.example.prefy.Popular.PopularPostSet;
+import com.example.prefy.customClasses.StandardPost;
 
 public class PopViewModel extends ViewModel {
     private MutableLiveData<PopularPostSet> popPostSetData;
@@ -48,7 +49,13 @@ public class PopViewModel extends ViewModel {
         return popRepo.getActivityCount();
     }
 
+    public void deleteItem(StandardPost post){
+        popRepo.deleteItem(post);
+    }
 
+    public void refreshData(){
+        //popRepo.ref
+    }
 
     public void getMoreData(){
         if (popRepo.getDataLoading() == false) {

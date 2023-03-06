@@ -8,6 +8,7 @@ import com.example.prefy.Activity.ActivityRepository;
 import com.example.prefy.Activity.Comment.CommentActivity;
 import com.example.prefy.Activity.Votes.VoteActivity;
 import com.example.prefy.customClasses.FullPost;
+import com.example.prefy.customClasses.StandardPost;
 
 import java.util.List;
 
@@ -44,5 +45,9 @@ public class ExploreViewModel extends ViewModel {
 
     public void refresh(){
         exploreRepo.refreshData();
+    }
+
+    public void deleteItem(FullPost fullPost){
+        exploreRepo.deleteItem(fullPost);
     }
 }

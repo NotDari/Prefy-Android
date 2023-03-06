@@ -190,7 +190,8 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
                 fullPost.setStandardPost(postList.get(position));
                 User user = ServerAdminSingleton.getCurrentUser(parentActivity.getApplicationContext());
                 fullPost.setUser(user);
-                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), false, parentActivity,fullPost);
+                Boolean loggedUserPost = user.getId().equals(ServerAdminSingleton.getCurrentUser(parentActivity.getApplicationContext()).getId());
+                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), loggedUserPost, parentActivity,fullPost, null, null);
                 int test1[] = new int[2];
                 holder.moreButton.getLocationOnScreen(test1);
                 Integer bottomNavHeight = parentActivity.findViewById(R.id.BottomNav).getHeight();

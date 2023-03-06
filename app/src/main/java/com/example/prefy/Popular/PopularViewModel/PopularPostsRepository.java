@@ -8,8 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.prefy.Popular.PopularActivity;
 import com.example.prefy.Popular.PopularPost;
 import com.example.prefy.Popular.PopularPostSet;
+import com.example.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.example.prefy.customClasses.StandardPost;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 import lombok.Getter;
@@ -46,6 +48,16 @@ public class PopularPostsRepository implements RetreivePopularDataInterface, Cac
     }
 
 
+    public void deleteItem(StandardPost standardPost){
+        PopularPostSet popularPostSet = popularSetMutable.getValue();
+        ArrayList<StandardPost> postList = popularPostSet.getPostList();
+        for (int i = 0; i < postList.size(); i ++){
+            if (standardPost.getPostId().equals(postList.get(i).getPostId())){
+                postList.remove(postList.get(i));
+            }
+        }
+        popularSetMutable.setValue(popularPostSet);
+    }
 
     public MutableLiveData<PopularPostSet> getIntitialData(){
         if (popularPostSet == null) {
@@ -102,9 +114,8 @@ public class PopularPostsRepository implements RetreivePopularDataInterface, Cac
     @Override
     public void taskComplete(Boolean successful, PopularPostSet newPopularPostSet, Boolean update) {
         dataType = "";
-
         if (successful){
-            System.out.println("Sdad update:" + update + dataStatus);
+            System.out.println("Sdad dB update:" + update + dataStatus);
             if (!update) {
                 if (dataStatus < 2) {
                     popularPostSet = newPopularPostSet;

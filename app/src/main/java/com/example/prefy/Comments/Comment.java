@@ -23,6 +23,7 @@ public class Comment implements Parcelable {
     private String text;
     private String replyUsername;
     private Long replyID;
+    private Long subReplyID;
     private Long commentId;
     private Long postId;
     private User user;

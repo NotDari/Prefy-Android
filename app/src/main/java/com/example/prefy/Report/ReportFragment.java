@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.prefy.Comments.Comment;
+import com.example.prefy.Network.UploadController.UploadController;
+import com.example.prefy.Network.UploadController.UploadEndpoint;
 import com.example.prefy.R;
 import com.example.prefy.customClasses.StandardPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -177,6 +179,16 @@ public class ReportFragment extends Fragment {
 
     private void submitPostReport(String reason){
         //TODO fix PostReport
+        Report report = new Report();
+        if (post != null) {
+            report.setPostId(post.getPostId());
+            report.setUserId(post.getUserId());
+            report.setCommentId(null);
+            report.setRepCategory(reason);
+            report.setType(type);
+            report.setCreationDate((double) System.currentTimeMillis());
+        }
+        UploadController.saveReport(getActivity().getApplicationContext(),report);
         /**
         FirebaseFirestore ff = FirebaseFirestore.getInstance();
         HashMap<String, Object> reportMap = new HashMap<>();
@@ -197,6 +209,16 @@ public class ReportFragment extends Fragment {
 
     private void submitCommentReport(String reason){
         //TODO fix Commentreport
+        Report report = new Report();
+        if (comment != null) {
+            report.setPostId(comment.getPostId());
+            report.setUserId(comment.getUser().getId());
+            report.setCommentId(comment.getCommentId());
+            report.setRepCategory(reason);
+            report.setType(type);
+            report.setCreationDate((double) System.currentTimeMillis());
+        }
+        UploadController.saveReport(getActivity().getApplicationContext(),report);
         /**
         FirebaseFirestore ff = FirebaseFirestore.getInstance();
         HashMap<String, Object> reportMap = new HashMap<>();

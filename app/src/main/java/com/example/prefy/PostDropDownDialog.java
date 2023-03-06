@@ -3,41 +3,34 @@ package com.example.prefy;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 
-import com.example.prefy.Activities.MainActivity;
+import com.example.prefy.DeleteDialog.DeleteDelegate;
+import com.example.prefy.DeleteDialog.DeleteDialog;
+import com.example.prefy.DeleteDialog.DeleteDialogDelegate;
+import com.example.prefy.Network.UploadController.UploadController;
 import com.example.prefy.Profile.User;
 import com.example.prefy.customClasses.FullPost;
 import com.example.prefy.customClasses.StandardPost;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-public class PostDropDownDialog {
+public class PostDropDownDialog implements DeleteDialogDelegate {
     private Dialog postDialog;
     private Context context;
     private Boolean loggedUserPost;
@@ -48,12 +41,18 @@ public class PostDropDownDialog {
     private StandardPost post;
     private Drawable imageDrawable;
 
-    public PostDropDownDialog(Context context, Boolean loggedUserPost, Activity ownerActivity, FullPost fullPost) {
+    private PostDropDownDialogDelegate exploreDelegate;
+
+    private DeleteDelegate delegateDelegate;
+
+    public PostDropDownDialog(Context context, Boolean loggedUserPost, Activity ownerActivity, FullPost fullPost, PostDropDownDialogDelegate exploreDelegate, DeleteDelegate deleteDelegate) {
         this.context = context;
         this.loggedUserPost = loggedUserPost;
         this.ownerActivity = ownerActivity;
         this.user = fullPost.getUser();
         this.post = fullPost.getStandardPost();
+        this.exploreDelegate = exploreDelegate;
+        this.delegateDelegate = deleteDelegate;
     }
 
     public void setImageDrawable(Drawable imageDrawable) {
@@ -149,6 +148,7 @@ public class PostDropDownDialog {
                     MediaStore.Images.Media.insertImage(context.getContentResolver(), totalImage, ("Prefy-" + currentDate), "test");
                     Toast.makeText(saveLayout.getContext(), "Image Saved", Toast.LENGTH_SHORT).show();
                     postDialog.dismiss();
+                    changeVisibility();
                 } else {
                     Toast.makeText(saveLayout.getContext(), "Failed to save image", Toast.LENGTH_SHORT).show();
                     postDialog.dismiss();
@@ -163,6 +163,7 @@ public class PostDropDownDialog {
                 bundle.putParcelable("user", user);
                 Navigation.findNavController(ownerActivity, R.id.FragmentContainerView).navigate(R.id.action_global_userProfile, bundle);
                 postDialog.dismiss();
+                changeVisibility();
             }
         });
         reportLayout.setOnClickListener(new View.OnClickListener() {
@@ -174,6 +175,7 @@ public class PostDropDownDialog {
                     bundle.putParcelable("post", post);
                     Navigation.findNavController(ownerActivity, R.id.FragmentContainerView).navigate(R.id.action_global_reportFragment, bundle);
                     postDialog.dismiss();
+                    changeVisibility();
                 } else {
                     Toast.makeText(ownerActivity, "An error has occurred", Toast.LENGTH_SHORT).show();
                 }
@@ -182,9 +184,17 @@ public class PostDropDownDialog {
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                postDialog.dismiss();
+                DeleteDialog deleteDialog = DeleteDialog.getInstance(context, PostDropDownDialog.this::deleteClicked, "Post");
+                deleteDialog.show();
             }
         });
+    }
+
+    private void changeVisibility(){
+        if (this.exploreDelegate != null){
+            exploreDelegate.replyClicked();
+        }
     }
 
     private Bitmap addWaterMark(Drawable image){
@@ -202,5 +212,14 @@ public class PostDropDownDialog {
         comboImage.drawBitmap(imageBit, 0f, 0f, null);
         comboImage.drawBitmap(waterMark, 0f, imageBit.getHeight(), null);
         return combinedBitmap;
+    }
+
+    @Override
+    public void deleteClicked() {
+        UploadController.saveDelete(context.getApplicationContext(), "Post" , post.getPostId());
+        if (delegateDelegate != null){
+            delegateDelegate.itemDeleted();
+        }
+        changeVisibility();
     }
 }

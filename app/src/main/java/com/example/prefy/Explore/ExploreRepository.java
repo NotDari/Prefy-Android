@@ -47,6 +47,17 @@ public class ExploreRepository implements ExploreWholeInterface{
         return explorePostSetMutable;
     }
 
+    public void deleteItem(FullPost fullPost){
+        ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
+        ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
+        for (int i = 0; i < fullPostList.size(); i ++){
+            if (fullPostList.get(i).getStandardPost().getPostId().equals(fullPost.getStandardPost().getPostId())){
+                fullPostList.remove(fullPostList.get(i));
+            }
+        }
+        explorePostSetMutable.setValue(explorePostSet);
+    }
+
 
     public MutableLiveData<List<FullPost>> getFeaturedPostList() {
         return featuredPostList;

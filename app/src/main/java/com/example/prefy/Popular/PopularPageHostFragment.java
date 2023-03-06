@@ -201,6 +201,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
     }
 
     private void updateViewPagerData(PopularPostSet newPopularPostSet){
+        System.out.println("Sdad newPopPos:" + newPopularPostSet.getPostList().get(0).getQuestion() + " dataType:" + popViewModel.getDataType().contains("update"));
         if (!destroyed){
             if (dataRefreshing){
                 swipeLayout.setRefreshing(false);
@@ -212,7 +213,6 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
                 //popularPagerAdaptor.notifyItemRangeChanged(previousPopularPostSet.getPostList().size(), newPopularPostSet.getPostList().size());
             } else {
                 ViewPagerNewItemsHandler viewPagerNewItemsHandler = new ViewPagerNewItemsHandler(newPopularPostSet, previousPostArrayList, viewPager, popularPagerAdaptor, getActivity());
-                System.out.println("Sdad postQuestionnn " + newPopularPostSet.getPostList().get(0).getQuestion() + "  " + previousPostArrayList.get(0).getQuestion());
                 viewPagerNewItemsHandler.viewPagerChanged(popViewModel.getDataType());
             }
 

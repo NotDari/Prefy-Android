@@ -65,7 +65,9 @@ public class ViewPagerNewItemsHandler {
         }
         System.out.println("Sdad dataType: " + dataType);
          */
+        System.out.println("Sdad vP:" + dataType);
         if (!dataType.equals("override + NothingChanged")){
+            System.out.println("Sdad vP" + (viewPager.getScrollState() == ViewPager2.SCROLL_STATE_IDLE));
             if (viewPager.getScrollState() != ViewPager2.SCROLL_STATE_IDLE) {
                 callback = new ViewPager2.OnPageChangeCallback() {
                     @Override
@@ -81,6 +83,7 @@ public class ViewPagerNewItemsHandler {
                     @Override
                     public void onPageScrollStateChanged(int state) {
                         super.onPageScrollStateChanged(state);
+                        System.out.println("Sdad vP state:" + state);
                         if (state == 2) {
                             viewPager.unregisterOnPageChangeCallback(this);
                             completeTransactionNoCallback();
@@ -102,6 +105,7 @@ public class ViewPagerNewItemsHandler {
         viewPagerPosition = viewPagerAdaptor.getAdaptorPosition();
         StandardPost post = oldPopularPostList.get(viewPagerPosition);
         Integer newPosition = newPopularPostSet.getPostList().indexOf(post);
+        System.out.println("Sdad newPosition:" + newPosition);
         //viewPager.setAdapter(viewPagerAdaptor);
         viewPagerAdaptor.setPopularPostSet(newPopularPostSet);
         viewPagerAdaptor.notifyDataSetChanged();

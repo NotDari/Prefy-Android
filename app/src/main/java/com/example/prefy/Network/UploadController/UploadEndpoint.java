@@ -16,6 +16,7 @@ import com.example.prefy.Database.DatabaseUtils;
 import com.example.prefy.Explore.ExplorePostSet;
 import com.example.prefy.Explore.ExploreRepository;
 import com.example.prefy.Network.CacheContentTools;
+import com.example.prefy.Report.Report;
 import com.example.prefy.Utils.CustomJsonMapper;
 import com.example.prefy.Utils.ServerAdminSingleton;
 import com.example.prefy.customClasses.FullPost;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.Repo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -327,6 +329,7 @@ public class UploadEndpoint {
                                         Comment comment = new Comment();
                                         comment.setPostId(DatabaseUtils.getLongWithNull(commentCursor, "PostId"));
                                         comment.setReplyID(DatabaseUtils.getLongWithNull(commentCursor, "ReplyId"));
+                                        comment.setSubReplyID(DatabaseUtils.getLongWithNull(commentCursor, "subReplyID"));
                                         comment.setReplyUsername(DatabaseUtils.getStringWithNull(commentCursor, "ReplyUsername"));
                                         comment.setText(DatabaseUtils.getStringWithNull(commentCursor, "text"));
                                         comment.setUserId(DatabaseUtils.getLongWithNull(commentCursor, "UserId"));
@@ -340,6 +343,7 @@ public class UploadEndpoint {
                                             jsonObject.put("creationDate", comment.getCreationDate());
                                             jsonObject.put("text", comment.getText());
                                             jsonObject.put("parentId", comment.getReplyID());
+                                            jsonObject.put("subParentId", comment.getSubReplyID());
                                             jsonObject.put("userId", comment.getUserId());
                                         } catch (JSONException e) {
                                             CompletedCount += 1;
@@ -352,7 +356,6 @@ public class UploadEndpoint {
                                                 .addHeader("Content-Type", "application/json")
                                                 .addHeader("Authorization", authToken)
                                                 .build();
-                                        System.out.println("Sdad requestSENT:" + jsonObject);
 
                                         try {
                                             Response response = client.newCall(request).execute();
@@ -369,6 +372,126 @@ public class UploadEndpoint {
                                             CompletedCount += 1;
                                             checkCompleted();
                                         }
+
+                                    }
+                                });
+                            }
+                        }
+                        Cursor reportCursor = db.rawQuery("Select * FROM UploadReports", null);
+                        if (reportCursor.moveToFirst()){
+                            for (int i =0; i < reportCursor.getCount(); i ++){
+                                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Report report = new Report();
+                                        report.setPostId(DatabaseUtils.getLongWithNull(reportCursor, "postId"));
+                                        report.setUserId(DatabaseUtils.getLongWithNull(reportCursor, "userId"));
+                                        report.setCreationDate(DatabaseUtils.getDoubleWithNull(reportCursor, "creationDate"));
+                                        report.setCommentId(DatabaseUtils.getLongWithNull(reportCursor, "commentId"));
+                                        report.setRepCategory(DatabaseUtils.getStringWithNull(reportCursor, "repCategory"));
+                                        report.setType(DatabaseUtils.getStringWithNull(reportCursor, "Type"));
+
+                                        HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Reports/SubmitReport").newBuilder();
+                                        JSONObject jsonObject = new JSONObject();
+                                        try {
+                                            jsonObject.put("postId", report.getPostId());
+                                            jsonObject.put("userId", report.getUserId());
+                                            jsonObject.put("creationDate", report.getCreationDate());
+                                            jsonObject.put("commentId", report.getCommentId());
+                                            jsonObject.put("repCategory", report.getRepCategory());
+                                            jsonObject.put("type", report.getType());
+                                        } catch (JSONException e) {
+                                            CompletedCount += 1;
+                                            checkCompleted();
+                                        }
+
+                                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                        Request request = new Request.Builder()
+                                                .url(httpBuilder.build())
+                                                .method("POST", body)
+                                                .addHeader("Content-Type", "application/json")
+                                                .addHeader("Authorization", authToken)
+                                                .build();
+
+                                        try {
+                                            Response response = client.newCall(request).execute();
+                                            if (response.isSuccessful()) {
+                                                CompletedCount += 1;
+                                                SuccessfulCount += 1;
+                                                removeReportFromDb(db, report);
+                                                checkCompleted();
+                                            } else {
+                                                CompletedCount += 1;
+                                                checkCompleted();
+                                            }
+                                        } catch (IOException e) {
+                                            CompletedCount += 1;
+                                            checkCompleted();
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                        Cursor deleteCursor = db.rawQuery("Select * FROM UploadDeleteTable", null);
+                        if (deleteCursor.moveToFirst()){
+                            for (int i =0; i < deleteCursor.getCount(); i ++){
+                                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String type = DatabaseUtils.getStringWithNull(deleteCursor, "Type");
+                                        Long itemId = DatabaseUtils.getLongWithNull(deleteCursor, "ItemId");
+                                        Long userID = DatabaseUtils.getLongWithNull(deleteCursor, "UserId");
+                                        Boolean breakOut;
+                                        HttpUrl.Builder httpBuilder;
+                                        if (type.equals("Comment")){
+                                            breakOut = false;
+                                            httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Comments/DeleteComment").newBuilder();
+                                        } else if (type.equals("Post")) {
+                                            breakOut = false;
+                                            httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/DeletePost").newBuilder();
+                                        } else {
+                                            breakOut = true;
+                                            httpBuilder = null;
+                                            CompletedCount += 1;
+                                            checkCompleted();
+                                        }
+                                        if (!breakOut){
+                                            JSONObject jsonObject = new JSONObject();
+                                            try {
+                                                jsonObject.put("itemId", itemId);
+                                                jsonObject.put("userId", userID);
+                                            } catch (JSONException e) {
+                                                CompletedCount += 1;
+                                                checkCompleted();
+                                            }
+                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                            Request request = new Request.Builder()
+                                                    .url(httpBuilder.build())
+                                                    .method("PUT", body)
+                                                    .addHeader("Content-Type", "application/json")
+                                                    .addHeader("Authorization", authToken)
+                                                    .build();
+                                            try {
+                                                Response response = client.newCall(request).execute();
+                                                if (response.isSuccessful()) {
+                                                    CompletedCount += 1;
+                                                    SuccessfulCount += 1;
+                                                    removeDeleteFromDb(db, type, itemId, userID);
+                                                    checkCompleted();
+                                                } else {
+                                                    CompletedCount += 1;
+                                                    checkCompleted();
+                                                }
+                                            } catch (IOException e) {
+                                                CompletedCount += 1;
+                                                checkCompleted();
+                                            }
+                                        }
+
+
+
+
 
                                     }
                                 });
@@ -404,6 +527,20 @@ public class UploadEndpoint {
                 " SET " + "Count" + " = " + "Count" + " - 1" +
                 " WHERE " + "Type" + " = ?", new String[] {"Comment"});
         db.delete("UploadComments","text=? and CreationDate=?",new String[]{comment.getText(), comment.getCreationDate().toString()});
+    }
+
+    public void removeReportFromDb(SQLiteDatabase db, Report report){
+        db.execSQL("UPDATE " + "UploadTasks" +
+                " SET " + "Count" + " = " + "Count" + " - 1" +
+                " WHERE " + "Type" + " = ?", new String[] {"Report"});
+        db.delete("UploadReports","userId=? and CreationDate=?",new String[]{report.getUserId().toString(), report.getCreationDate().toString()});
+    }
+
+    public void removeDeleteFromDb(SQLiteDatabase db, String type, Long itemId, Long userId){
+        db.execSQL("UPDATE " + "UploadTasks" +
+                " SET " + "Count" + " = " + "Count" + " - 1" +
+                " WHERE " + "Type" + " = ?", new String[] {"Delete"});
+        db.delete("UploadDeleteTable","UserId=? and ItemId=? and Type=?",new String[]{userId.toString(), itemId.toString(), type.toString()});
     }
 
     private void checkCompleted(){

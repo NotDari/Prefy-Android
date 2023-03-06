@@ -530,6 +530,10 @@ public class DetailsEditFragment extends Fragment {
         });
     }
 
+    private void initEmailSave(){
+
+    }
+
     private void initSaveFullName(){
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

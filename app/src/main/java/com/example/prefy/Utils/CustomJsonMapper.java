@@ -192,6 +192,8 @@ public class CustomJsonMapper {
             comment.setText(jsonObject.getString("text"));
             comment.setReplyID(jsonObject.isNull("parentId") ? null :jsonObject.getLong("parentId"));
             comment.setUser(getUserFromObject(jsonObject.getJSONObject("user")));
+            comment.setSubReplyID(jsonObject.isNull("subParentId") ? null :jsonObject.getLong("subParentId"));
+            comment.setReplyUsername(jsonObject.isNull("replyUsername") ? null :jsonObject.getString("replyUsername"));
 
             //comment.setReplyCount(jsonObject.getString("replyCount")); Currently doesn't retreive replyCount
             return comment;
@@ -212,6 +214,7 @@ public class CustomJsonMapper {
             for (int i =0; i < commentReplyJson.length(); i ++){
                 commentReplyList.add(getCommentFromObject(commentReplyJson.getJSONObject(i)));
             }
+            fullComment.setReplyCount(jsonObject.getInt("replyCount"));
             fullComment.setCommentReplyList(commentReplyList);
             return fullComment;
         } catch (JSONException e){

@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import lombok.AllArgsConstructor;
@@ -94,4 +95,6 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+
+
 }

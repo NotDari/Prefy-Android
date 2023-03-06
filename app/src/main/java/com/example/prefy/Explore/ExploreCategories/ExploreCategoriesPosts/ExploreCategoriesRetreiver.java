@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.prefy.Comments.FullComment;
 import com.example.prefy.Explore.ExplorePostSet;
 import com.example.prefy.Profile.User;
+import com.example.prefy.Utils.CustomJsonCreator;
 import com.example.prefy.Utils.CustomJsonMapper;
 import com.example.prefy.Utils.FirebaseUtils;
 import com.example.prefy.Utils.ServerAdminSingleton;
@@ -87,14 +88,16 @@ public class ExploreCategoriesRetreiver {
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
+                    System.out.println("Sdad oadsia" + response.isSuccessful());
                     if (response.isSuccessful()){
                         try {
-                            JSONObject totalObject = new JSONObject(response.body().string());
-                            JSONArray jsonArray = totalObject.getJSONArray("");
+                            JSONArray jsonArray = new JSONArray(response.body().string());
+                            System.out.println("Sdad uwu:" + jsonArray.length());
                             for (int i = 0; i < jsonArray.length(); i ++){
                                 JSONObject tempObject = jsonArray.getJSONObject(i);
                                 FullPost fullPost = new FullPost();
                                 fullPost.setStandardPost(CustomJsonMapper.getPostFromObject(tempObject));
+                                postList.add(fullPost);
                             }
                             explorePostSet = new ExplorePostSet();
                             explorePostSet.setPostList(postList);
@@ -123,12 +126,12 @@ public class ExploreCategoriesRetreiver {
     private void getUsers(){
         ArrayList<Long> idList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
-            idList.add(explorePostSet.getPostList().get(i).getUser().getId());
+            idList.add(explorePostSet.getPostList().get(i).getStandardPost().getUserId());
         }
 
         OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "prefy/v1/Users/GetUserByIdList").newBuilder();
-        httpBuilder.addEncodedQueryParameter("idList", idList.toString());
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Users/GetUserByIdList").newBuilder();
+        httpBuilder.addEncodedQueryParameter("idList", CustomJsonCreator.createArrayStringFromLong(idList));
         Request request = new Request.Builder()
                 .url(httpBuilder.build())
                 .method("GET", null)
@@ -139,8 +142,7 @@ public class ExploreCategoriesRetreiver {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
                 try {
-                    JSONObject totalObject = new JSONObject(response.body().string());
-                    JSONArray jsonArray = totalObject.getJSONArray("");
+                    JSONArray jsonArray = new JSONArray(response.body().string());
                     for (int i = 0; i < jsonArray.length(); i ++){
                         JSONObject tempObject = jsonArray.getJSONObject(i);
                         User user = CustomJsonMapper.getUserFromObject(tempObject);

@@ -77,6 +77,7 @@ public class CommentUpdaterExecutor {
                                 FullRecComment fullRecComment = new FullRecComment();
                                 fullRecComment.setFullComment(CustomJsonMapper.getFullCommentFromObject(jsonObjectTemp));
                                 fullRecComment.setRepliesShown(0);
+                                fullRecComment.setMinimised(false);
                                 fullCommentList.add(fullRecComment);
                             }
                             success();

@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.prefy.Comments.Comment;
 import com.example.prefy.Database.DatabaseHelper;
+import com.example.prefy.Report.Report;
+import com.example.prefy.Utils.ServerAdminSingleton;
 
 import java.util.HashMap;
 
@@ -15,6 +17,9 @@ public class UploadController {
     private static final String VotesTableName = "UploadVotes";
     private static final String ActivityClearTableName = "UploadActivityClear";
     private static final String CommentTableName = "UploadComments";
+    private static final String ReportTableName = "UploadReports";
+
+    private static final String DeleteTableName = "UploadDeleteTable";
     private static final String Count = "Count";
 
     public static void saveVote(Context appContext, HashMap<String, Object> Vote){
@@ -30,7 +35,7 @@ public class UploadController {
             db.execSQL("UPDATE " + UploadTableName +
                     " SET " + Count + " = " + Count + " + 1" +
                     " WHERE " + "Type" + " = ?", new String[]{"Vote"});
-            attempUpload(appContext);
+            attemptUpload(appContext);
         }
     }
 
@@ -47,7 +52,7 @@ public class UploadController {
                     " SET " + Count + " = " + Count + " + 1" +
                     " WHERE " + "Type" + " = ?", new String[] {"ActivityClear"});
             db.insert(ActivityClearTableName, null, contentValues);
-            attempUpload(appContext);
+            attemptUpload(appContext);
         }
     }
 
@@ -58,20 +63,52 @@ public class UploadController {
                 " WHERE " + "Type" + " = ?", new String[] {"Comment"});
         ContentValues contentValues = new ContentValues();
         contentValues.put("postId", comment.getPostId());
-        contentValues.put("replyId", comment.getReplyID());
+        contentValues.put("ReplyId", comment.getReplyID());
         contentValues.put("replyUsername", comment.getReplyUsername());
         contentValues.put("text", comment.getText());
         contentValues.put("UserID", comment.getUserId());
         contentValues.put("CreationDate", comment.getCreationDate());
+        contentValues.put("subReplyID", comment.getSubReplyID());
         db.insert(CommentTableName, null, contentValues);
-        attempUpload(appContext);
+        attemptUpload(appContext);
         //contentValues.put("", comment.get);
     }
 
-    public static void attempUpload(Context appContext){
+    public static void saveReport(Context appContext, Report report){
+        SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
+        db.execSQL("UPDATE " + UploadTableName +
+                " SET " + Count + " = " + Count + " + 1" +
+                " WHERE " + "Type" + " = ?", new String[] {"Report"});
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("postId", report.getPostId());
+        contentValues.put("userId", report.getUserId());
+        contentValues.put("commentId", report.getCommentId());
+        contentValues.put("repCategory", report.getRepCategory());
+        contentValues.put("creationDate", report.getCreationDate());
+        contentValues.put("Type", report.getType());
+        db.insert(ReportTableName, null, contentValues);
+        attemptUpload(appContext);
+    }
+
+    public static void saveDelete(Context appContext, String type, Long itemId){
+        SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
+        db.execSQL("UPDATE " + UploadTableName +
+                " SET " + Count + " = " + Count + " + 1" +
+                " WHERE " + "Type" + " = ?", new String[] {"Delete"});
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("ItemId", itemId);
+        contentValues.put("Type", type);
+        contentValues.put("UserId", ServerAdminSingleton.getInstance().getLoggedInId());
+        db.insert(DeleteTableName, null, contentValues);
+        attemptUpload(appContext);
+    }
+
+    public static void attemptUpload(Context appContext){
         UploadEndpoint endpoint = UploadEndpoint.getInstance(appContext);
         endpoint.startUploads();
     }
+
+
 
 
 

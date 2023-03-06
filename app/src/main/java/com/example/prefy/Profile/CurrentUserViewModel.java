@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.prefy.Activity.ActivityRepository;
 import com.example.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
+import com.example.prefy.customClasses.StandardPost;
 
 public class CurrentUserViewModel extends ViewModel {
     private CurrentUserRepository userRepo;
@@ -28,5 +29,9 @@ public class CurrentUserViewModel extends ViewModel {
 
     public LiveData<Boolean> getInternetAvailable(){
         return internetAvailable;
+    }
+
+    public void deleteItem(StandardPost post){
+        userRepo.deleteItem(post);
     }
 }

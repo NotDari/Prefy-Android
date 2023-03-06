@@ -23,6 +23,7 @@ import com.example.prefy.Popular.PopularViewModel.PopViewModel;
 import com.example.prefy.PostDropDownDialog;
 import com.example.prefy.Profile.User;
 import com.example.prefy.R;
+import com.example.prefy.Utils.ServerAdminSingleton;
 import com.example.prefy.Utils.Utils;
 import com.example.prefy.Utils.dateSinceSystem;
 import com.example.prefy.Votes.VoteImageHandler;
@@ -30,6 +31,8 @@ import com.example.prefy.customClasses.FullPost;
 import com.example.prefy.customClasses.StandardPost;
 
 import java.util.HashMap;
+
+import io.grpc.Server;
 
 
 public class PopularPageFragment extends Fragment{
@@ -124,7 +127,8 @@ public class PopularPageFragment extends Fragment{
                 FullPost fullPost = new FullPost();
                 fullPost.setUser(user);
                 fullPost.setStandardPost(post);
-                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), false, getActivity(),fullPost);
+                Boolean loggedUserPost = user.getId().equals(ServerAdminSingleton.getCurrentUser(getContext().getApplicationContext()).getId());
+                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), loggedUserPost, getActivity(),fullPost, null, null);
                 int[] point = new int[2];
                 view.getLocationOnScreen(point); // or getLocationInWindow(point)
                 int x = point[0];

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
             android:layout_below="@id/ActivityCommentsNoItemsImage"
-            android:text="Nobody has voted on your posts"/>
+            android:text="Nobody has commented on your posts"/>
 
     </RelativeLayout>
 

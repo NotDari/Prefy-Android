@@ -97,6 +97,7 @@ import okhttp3.Response;
 
 public class SubmitPostDialog {
     private Context context;
+    private BottomSheetDialog bottomSheetDialog;
     private String category;
     ImageView normalSelector, duelSelector, beforeAfterSelector, crazySelector;
     private static SubmitPostDialog instance = null;
@@ -138,7 +139,7 @@ public class SubmitPostDialog {
 
     public void displaySheet(Context context){
         this.context = context;
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
+        bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
         bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         bottomSheetDialog.setContentView(R.layout.post_bottom_dialog);
         getViews(bottomSheetDialog);
@@ -440,7 +441,7 @@ public class SubmitPostDialog {
                                 try {
                                     JSONObject jsonObject = new JSONObject();
                                     jsonObject.put("allVotes", 0);
-                                    jsonObject.put("category", new JSONArray(categories));
+                                    jsonObject.put("categoryList", new JSONArray(categories));
                                     jsonObject.put("commentsNumber", 0);
                                     jsonObject.put("creationDate", finalTime);
                                     jsonObject.put("featured", false);
@@ -556,6 +557,7 @@ public class SubmitPostDialog {
                 .preload();
         Utils utils = new Utils(context);
         utils.saveLong(context.getString(R.string.save_postCount_pref), (utils.loadLong(context.getString(R.string.save_postCount_pref), 0) + 1));
+        bottomSheetDialog.dismiss();
     }
 
     private void initFlex(BottomSheetDialog bottomSheetDialog){

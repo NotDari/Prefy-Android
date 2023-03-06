@@ -3,6 +3,7 @@ package com.example.prefy.Comments.ReplyComment;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -16,9 +17,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.bumptech.glide.Glide;
 import com.example.prefy.Comments.Comment;
 import com.example.prefy.Comments.CommentListAdaptor;
+import com.example.prefy.Comments.CommentMorePopUpDialog;
+import com.example.prefy.Comments.CommentReplyClicked;
+import com.example.prefy.Comments.FullComment;
 import com.example.prefy.Comments.FullRecComment;
 import com.example.prefy.R;
 import com.example.prefy.Utils.dateSinceSystem;
@@ -30,18 +36,17 @@ public class CommentReplyItem extends FrameLayout {
     private ImageView userProfileImage;
     private ImageButton moreButton;
     private View bottomView;
+    private Activity ownerActivity;
+    private CommentReplyClicked commentDelegate;
 
-    public CommentReplyItem(Context context, Comment comment) {
+    public CommentReplyItem(Context context, Comment comment, DisplayMetrics displayMetrics, Activity ownerActivity, CommentReplyClicked commentDelegate) {
         super(context);
         this.comment = comment;
-        init(context);
-    }
-    public CommentReplyItem(Context context, Comment comment, DisplayMetrics displayMetrics) {
-        super(context);
-        this.comment = comment;
+        this.ownerActivity = ownerActivity;
         init(context);
         setImageSize((int) (displayMetrics.widthPixels * .1));
         resizeImageButon(displayMetrics);
+        this.commentDelegate = commentDelegate;
     }
 
     private void resizeImageButon(DisplayMetrics displayMetrics){
@@ -67,11 +72,39 @@ public class CommentReplyItem extends FrameLayout {
         timeSinceText = findViewById(R.id.CommentReplyItemTimeSince);
         moreButton = findViewById(R.id.CommentReplyItemMoreButton);
         bottomView = findViewById(R.id.CommentReplyItemBottomView);
+
+        handleViews();
+    }
+    private void handleViews(){
+
+        moreButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommentReplyPopUp dialog = new CommentReplyPopUp(comment, ownerActivity, commentDelegate );
+                dialog.initDialog();
+            }
+        });
+        userProfileImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong("id", comment.getUser().getId());
+                bundle.putParcelable("user", comment.getUser());
+                Navigation.findNavController(ownerActivity, R.id.FragmentContainerView).navigate(R.id.action_global_userProfile, bundle);
+            }
+        });
     }
 
     private void setViews(){
         SpannableStringBuilder builder = new SpannableStringBuilder();
-        commentText.setText(comment.getText());
+        if (comment.getReplyUsername() != null){
+            String replyText = "@" + comment.getReplyUsername() + ", ";
+            SpannableString replySpannable= new SpannableString(replyText);
+            replySpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, replyText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.append(replySpannable);
+        }
+        builder.append(comment.getText());
+        commentText.setText(builder);
         usernameText.setText(comment.getUser().getUsername());
         timeSinceText.setText(dateSinceSystem.getTimeSince(comment.getCreationDate()));
         initGlide();

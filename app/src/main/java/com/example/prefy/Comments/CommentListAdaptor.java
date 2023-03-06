@@ -102,7 +102,7 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             //holder.usernameText.setText(commentList.get(position).getReplyUsername());
             SpannableStringBuilder builder = new SpannableStringBuilder();
             if (commentList.get(refactoredPosition).getFullComment().getComment().getReplyUsername() != null){
-                String replyText = commentList.get(refactoredPosition).getFullComment().getComment().getReplyUsername() + ", ";
+                String replyText = "@" + commentList.get(refactoredPosition).getFullComment().getComment().getReplyUsername() + ", ";
                 SpannableString replySpannable= new SpannableString(replyText);
                 replySpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, replyText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.append(replySpannable);
@@ -111,7 +111,7 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             commentHolder.commentText.setText(builder);
             commentHolder.usernameText.setText(commentList.get(refactoredPosition).getFullComment().getComment().getUser().getUsername());
             commentHolder.timeSinceText.setText(dateSinceSystem.getTimeSince(commentList.get(refactoredPosition).getFullComment().getComment().getCreationDate()));
-            CommentReplyHandler commentReplyHandler = new CommentReplyHandler(commentList.get(refactoredPosition), commentHolder, parentActivity, position);
+            CommentReplyHandler commentReplyHandler = new CommentReplyHandler(commentList.get(refactoredPosition), commentHolder, parentActivity, refactoredPosition, commentDelegate);
             commentReplyHandler.init();
             handleClick(commentHolder, refactoredPosition);
         } else if (holder.getItemViewType() == COMMENT_HEADER){
@@ -132,7 +132,22 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
            // ((TextView)holder.itemView).setText("View More");
         }
     }
-
+    public void addComments(ArrayList<FullRecComment> commentList){
+        noInternetDefault = false;
+        for (int i = this.commentList.size(); i < commentList.size(); i ++){
+            this.commentList.add(commentList.get(i));
+        }
+        parentActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (commentList.size() > 0) {
+                    commentHeaderItem.NoItemsCheck(false);
+                } else {
+                    commentHeaderItem.NoItemsCheck(true);
+                }
+            }
+        });
+    }
 
     public void setCommentList(ArrayList<FullRecComment> commentList) {
         this.commentList = commentList;
