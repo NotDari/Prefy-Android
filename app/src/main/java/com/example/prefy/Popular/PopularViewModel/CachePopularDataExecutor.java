@@ -36,9 +36,9 @@ public class CachePopularDataExecutor {
                 DatabaseHelper databaseHelper = DatabaseHelper.getInstance(ApplicationContext);
                 SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
-                String standardPostQuery = "SELECT * FROM PopularPostsStandardPosts";
-                Cursor standardPostCursor = db.rawQuery(standardPostQuery, null);
-                popularPostSet.setPostList(CacheContentTools.getPostList(standardPostCursor));
+                String popularPostQuery = "SELECT * FROM PopularPostsPopularPosts";
+                Cursor popularPostCursor = db.rawQuery(popularPostQuery, null);
+                popularPostSet.setPostList(CacheContentTools.getPopularPostList(popularPostCursor));
 
 
                 String userQuery = "SELECT * FROM PopularPostsUsers";

@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sqlstatement = "CREATE TABLE PopularPostsUsers(id Long,username String, profileImageURL String, fullname String, postsNumber Long, votesNumber Long, prefsNumber Long, rating Long, bio String, vk String, instagram, String, twitter String, verified Integer);";
         db.execSQL(sqlstatement);
-        sqlstatement = "CREATE TABLE PopularPostsStandardPosts(postId Long PRIMARY KEY, userId Long, leftVotes Integer, rightVotes Integer, imageURL String, question String, commentsNumber Integer, creationDate Double, allVotes Integer, currentVote String);";
+        sqlstatement = "CREATE TABLE PopularPostsPopularPosts(postId Long PRIMARY KEY, userId Long, leftVotes Integer, rightVotes Integer, imageURL String, question String, commentsNumber Integer, creationDate Double, allVotes Integer, currentVote String, popularDate Double);";
         db.execSQL(sqlstatement);
         sqlstatement = "Create TABLE UploadTasks(Type String PRIMARY KEY, Count Integer)";
         db.execSQL(sqlstatement);

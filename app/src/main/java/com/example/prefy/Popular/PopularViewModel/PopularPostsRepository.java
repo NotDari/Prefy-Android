@@ -50,7 +50,7 @@ public class PopularPostsRepository implements RetreivePopularDataInterface, Cac
 
     public void deleteItem(StandardPost standardPost){
         PopularPostSet popularPostSet = popularSetMutable.getValue();
-        ArrayList<StandardPost> postList = popularPostSet.getPostList();
+        ArrayList<PopularPost> postList = popularPostSet.getPostList();
         for (int i = 0; i < postList.size(); i ++){
             if (standardPost.getPostId().equals(postList.get(i).getPostId())){
                 postList.remove(postList.get(i));
@@ -217,7 +217,6 @@ public class PopularPostsRepository implements RetreivePopularDataInterface, Cac
     @Override
     public void taskCompleted(Boolean successful, PopularActivity popularActivity) {
         if (successful){
-
             popularActivityMutable.postValue(popularActivity);
         }
     }

@@ -3,6 +3,7 @@ package com.example.prefy.Network;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.example.prefy.Popular.PopularPost;
 import com.example.prefy.Profile.User;
 import com.example.prefy.customClasses.StandardPost;
 
@@ -115,6 +116,43 @@ public class CacheContentTools {
                 post.setPostId(postId);
                 post.setAllVotes(allVotes);
                 post.setCurrentVote(currentVote);
+
+                postList.add(post);
+                postCursor.moveToNext();
+            }
+        }
+        postCursor.close();
+
+        return postList;
+    }
+
+    public static ArrayList<PopularPost> getPopularPostList(Cursor postCursor){
+        ArrayList<PopularPost> postList = new ArrayList<>();
+        if (postCursor.moveToFirst()){
+            for (int i = 0; i < postCursor.getCount(); i ++){
+                PopularPost post = new PopularPost();
+                Long Id = postCursor.getLong(postCursor.getColumnIndexOrThrow("userId"));
+                Integer leftVotes = postCursor.getInt(postCursor.getColumnIndexOrThrow("leftVotes"));
+                Integer rightVotes = postCursor.getInt(postCursor.getColumnIndexOrThrow("rightVotes"));
+                String imageURL = postCursor.getString(postCursor.getColumnIndexOrThrow("imageURL"));
+                String question = postCursor.getString(postCursor.getColumnIndexOrThrow("question"));
+                Integer commentsNumber = postCursor.getInt(postCursor.getColumnIndexOrThrow("commentsNumber"));
+                Double creationDate = postCursor.getDouble(postCursor.getColumnIndexOrThrow("creationDate"));
+                Long postId = postCursor.getLong(postCursor.getColumnIndexOrThrow("postId"));
+                Integer allVotes = postCursor.getInt(postCursor.getColumnIndexOrThrow("allVotes"));
+                String currentVote = postCursor.getString(postCursor.getColumnIndexOrThrow("currentVote"));
+                Double popularDate = postCursor.getDouble(postCursor.getColumnIndexOrThrow("popularDate"));
+                post.setUserId(Id);
+                post.setLeftVotes(leftVotes);
+                post.setRightVotes(rightVotes);
+                post.setImageURL(imageURL);
+                post.setQuestion(question);
+                post.setCommentsNumber(commentsNumber);
+                post.setCreationDate(creationDate);
+                post.setPostId(postId);
+                post.setAllVotes(allVotes);
+                post.setCurrentVote(currentVote);
+                post.setPopularDate(popularDate);
 
                 postList.add(post);
                 postCursor.moveToNext();

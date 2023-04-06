@@ -2,8 +2,10 @@ package com.example.prefy.Activity.Votes;
 
 import androidx.annotation.NonNull;
 
+import com.example.prefy.Profile.User;
 import com.example.prefy.Utils.CustomJsonCreator;
 import com.example.prefy.Utils.CustomJsonMapper;
+import com.example.prefy.Utils.DefaultCreator;
 import com.example.prefy.Utils.FirebaseUtils;
 import com.example.prefy.Utils.ServerAdminSingleton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -107,9 +109,14 @@ public class VoteActivityRetreiver {
                         try {
                             JSONArray jsonArray = new JSONArray(response.body().string());
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject tempObject = jsonArray.getJSONObject(i);
-                                if (tempObject != null) {
-                                    voteActivityList.get(i).setUser(CustomJsonMapper.getUserFromObject(tempObject));
+                                if (!jsonArray.isNull(i)) {
+                                    JSONObject tempObject = jsonArray.getJSONObject(i);
+                                    if (tempObject != null) {
+                                        voteActivityList.get(i).setUser(CustomJsonMapper.getUserFromObject(tempObject));
+                                    }
+                                } else {
+                                    voteActivityList.get(i).setUser(DefaultCreator.createBlankUser());
+
                                 }
                             }
                             userRetrieved = true;

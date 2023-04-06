@@ -85,6 +85,5 @@ public class GetUserDetailsExecutor implements ProfileHandlerInt {
         }
         wholeProfile.setUser(user);
         delegate.taskDone(successful, wholeProfile);
-
     }
 }

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PopularPostSet {
-    private ArrayList<StandardPost> postList;
+    private ArrayList<PopularPost> postList;
     private ArrayList<User> userList;
 
 }

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.prefy.Network.UploadController.UploadController;
 import com.example.prefy.Popular.PopularViewModel.PopViewModel;
+import com.example.prefy.Popular.PopularViewModel.PopularModelPackage;
 import com.example.prefy.R;
 import com.example.prefy.customClasses.StandardPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,7 +39,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
     private TextView activityText;
     private PopViewModel popViewModel;
     private Boolean initValuesSet;
-    private ArrayList<StandardPost> previousPostArrayList = new ArrayList<>();
+    private ArrayList<PopularPost> previousPostArrayList = new ArrayList<>();
     private PopularPagerAdaptor popularPagerAdaptor;
     private SwipeRefreshLayout swipeLayout;
     private Boolean dataRefreshing;
@@ -87,23 +88,25 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         //System.out.println("Sdad recView " + recyclerView);
         //((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         viewPager.setAdapter(popularPagerAdaptor);
-        popViewModel.getPostData().observe(getActivity(), new Observer<PopularPostSet>() {
+        popViewModel.getPostData().observe(getActivity(), new Observer<PopularModelPackage>() {
             @Override
-            public void onChanged(PopularPostSet popularPostSet) {
-                if (popularPostSet != null) {
-                    if (popularPostSet.getPostList() != null) {
+            public void onChanged(PopularModelPackage popularModelPackage) {
+                PopularPostSet popularPostSet = popularModelPackage.getPopularPostSet();
+                if (popularPostSet != null){
+                    if (popularPostSet.getPostList() != null){
                         if (popularPostSet.getPostList().size() > 0) {
                             if (!initValuesSet) {
                                 initViewPager(popularPostSet);
                             } else {
-                                updateViewPagerData(popularPostSet);
+                                updateViewPagerData(popularModelPackage);
                             }
                         }
-
                     }
                 }
             }
         });
+
+        /**
         popViewModel.getActivity().observe(getActivity(), new Observer<PopularActivity>() {
             @Override
             public void onChanged(PopularActivity popularActivity) {
@@ -118,6 +121,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
                 }
             }
         });
+         */
         onPageChangeListener();
     }
 
@@ -128,7 +132,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
             progressBar.setVisibility(View.GONE);
             popularPagerAdaptor.setPopularPostSet(popularPostSet);
             popularPagerAdaptor.notifyItemRangeChanged(0, popularPostSet.getPostList().size());
-            previousPostArrayList = (ArrayList<StandardPost>) popularPostSet.getPostList().clone();
+            previousPostArrayList = (ArrayList<PopularPost>) popularPostSet.getPostList().clone();
             initValuesSet = true;
         }
     }
@@ -140,7 +144,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
             public void onRefresh() {
                 if (!dataRefreshing){
                     dataRefreshing = true;
-                    popViewModel.getMoreData();
+                    popViewModel.refreshData();
                 }
             }
         });
@@ -177,7 +181,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
             @Override
             public void onPageSelected(int position) {
                 if (popularPagerAdaptor.getItemCount() > position + 3){
-                    System.out.println("Sdad preloading");
+                    System.out.println("Sdad preloading" + popularPagerAdaptor.popularPostSet.getPostList().size() + " " + popularPagerAdaptor.popularPostSet.getUserList().size());
                     String imageLink1 = popularPagerAdaptor.popularPostSet.getPostList().get(position + 1).getImageURL();
                     String ppLink1 = popularPagerAdaptor.popularPostSet.getUserList().get(position + 1).getProfileImageURL();
                     String imageLink2 = popularPagerAdaptor.popularPostSet.getPostList().get(position + 2).getImageURL();
@@ -195,11 +199,29 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
                             .load(ppLink2)
                             .preload();
                 }
+                popularPagerAdaptor.setAdaptorPosition(position);
                 super.onPageSelected(position);
             }
         });
     }
+    private void updateViewPagerData(PopularModelPackage popularModelPackage){
+        if (!destroyed){
+            if (dataRefreshing){
+                swipeLayout.setRefreshing(false);
+                dataRefreshing = false;
+            }
+            if (popularModelPackage.getRetrievalType().contains("override")){
+                popularPagerAdaptor.setPopularPostSet(popularModelPackage.getPopularPostSet());
+                popularPagerAdaptor.notifyDataSetChanged();
+            }else {
+                ViewPagerNewItemsHandler viewPagerNewItemsHandler = new ViewPagerNewItemsHandler(popularModelPackage.getPopularPostSet(),   previousPostArrayList, viewPager, popularPagerAdaptor, getActivity());
+                viewPagerNewItemsHandler.viewPagerChanged(popularModelPackage.getRetrievalType());
+            }
+            this.previousPostArrayList = popularModelPackage.getPopularPostSet().getPostList();
+        }
+    }
 
+    /**
     private void updateViewPagerData(PopularPostSet newPopularPostSet){
         System.out.println("Sdad newPopPos:" + newPopularPostSet.getPostList().get(0).getQuestion() + " dataType:" + popViewModel.getDataType().contains("update"));
         if (!destroyed){
@@ -218,6 +240,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
 
         }
     }
+     */
 
     private void initActivityButton(View view){
         activityText.setOnClickListener(new View.OnClickListener() {
@@ -276,13 +299,13 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
 
     public class PopularPagerAdaptor extends FragmentStateAdapter {
         private PopularPostSet popularPostSet;
-        private Integer updateTriggerCount;
         private FragmentViewHolder holder;
+
+        private Integer currentPos;
 
         public PopularPagerAdaptor(@NonNull Fragment fragment, PopularPostSet popularPostSet) {
             super(fragment);
             this.popularPostSet = popularPostSet;
-            updateTriggerCount = 10;
         }
 
         @NonNull
@@ -295,6 +318,7 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
                 args.putParcelable("user", popularPostSet.getUserList().get(position));
                 fragment.setArguments(args);
             }
+
             return fragment;
         }
 
@@ -311,7 +335,12 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         }
 
         public Integer getAdaptorPosition(){
-            return holder.getAdapterPosition();
+            return currentPos;
+        }
+
+        public void setAdaptorPosition(Integer currentPos){
+            this.currentPos = currentPos;
+            popViewModel.setAdaptorPosition(currentPos);
         }
 
 
@@ -319,10 +348,9 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         public void onBindViewHolder(@NonNull FragmentViewHolder holder, int position, @NonNull List<Object> payloads) {
             super.onBindViewHolder(holder, position, payloads);
             this.holder = holder;
-            if (position >= updateTriggerCount) {
-                updateTriggerCount += 15;
-                popViewModel.getMoreData();
-            }
+
+
+
         }
     }
 }

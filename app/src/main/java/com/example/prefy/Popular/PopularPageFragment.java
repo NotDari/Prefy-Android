@@ -155,9 +155,6 @@ public class PopularPageFragment extends Fragment{
 
         PopViewModel popViewModel = new PopViewModel();
         popViewModel.init(getContext().getApplicationContext());
-        for (int i = 0; i < popViewModel.getPostData().getValue().getPostList().size(); i++){
-            StandardPost newPost = popViewModel.getPostData().getValue().getPostList().get(i);
-        }
 
         rightClick.setOnClickListener(new View.OnClickListener() {
             @Override

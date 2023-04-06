@@ -5,6 +5,8 @@ import com.example.prefy.Activity.Votes.VoteActivity;
 import com.example.prefy.Comments.Comment;
 import com.example.prefy.Comments.FullComment;
 import com.example.prefy.Popular.PopularActivity;
+import com.example.prefy.Popular.PopularPost;
+import com.example.prefy.Popular.PopularPostSet;
 import com.example.prefy.Profile.User;
 import com.example.prefy.customClasses.CustomError;
 import com.example.prefy.customClasses.StandardPost;
@@ -177,6 +179,26 @@ public class CustomJsonMapper {
             standardPost.setImageURL(jsonObject.getString("imageURL"));
             standardPost.setQuestion(jsonObject.getString("question"));
             return standardPost;
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static PopularPost getPopularPostFromObject(JSONObject jsonObject){
+        try {
+            PopularPost popularPost = new PopularPost();
+            popularPost.setCreationDate(jsonObject.getDouble("creationDate"));
+            popularPost.setAllVotes(jsonObject.getInt("allVotes"));
+            popularPost.setCommentsNumber(jsonObject.getInt("commentsNumber"));
+            popularPost.setPostId(jsonObject.getLong("id"));
+            popularPost.setUserId(jsonObject.getLong("userId"));
+            popularPost.setRightVotes(jsonObject.getInt("rightVotes"));
+            popularPost.setLeftVotes(jsonObject.getInt("leftVotes"));
+            popularPost.setImageURL(jsonObject.getString("imageURL"));
+            popularPost.setQuestion(jsonObject.getString("question"));
+            popularPost.setPopularDate(jsonObject.getDouble("popularDate"));
+            return popularPost;
         } catch (JSONException e){
             e.printStackTrace();
         }

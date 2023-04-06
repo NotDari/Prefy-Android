@@ -8,11 +8,12 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.prefy.Popular.PopularActivity;
 import com.example.prefy.Popular.PopularPostSet;
+import com.example.prefy.Popular.PopularViewModel.UpdatedPopularViewModel.PopularPostsRepository2;
 import com.example.prefy.customClasses.StandardPost;
 
 public class PopViewModel extends ViewModel {
-    private MutableLiveData<PopularPostSet> popPostSetData;
-    private PopularPostsRepository popRepo;
+    private MutableLiveData<PopularModelPackage> popPostSetData;
+    private PopularPostsRepository2 popRepo;
     private Context ApplicationContext;
 
 
@@ -21,46 +22,43 @@ public class PopViewModel extends ViewModel {
 
     public void init(Context applicationContext){
         this.ApplicationContext = applicationContext;
-       popRepo = PopularPostsRepository.getInstance(applicationContext);
-        if (popRepo.getDataStatus() == 0) {
-            this.popPostSetData = popRepo.getIntitialData();
-        } else {
-            this.popPostSetData = popRepo.getPopularSetMutable();
-        }
+       popRepo = PopularPostsRepository2.getInstance(applicationContext);
+       this.popPostSetData = popRepo.getPopularModelMutable();
     }
 
-    public LiveData<PopularPostSet> getPostData(){
+    public LiveData<PopularModelPackage> getPostData(){
         return popPostSetData;
     }
 
-    public PopularPostSet singleDataCheck(){
+    public PopularModelPackage singleDataCheck(){
         if (popRepo == null){
-            popRepo = PopularPostsRepository.getInstance(ApplicationContext);
+            popRepo = PopularPostsRepository2.getInstance(ApplicationContext);
         }
         return popRepo.singleDataCheck();
     }
 
 
-    public String getDataType(){
-        return popRepo.getDataType();
-    }
 
+    /**
     public LiveData<PopularActivity> getActivity(){
         return popRepo.getActivityCount();
     }
+     */
 
     public void deleteItem(StandardPost post){
-        popRepo.deleteItem(post);
+        //popRepo.deleteItem(post);
+    }
+
+    public void setAdaptorPosition(Integer position){
+        popRepo.setViewPagerPosition(position);
     }
 
     public void refreshData(){
-        //popRepo.ref
+        popRepo.refreshData();
     }
 
-    public void getMoreData(){
-        if (popRepo.getDataLoading() == false) {
-            popRepo.getMoreData();
-        }
+    public void viewChanged(Integer position){
+
     }
 
 }

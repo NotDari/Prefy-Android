@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class ActivityViewModelSaver {
     private Context ApplicationContext;
     private final String popularpostTableName = "PopularPostsPosts";
-    private final String popularstandardpostTableName = "PopularPostsStandardPosts";
+    private final String popularstandardpostTableName = "PopularPostsPopularPosts";
     private final String popularuserInfoTableName = "PopularPostsUserInfo";
     private final String popularuserTableName = "PopularPostsUsers";
 
@@ -35,7 +35,7 @@ public class ActivityViewModelSaver {
 
     private void savePopular(){
         PopViewModel popViewModel = new PopViewModel();
-        PopularPostSet popularPostSet = popViewModel.singleDataCheck();
+        PopularPostSet popularPostSet = popViewModel.singleDataCheck().getPopularPostSet();
         DatabaseHelper databaseHelper = DatabaseHelper.getInstance(ApplicationContext);
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
         if (popularPostSet!= null) {

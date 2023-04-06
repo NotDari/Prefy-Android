@@ -1,27 +1,13 @@
-package com.example.prefy.Popular.PopularViewModel;
+package com.example.prefy.Popular.PopularViewModel.UpdatedPopularViewModel;
 
-import androidx.annotation.NonNull;
-
-import com.bumptech.glide.Glide;
 import com.example.prefy.Popular.PopularPost;
 import com.example.prefy.Popular.PopularPostSet;
+import com.example.prefy.Popular.PopularViewModel.RetreivePopularDataInterface;
 import com.example.prefy.Profile.User;
 import com.example.prefy.Utils.CustomJsonCreator;
 import com.example.prefy.Utils.CustomJsonMapper;
-import com.example.prefy.Utils.FirebaseUtils;
 import com.example.prefy.Utils.ServerAdminSingleton;
-import com.example.prefy.customClasses.FullPost;
 import com.example.prefy.customClasses.StandardPost;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,34 +15,30 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.IntStream;
 
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class WebPopularDataExecutor {
-    private Integer count = 15;
+public class WebPopularDataExecutor2 {
+    private Integer count = 2;
     private PopularPostSet popularPostSet;
     private Boolean userDetailsDone, userVotesDone;
     private Long tempTime, finalTime;
-    private RetreivePopularDataInterface delegate;
-    private Integer pageNumber;
-    private Boolean update;
+    private RetreivePopularDataInterface2 delegate;
+    private Double lastPopularDate;
+    private String retrievalType;
     private Integer userCompletedCounter = 0;
     private String serverAddress, authToken;
     private OkHttpClient client;
 
-    public WebPopularDataExecutor(RetreivePopularDataInterface delegate, Integer pageNumber, Boolean update) {
+    public WebPopularDataExecutor2(RetreivePopularDataInterface2 delegate, Double lastPopularDate, String retrievalType) {
         this.delegate = delegate;
-        this.pageNumber = pageNumber;
-        this.update = update;
+        this.lastPopularDate = lastPopularDate;
+        this.retrievalType = retrievalType;
     }
 
 
@@ -82,8 +64,9 @@ public class WebPopularDataExecutor {
                 RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
                  */
                 HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/PopularPosts").newBuilder();
-                httpBuilder.addEncodedQueryParameter("pageNumber", pageNumber.toString());
+                httpBuilder.addEncodedQueryParameter("lastPopularDate", lastPopularDate.toString());
                 httpBuilder.addEncodedQueryParameter("limit", count.toString());
+                httpBuilder.addEncodedQueryParameter("userId", ServerAdminSingleton.getInstance().getLoggedInId().toString());
                 Request request = new Request.Builder()
                         .url(httpBuilder.build())
                         .method("GET", null)
@@ -221,12 +204,8 @@ public class WebPopularDataExecutor {
         System.out.println("Sdad helop:" + userDetailsDone + userVotesDone);
         if (userDetailsDone  && userVotesDone){
             finalTime = System.nanoTime() - tempTime;
-            if (!update) {
-                delegate.taskComplete(true, popularPostSet, false);
-            } else {
-                System.out.println("Sdad firstItem:" + popularPostSet.getPostList().get(0).getQuestion() + " and first poster: " + popularPostSet.getUserList().get(0).getUsername());
-                delegate.taskComplete(true, popularPostSet, true);
-            }
+
+            delegate.taskComplete(true, popularPostSet, retrievalType);
         }
     }
 
