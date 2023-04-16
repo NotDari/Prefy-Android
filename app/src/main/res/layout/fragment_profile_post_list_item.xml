@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/fragment_background">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ProfilePostListItemFragmentBackBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fragment_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ProfilePostListItemFragmentBackBarBack"
+            android:layout_width="@dimen/back_button_size"
+            android:layout_height="@dimen/back_button_size"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/thin_left_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_color" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ProfilePostListItemFragmentTopBar"
+        app:layout_constraintTop_toBottomOf="@id/ProfilePostListItemFragmentBackBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp">
+        <ImageView
+            android:id="@+id/ProfilePostListItemFragmentUserImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"/>
+        <TextView
+            android:id="@+id/ProfilePostListItemFragmentUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/ProfilePostListItemFragmentUserImage"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="username"
+            android:textColor="@color/text_color"
+            android:layout_marginStart="5dp"/>
+        <TextView
+            android:id="@+id/ProfilePostListItemFragmentPostDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/ProfilePostListItemFragmentUsername"
+            app:layout_constraintStart_toEndOf="@id/ProfilePostListItemFragmentUserImage"
+            android:text="x months ago"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/grey"/>
+        <TextView
+            android:id="@+id/ProfilePostListItemFragmentTotalVotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="x Votes"
+            android:textColor="@color/text_color"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/ProfilePostListItemFragmentQuestionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Question"
+        app:layout_constraintTop_toBottomOf="@id/ProfilePostListItemFragmentTopBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text_color"/>
+    <ImageView
+        android:id="@+id/ProfilePostListItemFragmentQuestionImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ProfilePostListItemFragmentQuestionText"
+        app:layout_constraintBottom_toTopOf="@id/ProfilePostListItemFragmentBottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1"/>
+    <View
+        android:id="@+id/ProfilePostListItemFragmentImageCentreDivider"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintBottom_toBottomOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintStart_toStartOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintEnd_toEndOf="@id/ProfilePostListItemFragmentQuestionImage"
+        android:background="@android:color/transparent"/>
+
+    <RelativeLayout
+        android:id="@+id/ProfilePostListItemImageLeftClicker"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintBottom_toBottomOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintStart_toStartOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintEnd_toEndOf="@id/ProfilePostListItemFragmentImageCentreDivider"
+        android:background="@android:color/transparent">
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListItemImageLeftClickerText"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true">
+
+            <com.daribear.prefy.Votes.VoteCircleShape
+                android:id="@+id/ProfilePostListItemImageLeftClickerProgressCircle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/ProfilePostListItemImageLeftClickerVoteMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vote_mark"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+
+
+        <View
+            android:id="@+id/ProfilePostListItemImageLeftClickerBar"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/ProfilePostListItemImageLeftClickerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListItemImageLeftClickerBar"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/poppins_medium"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ProfilePostListItemImageRightClicker"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintBottom_toBottomOf="@id/ProfilePostListItemFragmentQuestionImage"
+        app:layout_constraintStart_toStartOf="@id/ProfilePostListItemFragmentImageCentreDivider"
+        app:layout_constraintEnd_toEndOf="@id/ProfilePostListItemFragmentQuestionImage"
+        android:background="@android:color/transparent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListItemImageRightClickerText"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true">
+
+            <com.daribear.prefy.Votes.VoteCircleShape
+                android:id="@+id/ProfilePostListItemImageRightClickerProgressCircle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/ProfilePostListItemImageRightClickerVoteMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vote_mark"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+
+
+        <View
+            android:id="@+id/ProfilePostListItemImageRightClickerBar"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/ProfilePostListItemImageRightClickerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListItemImageRightClickerBar"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/poppins_medium"
+            />
+    </RelativeLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ProfilePostListItemFragmentBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_margin="10dp">
+        <TextView
+            android:id="@+id/ProfilePostListItemFragmentCommentsButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            android:background="@drawable/comments"
+            android:text="0"
+            android:textColor="@color/text_color"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:backgroundTint="@color/text_color"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ProfilePostListItemFragmentCommentsButton"
+            android:text="Comments"
+            android:textColor="@color/text_color"
+            android:layout_marginStart="5dp"
+            android:backgroundTint="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/ProfilePostListItemFragmentMoreButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/more"
+            android:background="@android:color/transparent"
+            app:tint="@color/text_color"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

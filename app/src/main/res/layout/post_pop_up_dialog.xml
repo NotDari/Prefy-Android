@@ -19,6 +19,7 @@
             android:id="@+id/PostDialogSaveImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:tint="@color/text_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/PostDialogSaveImageGuideline"
@@ -43,8 +44,9 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/PostDialogSaveImage"
             android:autoSizeTextType="uniform"
+
             android:text="Save"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:textSize="18sp"
             android:fontFamily="@font/poppins_medium"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            app:tint="@color/text_color"
             android:src="@drawable/report"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -101,7 +104,7 @@
             android:autoSizeTextType="uniform"
             android:maxLines="1"
             android:text="Profile"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:textSize="18sp"
             android:fontFamily="@font/poppins_medium"
             app:layout_constraintTop_toTopOf="parent"
@@ -129,6 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
+            app:tint="@color/text_color"
             android:src="@drawable/report"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -155,7 +159,7 @@
             android:autoSizeTextType="uniform"
             android:maxLines="1"
             android:text="Report"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:textSize="18sp"
             android:fontFamily="@font/poppins_medium"
             app:layout_constraintTop_toTopOf="parent"
@@ -183,6 +187,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:src="@drawable/report"
+            app:tint="@color/text_color"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/PostDialogDeleteImageGuideline"/>
@@ -208,11 +213,64 @@
             android:autoSizeTextType="uniform"
             android:maxLines="1"
             android:text="Delete"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:textSize="18sp"
             android:fontFamily="@font/poppins_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/PostDialogDeleteTextGuideline"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:id="@+id/PostDialogSkipView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#E2E2E2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/PostDialogSkipLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/PostDialogSkipImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/report"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/PostDialogSkipImageGuideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogSkipImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/PostDialogSkipTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+        <TextView
+            android:id="@+id/PostDialogSkipText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/PostDialogSkipImage"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="Not interested"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/PostDialogSkipTextGuideline"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

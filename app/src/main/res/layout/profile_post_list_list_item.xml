@@ -82,7 +82,8 @@
         app:layout_constraintStart_toStartOf="@id/ProfilePostListListItemQuestionImage"
         app:layout_constraintEnd_toEndOf="@id/ProfilePostListListItemQuestionImage"
         android:background="@android:color/transparent"/>
-    <View
+
+    <RelativeLayout
         android:id="@+id/ProfilePostListListItemImageLeftClicker"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -90,8 +91,56 @@
         app:layout_constraintBottom_toBottomOf="@id/ProfilePostListListItemQuestionImage"
         app:layout_constraintStart_toStartOf="@id/ProfilePostListListItemQuestionImage"
         app:layout_constraintEnd_toEndOf="@id/ProfilePostListListItemImageCentreDivider"
-        android:background="@android:color/transparent"/>
-    <View
+        android:background="@android:color/transparent">
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListListItemImageLeftClickerText"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true">
+
+            <com.daribear.prefy.Votes.VoteCircleShape
+                android:id="@+id/ProfilePostListListItemImageLeftClickerProgressCircle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/ProfilePostListListItemImageLeftClickerVoteMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vote_mark"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+
+
+        <View
+            android:id="@+id/ProfilePostListListItemImageLeftClickerBar"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/ProfilePostListListItemImageLeftClickerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListListItemImageLeftClickerBar"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/poppins_medium"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/ProfilePostListListItemImageRightClicker"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -99,7 +148,53 @@
         app:layout_constraintBottom_toBottomOf="@id/ProfilePostListListItemQuestionImage"
         app:layout_constraintStart_toStartOf="@id/ProfilePostListListItemImageCentreDivider"
         app:layout_constraintEnd_toEndOf="@id/ProfilePostListListItemQuestionImage"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListListItemImageRightClickerText"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true">
+
+            <com.daribear.prefy.Votes.VoteCircleShape
+                android:id="@+id/ProfilePostListListItemImageRightClickerProgressCircle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:visibility="gone"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/ProfilePostListListItemImageRightClickerVoteMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vote_mark"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+        </FrameLayout>
+
+
+
+        <View
+            android:id="@+id/ProfilePostListListItemImageRightClickerBar"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/ProfilePostListListItemImageRightClickerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ProfilePostListListItemImageRightClickerBar"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/poppins_medium"
+            />
+    </RelativeLayout>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ProfilePostListListItemBottomBar"
         android:layout_width="match_parent"

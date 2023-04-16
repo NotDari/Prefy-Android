@@ -11,8 +11,7 @@
     <string name="hello_second_fragment">Hello second fragment</string>
 
 
-
-    <string name="Server_base_address">http://100.68.142.79:8090</string>
+    <string name="Server_base_address">http://192.168.0.21:8090</string>
 
     <!-- http://100.68.142.3:8090
 
@@ -25,7 +24,7 @@
 
 
     <!-- String for when data couldn't be got from firebase !-->
-    <string name="error_string">"No Internet Connection \n Tap to retry...</string>
+    <string name="error_string">"No Internet Connection \n Tap to retry…</string>
 
     <string name="save_email_pref">email_save</string>
     <string name="save_username_pref">username_save</string>

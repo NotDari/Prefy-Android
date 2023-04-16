@@ -1,0 +1,99 @@
+package com.daribear.prefy.Popular.PopularViewModel;
+
+import android.content.Context;
+
+import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.ServerAdminSingleton;
+import com.google.firebase.database.DatabaseReference;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.concurrent.Executors;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class PopularActivityRetreiver {
+    private PopularActivityRetrieverInterface delegate;
+
+
+    public PopularActivityRetreiver(PopularActivityRetrieverInterface delegate) {
+        this.delegate = delegate;
+    }
+
+    public void init(){
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder httpBuilder = HttpUrl.parse(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Activity/GeneralActivity").newBuilder();
+                Request request = new Request.Builder()
+                        .url(httpBuilder.build())
+                        .method("GET", null)
+                        .addHeader("Content-Type", "application/json")
+                        .addHeader("Authorization", ServerAdminSingleton.getInstance().getServerAuthToken())
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()){
+                        try {
+                            delegate.taskCompleted(true, CustomJsonMapper.getPopularActivityFromResponse(response));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }else {
+                        ErrorChecker.checkForStandardError(response);
+                        delegate.taskCompleted(false, null);
+                    }
+                } catch (IOException | JSONException e) {
+                    delegate.taskCompleted(false, null);
+                }
+            }
+        });
+    }
+    /**
+    public void init(){
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                dbRef = FirebaseDatabase.getInstance().getReference("activity").child(FirebaseAuth.getInstance().getUid());
+                dbRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()){
+                            PopularActivity popularActivity = new PopularActivity();
+                            Integer totalCount = task.getResult().child("newActivitiesCount").getValue(Integer.class);
+                            if (totalCount == null){
+                                totalCount = 0;
+                            }
+                            Integer commentCount = task.getResult().child("newCommentsCount").getValue(Integer.class);
+                            if (commentCount == null){
+                                commentCount = 0;
+                            }
+                            Integer voteCount = task.getResult().child("newVotesCount").getValue(Integer.class);
+                            if (voteCount == null){
+                                voteCount = 0;
+                            }
+                            popularActivity.setTotalActivities(totalCount);
+                            popularActivity.setCommentsCount(commentCount);
+                            popularActivity.setVotesCount(voteCount);
+                            delegate.taskCompleted(true, popularActivity);
+                        } else {
+                            delegate.taskCompleted(false, null);
+                        }
+
+
+
+                    }
+                });
+            }
+        });
+    }
+     */
+}
