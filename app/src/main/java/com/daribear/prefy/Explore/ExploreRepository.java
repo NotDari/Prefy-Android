@@ -2,6 +2,7 @@ package com.daribear.prefy.Explore;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.customClasses.FullPost;
 
 import java.util.ArrayList;
@@ -54,14 +55,18 @@ public class ExploreRepository implements ExploreWholeInterface{
     }
 
     public void itemVote(Long postId, String vote){
-        ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
-        ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
-        for (int i = 0; i < fullPostList.size(); i ++){
-            if (fullPostList.get(i).getStandardPost().getPostId().equals(postId)){
-                fullPostList.get(i).getStandardPost().setCurrentVote(vote);
+        if (explorePostSetMutable.getValue() != null) {
+            ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
+            if (explorePostSet != null) {
+                ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
+                for (int i = 0; i < fullPostList.size(); i++) {
+                    if (fullPostList.get(i).getStandardPost().getPostId().equals(postId)) {
+                        fullPostList.get(i).getStandardPost().setCurrentVote(vote);
+                    }
+                }
+                explorePostSetMutable.setValue(explorePostSet);
             }
         }
-        explorePostSetMutable.setValue(explorePostSet);
     }
 
 
@@ -113,6 +118,7 @@ public class ExploreRepository implements ExploreWholeInterface{
                     }
                 }
             }
+            AdTracker.getInstance().otherViewed();
         }
     }
 }

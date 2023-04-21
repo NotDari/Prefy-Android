@@ -2,16 +2,25 @@ package com.daribear.prefy.Activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.daribear.prefy.Ads.AdTracker
 import com.daribear.prefy.R
+import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import kotlinx.android.synthetic.main.profile_header_item.*
 
 
 class login_activity : AppCompatActivity() {
@@ -28,6 +37,7 @@ class login_activity : AppCompatActivity() {
         }
         super.onCreate(savedInstanceState)
         checkForUpdate()
+        getDefaultSettings()
         handleUsernameLogin()
         createSnackBar()
 
@@ -77,6 +87,33 @@ class login_activity : AppCompatActivity() {
         }
     }
 
+    private fun getDefaultSettings(){
+        FirebaseApp.initializeApp(this)
+        FirebaseRemoteConfig.getInstance().apply {
+
+
+            val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(20)
+                .build()
+            setConfigSettingsAsync(configSettings)
+
+            setDefaultsAsync(R.xml.remote_config_defaults)
+            ServerAdminSingleton.getInstance().serverAddress = FirebaseRemoteConfig.getInstance().getString("Api_link")
+            AdTracker.getInstance().setTotals(FirebaseRemoteConfig.getInstance().getLong("interstitial_popular_frequency").toInt(), FirebaseRemoteConfig.getInstance().getLong("interstitial_other_frequency").toInt())
+            fetchAndActivate().addOnCompleteListener { task ->
+                val updated = task.result
+                if (task.isSuccessful) {
+                    val updated = task.result
+                    if (updated) {
+                        ServerAdminSingleton.getInstance().serverAddress =
+                            FirebaseRemoteConfig.getInstance().getString("Api_link")
+                    }
+                } else {
+                    Log.d("TAG", "Config params updated: $updated")
+                }
+            }
+        }
+    }
 
 
 

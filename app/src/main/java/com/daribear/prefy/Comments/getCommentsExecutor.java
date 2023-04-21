@@ -68,6 +68,7 @@ public class getCommentsExecutor {
                                 JSONObject jsonObjectTemp = jsonArray.getJSONObject(i);
                                 FullRecComment fullRecComment = new FullRecComment();
                                 fullRecComment.setFullComment(CustomJsonMapper.getFullCommentFromObject(jsonObjectTemp));
+                                System.out.println("Sdad commentText:" + fullRecComment.getFullComment().getComment().getText() + " " + fullRecComment.getFullComment().getComment().getCommentId());
                                 fullRecComment.setRepliesShown(0);
                                 fullRecComment.setMinimised(false);
                                 fullCommentList.add(fullRecComment);

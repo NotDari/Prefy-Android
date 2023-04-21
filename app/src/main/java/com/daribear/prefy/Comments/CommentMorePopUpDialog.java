@@ -2,6 +2,7 @@ package com.daribear.prefy.Comments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -91,10 +92,11 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
             @Override
             public void onClick(View view) {
                 postDialog.dismiss();
-                DeleteDialog.getInstance(ownerActivity, CommentMorePopUpDialog.this::deleteClicked, "Comment" ).show();
-
+                System.out.println("Sdad deleteInit:" + fullComment.getComment().getCommentId());
+                DeleteDialog.getInstance(ownerActivity, CommentMorePopUpDialog.this::deleteClicked, "Comment").show();
             }
         });
+
     }
 
     public void initDialog(){
@@ -133,5 +135,6 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
     @Override
     public void deleteClicked() {
         UploadController.saveDelete(commentDialog.getContext().getApplicationContext(), "Comment", fullComment.getComment().getCommentId());
+        commentDeleteDelegate.deleteClicked(fullComment.getComment().getCommentId());
     }
 }

@@ -24,6 +24,7 @@ import androidx.viewpager2.adapter.FragmentViewHolder;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.Ads.Interstitial;
 import com.daribear.prefy.Popular.PopularActivity;
 import com.daribear.prefy.Popular.PopularPost;
@@ -333,8 +334,6 @@ public class PopularPageHostFragment2 extends Fragment implements PopularPostVot
 
     @Override
     public void voted(Boolean saveVote, Boolean scroll, Boolean cooldown) {
-        System.out.println("Sdad called:" + saveVote + scroll + cooldown);
-        System.out.println("Sdad size: " + popularPagerAdaptor.getItemCount()  + " al" + viewPager.getCurrentItem());
         if (!destroyed){
             if (popularPagerAdaptor.getItemCount() >= viewPager.getCurrentItem() + 1) {
                 if (saveVote){
@@ -359,6 +358,7 @@ public class PopularPageHostFragment2 extends Fragment implements PopularPostVot
             } else {
                 alterInternet();
             }
+            AdTracker.getInstance().popViewed();
         }
     }
 

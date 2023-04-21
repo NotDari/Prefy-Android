@@ -186,9 +186,17 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     @Override
-    public void deleteClicked(FullComment comment) {
-        this.commentList.remove(comment);
-        notifyDataSetChanged();
+    public void deleteClicked(Long commentId) {
+        System.out.println("Sdad oooa");
+        for (int i = 0; i < commentList.size(); i++){
+            System.out.println("Sdad oooaTemp : " + commentId + " " + commentList.get(i).getFullComment().getComment().getCommentId());
+            if (commentList.get(i).getFullComment().getComment().getCommentId() == commentId){
+                System.out.println("Sdad oooaInside!");
+                commentList.remove(i);
+                notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
 
@@ -253,6 +261,10 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public void removeComment(Long commentId){
+
+    }
+
     private void handleClick(CommentItemViewHolder holder, int position){
         holder.userProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,7 +307,13 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FullComment fullComment = commentList.get(position).getFullComment();
+                System.out.println("Sdad moreClicked:" + commentList.get(position).getFullComment().getComment().getCommentId());
+                FullComment fullComment = null;
+                try {
+                    fullComment = (FullComment) commentList.get(position).getFullComment().clone();
+                } catch (CloneNotSupportedException e) {
+                    throw new RuntimeException(e);
+                }
                 CommentMorePopUpDialog dialog = new CommentMorePopUpDialog(fullComment, parentActivity, commentDelegate, CommentListAdaptor.this::deleteClicked);
                 Integer bottomNavHeight = parentActivity.findViewById(R.id.BottomNav).getHeight();
                 dialog.setCoordinates(0, bottomNavHeight);

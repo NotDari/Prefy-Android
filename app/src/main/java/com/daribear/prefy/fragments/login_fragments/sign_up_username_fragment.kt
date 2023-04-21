@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.daribear.prefy.R
+import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.usernameValidityChecker
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.fragment_sign_up_username.*
@@ -54,7 +55,7 @@ class sign_up_username_fragment : Fragment() {
                         Executors.newSingleThreadExecutor().execute() {
                             val client = OkHttpClient()
                             val request = Request.Builder()
-                                .url(getString(R.string.Server_base_address) + "/prefy/v1/Registration/UsernameAvailable?username=" + userNameInput )
+                                .url(ServerAdminSingleton.getInstance().serverAddress + "/prefy/v1/Registration/UsernameAvailable?username=" + userNameInput )
                                 .method("GET", null)
                                 .addHeader("Content-Type", "application/json")
                                 .build()

@@ -49,6 +49,9 @@ public class DeleteDialog {
     public static DeleteDialog getInstance(Context context, DeleteDialogDelegate delegate, String type){
         if (instance == null){
             instance = new DeleteDialog(context, delegate, type);
+        } else {
+            instance.delegate = delegate;
+            instance.createDialog(type);
         }
         return instance;
     }

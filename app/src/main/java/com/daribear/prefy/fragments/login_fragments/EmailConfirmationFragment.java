@@ -59,6 +59,7 @@ public class EmailConfirmationFragment extends Fragment {
     private void getViews(View view){
         resendEmail = view.findViewById(R.id.EmailConfFragResend);
         emailConfirmedButton = view.findViewById(R.id.EmailConfFragConfirmButton);
+
     }
 
     private void initTasks(){
@@ -79,7 +80,7 @@ public class EmailConfirmationFragment extends Fragment {
                             public void run() {
                                 OkHttpClient client = new OkHttpClient();
                                 Request request = new Request.Builder()
-                                        .url(getActivity().getString(R.string.Server_base_address) + "/prefy/v1/Registration/ResendConfirmation?login=\"" + email + "\"")
+                                        .url(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Registration/ResendConfirmation?login=\"" + email + "\"")
                                         .method("GET", null)
                                         .addHeader("Content-Type", "application/json")
                                         .build();
@@ -127,7 +128,7 @@ public class EmailConfirmationFragment extends Fragment {
                             jsonObject.addProperty("password", password);
                             RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
                             Request request = new Request.Builder()
-                                    .url(getActivity().getString(R.string.Server_base_address) + "/login")
+                                    .url(ServerAdminSingleton.getInstance().getServerAddress() + "/login")
                                     .method("POST", body)
                                     .addHeader("Content-Type", "application/json")
                                     .build();
@@ -185,6 +186,7 @@ public class EmailConfirmationFragment extends Fragment {
             }
         });
     }
+
 
     private void Countdown(){
         buttonResetCooldownTime = 45;

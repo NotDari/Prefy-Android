@@ -101,6 +101,7 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         postTime.setText(dateSinceSystem.getTimeSince(fullFeaturedPost.getStandardPost().getCreationDate()));
         voteCount.setText(fullFeaturedPost.getStandardPost().getAllVotes().toString() + " votes");
         usernameText.setText(fullFeaturedPost.getUser().getUsername().toString());
+        commentsButton.setText(fullFeaturedPost.getStandardPost().getCommentsNumber());
         initImages();
     }
 

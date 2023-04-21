@@ -7,8 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FullComment {
+public class FullComment implements Cloneable{
     private Comment comment;
     private ArrayList<Comment> commentReplyList;
     private Integer replyCount;
+
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
+    }
 }

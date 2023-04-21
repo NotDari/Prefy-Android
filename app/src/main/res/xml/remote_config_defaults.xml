@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+  <entry>
+    <key>Api_link</key>
+    <value>http://192.168.0.21:8090</value>
+  </entry>
+  <entry>
+    <key>interstitial_popular_frequency</key>
+    <value> 0 </value>
+  </entry>
+  <entry>
+    <key>interstitial_other_frequency</key>
+    <value> 0 </value>
+  </entry>
+</defaults>

@@ -2,6 +2,7 @@ package com.daribear.prefy.fragments.login_fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.text.method.PasswordTransformationMethod
 import android.text.method.SingleLineTransformationMethod
 import android.util.Log
@@ -17,6 +18,7 @@ import androidx.navigation.fragment.navArgs
 import com.daribear.prefy.Activities.MainActivity
 import com.daribear.prefy.R
 import com.daribear.prefy.Utils.GetInternet
+import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.SharedPrefs
 import com.daribear.prefy.custom_classes.UsersInfo
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +34,8 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.concurrent.Executors
 
 
@@ -42,6 +46,7 @@ class sign_up_email_fragment : Fragment() {
     private var full_name = ""
     private var email = ""
     private var password = ""
+    private lateinit var DOB : Date
     private val args: sign_up_email_fragmentArgs by navArgs()
     private var userdone = false
     private var fullnamedone = false
@@ -57,12 +62,14 @@ class sign_up_email_fragment : Fragment() {
         if (args.signUpFullName != null){
             full_name = args.signUpFullName.toString()
         }
+        DOB = args.dob
         return inflater.inflate(R.layout.fragment_sign_up_email, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         handleInput()
         changeVisibility()
+        enableLinks()
         super.onViewCreated(view, savedInstanceState)
 
     }
@@ -83,13 +90,16 @@ class sign_up_email_fragment : Fragment() {
                 json.put("email", email)
                 json.put("password", password)
                 json.put("fullname", full_name)
+                val spf = SimpleDateFormat("yyyy-MM-dd");
+                val dateOfBirth = spf.format(DOB);
+                json.put("DOB", dateOfBirth)
                 Executors.newSingleThreadExecutor().execute(){
                     val client = OkHttpClient()
                     val body = RequestBody.create(
                         MediaType.parse("application/json"), json.toString()
                     )
                     val request = Request.Builder()
-                        .url(getString(R.string.Server_base_address) +"/prefy/v1/Registration")
+                        .url(ServerAdminSingleton.getInstance().serverAddress +"/prefy/v1/Registration")
                         .method("POST", body)
                         .addHeader("Content-Type", "application/json")
                         .build()
@@ -215,6 +225,10 @@ class sign_up_email_fragment : Fragment() {
         }
     }
 
+
+    private fun enableLinks() {
+        signUpTermsText?.setMovementMethod(LinkMovementMethod.getInstance())
+    }
 
 
 

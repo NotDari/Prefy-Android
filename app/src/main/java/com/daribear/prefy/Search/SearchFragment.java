@@ -113,7 +113,6 @@ public class SearchFragment extends Fragment {
                 if (aBoolean != null){
                     progressBar.setVisibility(View.GONE);
                     if (!aBoolean){
-                        System.out.println("Sdad no Internet!");
                         noInternet();
                     } else {
                         internetBack();

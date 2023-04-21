@@ -3,11 +3,14 @@ package com.daribear.prefy.Comments;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.customClasses.FullPost;
 
 import java.util.ArrayList;
@@ -79,27 +82,24 @@ public class CommentListGateway {
     }
 
     public void commentSubmitted(Comment comment){
-        //TODO fix commentSubmitted if necessary
-        /**
+        FullRecComment fullRecComment = new FullRecComment();
         FullComment fullComment = new FullComment();
+        User user = ServerAdminSingleton.getCurrentUser(parentActivity.getApplicationContext());
+        comment.setUser(user);
         fullComment.setComment(comment);
-        User user = FirebaseUtils.getCurrentUser(context.getApplicationContext());
-        fullComment.setUser(user);
-        adaptor.getCommentList().add(fullComment);
+        fullComment.setReplyCount(0);
+        fullRecComment.setFullComment(fullComment);
+        fullRecComment.setRepliesShown(0);
+        fullRecComment.setMinimised(false);
+
+
+        adaptor.getCommentList().add(fullRecComment);
         adaptor.notifyDataSetChanged();
-         */
+
     }
 
     public void commentdeleted(Comment comment){
-        //TODO fix commentDeleted if necessary
-        /**
-        FullComment fullComment = new FullComment();
-        fullComment.setComment(comment);
-        User user = FirebaseUtils.getCurrentUser(context.getApplicationContext());
-        fullComment.setUser(user);
-        adaptor.getCommentList().remove(comment);
-        adaptor.notifyDataSetChanged();
-         */
+       adaptor.removeComment(comment.getCommentId());
     }
 
     public void detectViewMore(){

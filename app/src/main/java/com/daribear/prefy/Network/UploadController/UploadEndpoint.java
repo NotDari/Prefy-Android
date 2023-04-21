@@ -310,6 +310,7 @@ public class UploadEndpoint {
                                         comment.setCreationDate(DatabaseUtils.getDoubleWithNull(commentCursor, "CreationDate"));
 
 
+
                                         HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Comments/SubmitComment").newBuilder();
                                         JSONObject jsonObject = new JSONObject();
                                         try {
@@ -430,7 +431,7 @@ public class UploadEndpoint {
                                             CompletedCount += 1;
                                             checkCompleted();
                                         }
-                                        if (!breakOut){
+                                        if (!breakOut) {
                                             JSONObject jsonObject = new JSONObject();
                                             try {
                                                 jsonObject.put("itemId", itemId);
@@ -439,27 +440,34 @@ public class UploadEndpoint {
                                                 CompletedCount += 1;
                                                 checkCompleted();
                                             }
-                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                            Request request = new Request.Builder()
-                                                    .url(httpBuilder.build())
-                                                    .method("PUT", body)
-                                                    .addHeader("Content-Type", "application/json")
-                                                    .addHeader("Authorization", authToken)
-                                                    .build();
-                                            try {
-                                                Response response = client.newCall(request).execute();
-                                                if (response.isSuccessful()) {
-                                                    CompletedCount += 1;
-                                                    SuccessfulCount += 1;
-                                                    removeDeleteFromDb(db, type, itemId, userID);
-                                                    checkCompleted();
-                                                } else {
+                                            if (itemId == null || userID == null) {
+                                                CompletedCount += 1;
+                                                SuccessfulCount += 1;
+                                                removeDeleteFromDb(db, type, itemId, userID);
+                                                checkCompleted();
+                                            } else {
+                                                RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                                Request request = new Request.Builder()
+                                                        .url(httpBuilder.build())
+                                                        .method("PUT", body)
+                                                        .addHeader("Content-Type", "application/json")
+                                                        .addHeader("Authorization", authToken)
+                                                        .build();
+                                                try {
+                                                    Response response = client.newCall(request).execute();
+                                                    if (response.isSuccessful()) {
+                                                        CompletedCount += 1;
+                                                        SuccessfulCount += 1;
+                                                        removeDeleteFromDb(db, type, itemId, userID);
+                                                        checkCompleted();
+                                                    } else {
+                                                        CompletedCount += 1;
+                                                        checkCompleted();
+                                                    }
+                                                } catch (IOException e) {
                                                     CompletedCount += 1;
                                                     checkCompleted();
                                                 }
-                                            } catch (IOException e) {
-                                                CompletedCount += 1;
-                                                checkCompleted();
                                             }
                                         }
 

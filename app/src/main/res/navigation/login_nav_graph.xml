@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_sign_up_email_fragment_to_emailConfirmationFragment"
             app:destination="@id/emailConfirmationFragment" />
+        <argument
+            android:name="DOB"
+            app:argType="java.util.Date" />
     </fragment>
     <fragment
         android:id="@+id/log_in_fragment"

@@ -11,7 +11,7 @@ public class PrefyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ServerAdminSingleton.getInstance().setServerAddress(this.getString(R.string.Server_base_address));
+
 
 
 

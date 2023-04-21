@@ -28,10 +28,11 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Great! And what is your name?"
+                android:text="Great! And what is your name and Date of Birth?"
                 android:textSize="20sp"
                 android:textColor="@color/text_color"
                 android:textStyle="bold"
+                android:gravity="center"
                 app:layout_constraintWidth_percent=".8"
                 app:layout_constraintStart_toStartOf="@id/signUpleftGuideLine"
                 app:layout_constraintEnd_toEndOf="@id/signUprightGuideLine"
@@ -43,12 +44,39 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
                 app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/DateOfBirthEditText"
                 app:layout_constraintWidth_percent=".8"
                 android:textColor="@color/grey"
                 android:textColorHint="@color/grey"
                 android:hint="Full name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:layout_marginBottom="15dp"/>
+            <EditText
+                android:id="@+id/DateOfBirthEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
+                app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
+                app:layout_constraintBottom_toTopOf="@id/GetParentPermissionText"
+                app:layout_constraintWidth_percent=".8"
+                android:textColor="@color/grey"
+                android:hint="Date of Birth" />
+            <TextView
+                android:id="@+id/GetParentPermissionText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey"
+                android:fontFamily="@font/poppins_medium"
+                android:textSize="11sp"
+                app:layout_constraintStart_toEndOf="@id/signUpleftGuideLine"
+                app:layout_constraintRight_toRightOf="@id/signUprightGuideLine"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintWidth_percent=".8"
+                android:text="* You have to get a parent / guardian's permisson to use this app"
+                android:visibility="gone"/>
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.button.MaterialButton

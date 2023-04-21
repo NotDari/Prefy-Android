@@ -80,6 +80,29 @@
             android:text="Create Account"
             android:textColor="@color/white"
             app:cornerRadius="10dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/signUpCreateAccount">
+
+        <TextView
+            android:id="@+id/signUpTermsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/login_agreement_Text"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="11sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.8" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </RelativeLayout>
+
+
 
 </FrameLayout>

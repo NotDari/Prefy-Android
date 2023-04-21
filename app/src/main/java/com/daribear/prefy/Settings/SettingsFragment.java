@@ -139,7 +139,9 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("detail", "SocialMedia");
-                Navigation.findNavController(view).navigate(R.id.action_settingsFragment_to_detailsEditGatewayFragment, bundle);
+                if (!isDetached()) {
+                    Navigation.findNavController(view).navigate(R.id.action_settingsFragment_to_detailsEditGatewayFragment, bundle);
+                }
             }
         });
     }

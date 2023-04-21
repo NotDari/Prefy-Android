@@ -40,14 +40,18 @@ public class CurrentUserRepository implements ProfileHandlerInt {
     }
 
     public void itemVote(Long postId, String vote){
-        WholeProfile wholeProfile = wholeProfileMutable.getValue();
-        ArrayList<StandardPost> postList = wholeProfile.getPostListContainer().getPostList();
-        for (int i = 0; i < postList.size(); i ++){
-            if (postId.equals(postList.get(i).getPostId())){
-                postList.get(i).setCurrentVote(vote);
+        if (wholeProfileMutable.getValue() != null) {
+            WholeProfile wholeProfile = wholeProfileMutable.getValue();
+            if (wholeProfile != null) {
+                ArrayList<StandardPost> postList = wholeProfile.getPostListContainer().getPostList();
+                for (int i = 0; i < postList.size(); i++) {
+                    if (postId.equals(postList.get(i).getPostId())) {
+                        postList.get(i).setCurrentVote(vote);
+                    }
+                }
+                wholeProfileMutable.setValue(wholeProfile);
             }
         }
-        wholeProfileMutable.setValue(wholeProfile);
     }
 
     public void getCurrentUserData(){

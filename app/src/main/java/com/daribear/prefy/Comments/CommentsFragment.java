@@ -276,4 +276,5 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         replyActive = true;
         setReplyLay(replyUsername, parentID, subParentID);
     }
+
 }

@@ -132,7 +132,7 @@ class log_in_fragment : Fragment() {
                 MediaType.parse("application/json"), json
             )
             val request = Request.Builder()
-                .url(getString(R.string.Server_base_address) +"/login")
+                .url(ServerAdminSingleton.getInstance().serverAddress +"/login")
                 .method("POST", body)
                 .addHeader("Content-Type", "application/json")
                 .build()
@@ -142,10 +142,9 @@ class log_in_fragment : Fragment() {
                     val token = CustomJsonMapper.getJWTToken(response);
                     val user = CustomJsonMapper.getUser(response);
                     sharedprefs.putStringSharedPref(getString(R.string.save_auth_token_pref), token)
-                    val utils = Utils(context)
                     if (!emailDone){
                         val request = Request.Builder()
-                            .url(getString(R.string.Server_base_address) + "/prefy/v1/Login/GetEmail")
+                            .url(ServerAdminSingleton.getInstance().serverAddress + "/prefy/v1/Login/GetEmail")
                             .method("GET", null)
                             .addHeader("Content-Type", "application/json")
                             .addHeader("Authorization", token)

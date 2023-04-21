@@ -14,6 +14,7 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.Ads.Interstitial;
 import com.daribear.prefy.Explore.ExploreHostFragment;
 import com.daribear.prefy.Network.ActivityViewModelSaver;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         MobileAds.initialize(this);
         Interstitial interstitial = new Interstitial();
         interstitial.loadAd(this);
+        AdTracker.getInstance().setActivity(this);
     }
 
     private void initAuthSaving(){
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         ErrorChecker.setActivity(this);
+        AdTracker.getInstance().setActivity(this);
         super.onResume();
     }
 
@@ -203,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
             viewModelSaver.viewDestroyed();
         }
         ErrorChecker.setActivity(null);
+        AdTracker.getInstance().setActivity(null);
         super.onPause();
     }
 

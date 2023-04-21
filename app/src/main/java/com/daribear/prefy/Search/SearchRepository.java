@@ -2,6 +2,7 @@ package com.daribear.prefy.Search;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.Profile.User;
 
 import java.util.ArrayList;
@@ -51,7 +52,6 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
     public void getData(){
         pageNumber = 0;
         if (currentSearch.isEmpty()){
-
             SearchTopUsersRetriever topExecutor = new SearchTopUsersRetriever(pageNumber, 15, this);
             topExecutor.initExecutor();
         } else {
@@ -117,6 +117,7 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
                     System.out.println("Sdad list size:" + searchlistMutable.getValue().size());
                 }
             }
+            AdTracker.getInstance().otherViewed();
         } else {
             if (internetAvailable == null){
                 internetAvailable = new MutableLiveData<>();
@@ -144,6 +145,7 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
                     searchlistMutable.postValue(currentArrayList);
                 }
             }
+            AdTracker.getInstance().otherViewed();
         } else {
             if (internetAvailable == null){
                 internetAvailable = new MutableLiveData<>();
@@ -151,5 +153,6 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
             internetAvailable.postValue(false);
         }
         dataLoading = false;
+
     }
 }
