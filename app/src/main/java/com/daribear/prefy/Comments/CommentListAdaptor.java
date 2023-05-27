@@ -270,7 +270,8 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putLong("id", commentList.get(position).getFullComment().getComment().getUserId());
+                System.out.println("Sdad test:" + commentList.get(position).getFullComment().getComment().getUser().getId());
+                bundle.putLong("id", commentList.get(position).getFullComment().getComment().getUser().getId());
                 bundle.putParcelable("user", commentList.get(position).getFullComment().getComment().getUser());
                 Navigation.findNavController(view).navigate(R.id.action_global_userProfile, bundle);
             }

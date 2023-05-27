@@ -16,6 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.Ads.Interstitial;
+import com.daribear.prefy.Database.DatabaseHelper;
 import com.daribear.prefy.Explore.ExploreHostFragment;
 import com.daribear.prefy.Network.ActivityViewModelSaver;
 import com.daribear.prefy.Network.ViewModelDataController;
@@ -196,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         ErrorChecker.setActivity(this);
         AdTracker.getInstance().setActivity(this);
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(getApplicationContext());
+        ServerAdminSingleton.getInstance().setSqLiteDatabase(databaseHelper.getWritableDatabase());
         super.onResume();
     }
 
@@ -208,6 +211,13 @@ public class MainActivity extends AppCompatActivity {
         ErrorChecker.setActivity(null);
         AdTracker.getInstance().setActivity(null);
         super.onPause();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        ServerAdminSingleton.getInstance().setSqLiteDatabase(null);
+        super.onDestroy();
     }
 
     @Override

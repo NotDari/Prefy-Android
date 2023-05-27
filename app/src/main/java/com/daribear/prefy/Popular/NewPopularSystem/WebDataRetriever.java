@@ -8,6 +8,8 @@ import com.daribear.prefy.Utils.CustomJsonCreator;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 
 import org.json.JSONArray;
@@ -16,6 +18,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import okhttp3.HttpUrl;
@@ -25,7 +30,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class WebDataRetriever {
+public class WebDataRetriever implements GetFollowingDelegate {
     Integer count = 10;
 
     private PopularPostSet popularPostSet;
@@ -36,8 +41,10 @@ public class WebDataRetriever {
     private OkHttpClient client;
 
     private ArrayList<Long> avoidList;
-    private Boolean userDetailsDone = false, userVotesDone = false;
+    private Boolean userDetailsDone = false, userVotesDone = false, userFollowing = false;
     private String retrievalType;
+    private HashMap<Long, Boolean> followList;
+
 
 
 
@@ -79,6 +86,7 @@ public class WebDataRetriever {
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Authorization", authToken)
                         .build();
+                System.out.println("Sdad server Req:" + httpBuilder.build().url());
                 try {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()){
@@ -95,6 +103,7 @@ public class WebDataRetriever {
 
                             getUserDetails();
                             getCurrentUserPostVotes();
+                            getUserFollowing();
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
@@ -218,9 +227,43 @@ public class WebDataRetriever {
         }
     }
 
+    private void getUserFollowing(){
+        if (popularPostSet.getPostList().size() == 0){
+            userFollowing = true;
+            operationCompleted();
+        } else {
+            ArrayList<Long> idList = new ArrayList<>();
+            for (int i = 0; i < popularPostSet.getPostList().size(); i++) {
+                idList.add(popularPostSet.getPostList().get(i).getUserId());
+            }
+            FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, this, null);
+        }
+    }
+
     private void operationCompleted(){
-        if (userDetailsDone  && userVotesDone){
+        if (userDetailsDone  && userVotesDone && userFollowing){
+            if (followList != null) {
+                for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
+                    Long key = entry.getKey();
+                    for (int i = 0; i < popularPostSet.getUserList().size(); i++) {
+                        if (Objects.equals(popularPostSet.getUserList().get(i).getId(), key)) {
+                            popularPostSet.getUserList().get(i).setFollowing(followList.get(key));
+                        }
+                    }
+                }
+            }
             delegate.taskComplete(true, popularPostSet, retrievalType);
+        }
+    }
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful){
+            userFollowing = true;
+            this.followList = followList;
+            operationCompleted();
+        }else {
+            delegate.taskComplete(false, null, null);
         }
     }
 }

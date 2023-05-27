@@ -17,14 +17,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.daribear.prefy.Activities.MainActivity
 import com.daribear.prefy.R
+import com.daribear.prefy.Utils.CustomJsonMapper
 import com.daribear.prefy.Utils.GetInternet
 import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.SharedPrefs
+import com.daribear.prefy.customClasses.CustomError
 import com.daribear.prefy.custom_classes.UsersInfo
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.util.JsonMapper
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_sign_up_email.*
 import okhttp3.MediaType
@@ -111,8 +115,21 @@ class sign_up_email_fragment : Fragment() {
                                 findNavController().navigate(directions) }
 
                         } else {
+                            val customError = CustomJsonMapper.getCustomError(response)
+                            var message : String
+                            if (customError == null){
+                                message = "Couldn't connect to server"
+                            }else {
+                                when (customError.customCode) {
+                                    12 -> message = "Email not valid"
+                                    13 -> message = "Email already in use"
+                                    else -> {
+                                        message = "Couldn't connect to server"
+                                    }
+                                }
+                            }
                             activity?.runOnUiThread {
-                                Toast.makeText(requireActivity(), "Couldn't connect to server", Toast.LENGTH_LONG).show()
+                                Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
                             }
                             buttonActive = false
 

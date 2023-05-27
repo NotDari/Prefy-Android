@@ -5,114 +5,157 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/popdialog"
-    android:backgroundTint="@color/white"
+    android:backgroundTint="@color/fragment_background"
     android:id="@+id/PostDiaFullLay"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp">
+    android:paddingTop="30dp"
+    android:paddingBottom="30dp">
 
-    <RelativeLayout
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/CommentDialogReplyLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:paddingEnd="40dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/CommentDialogReplyImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/reply" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/CommentDialogReplyImageGuideline"
+            android:src="@drawable/reply"
+            app:tint="@color/text_color"
+            />
 
         <TextView
             android:id="@+id/CommentDialogReplyText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/CommentDialogReplyImage"
             android:autoSizeTextType="uniform"
             android:text="Reply"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/CommentDialogReplyTextGuideline" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogReplyImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogReplyTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
 
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E2E2E2"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/CommentDialogProfileLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="10dp"
-        android:paddingEnd="40dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/CommentDialogProfileImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/report" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/CommentDialogProfileImageGuideline"
+            android:src="@drawable/profile_unselected"
+            app:tint="@color/text_color"
+            />
 
         <TextView
-            android:id="@+id/PostDialogProfileText"
+            android:id="@+id/CommentDialogProfileText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/CommentDialogProfileImage"
             android:autoSizeTextType="uniform"
-            android:maxLines="1"
             android:text="Profile"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/CommentDialogProfileTextGuideline" />
 
-    </RelativeLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogProfileImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogProfileTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E2E2E2"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/CommentDialogReportLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="10dp"
-        android:paddingEnd="40dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/CommentDialogReportImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/CommentDialogReportImageGuideline"
             android:src="@drawable/report"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"/>
+            app:tint="@color/text_color"
+            />
 
         <TextView
             android:id="@+id/CommentDialogReportText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/CommentDialogReportImage"
             android:autoSizeTextType="uniform"
-            android:maxLines="1"
             android:text="Report"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/CommentDialogReportTextGuideline" />
 
-    </RelativeLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogReportImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogReportTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <View
         android:id="@+id/CommentDialogDeleteView"
         android:layout_width="match_parent"
@@ -120,37 +163,51 @@
         android:background="#E2E2E2"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
-    <RelativeLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/CommentDialogDeleteLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="10dp"
-        android:paddingEnd="40dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/CommentDialogDeleteImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/report" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/CommentDialogDeleteImageGuideline"
+            android:src="@drawable/delete"
+            app:tint="@color/text_color"
+            />
 
         <TextView
             android:id="@+id/CommentDialogDeleteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/CommentDialogDeleteImage"
             android:autoSizeTextType="uniform"
-            android:maxLines="1"
             android:text="Delete"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_medium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/CommentDialogDeleteTextGuideline" />
 
-    </RelativeLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogDeleteImageGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".2" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/CommentDialogDeleteTextGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".25" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

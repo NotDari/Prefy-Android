@@ -3,6 +3,8 @@ package com.daribear.prefy.Search;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 
 import org.json.JSONArray;
@@ -11,6 +13,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,7 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SearchTopUsersRetriever {
+public class SearchTopUsersRetriever implements GetFollowingDelegate {
     private Integer limitTo;
     private Long endAt;
     private ArrayList<User> searchUserArrayList;
@@ -61,7 +66,11 @@ public class SearchTopUsersRetriever {
                                     searchUserArrayList.add(user);
                                 }
                             }
-                            completed();
+                            ArrayList<Long> idList = new ArrayList<>();
+                            for (User user : searchUserArrayList){
+                                idList.add(user.getId());
+                            }
+                            FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, SearchTopUsersRetriever.this::completed, null);
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
@@ -82,9 +91,26 @@ public class SearchTopUsersRetriever {
 
 
 
-    private void completed(){
+    private void completed(HashMap<Long, Boolean> followList){
+        for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
+            Long key = entry.getKey();
+            for (int i =0; i < searchUserArrayList.size(); i ++){
+                if (Objects.equals(searchUserArrayList.get(i).getId(), key)){
+                    searchUserArrayList.get(i).setFollowing(followList.get(key));
+                }
+            }
+        }
         Boolean update;
         update = (pageNumber > 0);
         delegate.topCompleted(true, update,searchUserArrayList);
+    }
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful){
+            completed(followList);
+        } else {
+            delegate.topCompleted(false, null, null);
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.daribear.prefy.Search;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 
 import org.json.JSONArray;
@@ -11,6 +13,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,7 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SearchDataRetriever {
+public class SearchDataRetriever implements GetFollowingDelegate {
     private String text, originalString;
     private ArrayList<User> searchUserArrayList;
     private SearchUsersStringDelegate delegate;
@@ -64,7 +69,11 @@ public class SearchDataRetriever {
                                             searchUserArrayList.add(user);
                                         }
                                     }
-                                    operationCompleted(searchUserArrayList);
+                                    ArrayList<Long> idList = new ArrayList<>();
+                                    for (User user : searchUserArrayList){
+                                        idList.add(user.getId());
+                                    }
+                                    FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, SearchDataRetriever.this::completed, null);
                                 } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
@@ -76,43 +85,32 @@ public class SearchDataRetriever {
                         } catch (IOException | JSONException e) {
                             delegate.stringCompleted(false, false, null, null);
                         }
-
-                        /**
-                        Query query = ff.collection("Users").orderBy("username").startAt(text).limit(limitTo);
-                        query = query.endAt(originalString + "\uf8ff");
-                        if (update){
-                            //query = query.endAt(originalString + "\uf8ff");
-                        }
-                        query.get(Source.SERVER).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    System.out.println("Sdad search completed" + task.getResult().size());
-                                    if (task.getResult().getDocuments().size() == 0) {
-                                        delegate.stringCompleted(true, update,text, new ArrayList<>());
-                                    } else {
-                                        for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
-                                            User user = FirebaseUtils.retreiveUser(snapshot);
-                                            userArrayList.add(user);
-                                        }
-                                        operationCompleted(userArrayList);
-                                    }
-
-                                } else{
-                                    delegate.stringCompleted(false, update, null, null);
-                                }
-                            }
-                        });
-                         */
             }
         });
     }
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful) {
+            operationCompleted(followList);
+        } else {
+            delegate.stringCompleted(false, false, null, null);
+        }
+    }
 
 
-
-    private void operationCompleted(ArrayList<User> userArrayList){
+    private void operationCompleted(HashMap<Long, Boolean> followList){
+        for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
+            Long key = entry.getKey();
+            for (int i =0; i < searchUserArrayList.size(); i ++){
+                if (Objects.equals(searchUserArrayList.get(i).getId(), key)){
+                    searchUserArrayList.get(i).setFollowing(followList.get(key));
+                }
+            }
+        }
         Boolean update;
         update = (pageNumber > 0);
-        delegate.stringCompleted(true, update, text,  userArrayList);
+        delegate.stringCompleted(true, update, text,  searchUserArrayList);
     }
+
+
 }

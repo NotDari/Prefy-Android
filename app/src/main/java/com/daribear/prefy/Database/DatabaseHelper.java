@@ -44,6 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlstatement);
         sqlstatement = "Create TABLE UploadDeleteTable(ItemId Long, Type String, UserId Long)";
         db.execSQL(sqlstatement);
+        sqlstatement = "Create TABLE UploadFollowTable(FollowingUserId Long, UserId Long, Follow Integer)";
+        db.execSQL(sqlstatement);
         InitDatabaseTasks.init(db);
         //db.close();
 

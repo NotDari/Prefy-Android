@@ -1,6 +1,7 @@
-package com.daribear.prefy.Activity.Comment;
+package com.daribear.prefy.Activity.Followers;
 
-import com.daribear.prefy.Activity.Votes.VoteActivity;
+import com.daribear.prefy.Activity.Comment.CommentActivity;
+import com.daribear.prefy.Activity.Comment.commentRetreiverInterface;
 import com.daribear.prefy.Utils.CustomJsonCreator;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
@@ -16,10 +17,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,15 +27,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CommentActivityRetreiver implements GetFollowingDelegate {
-    private commentRetreiverInterface delegate;
-    private ArrayList<CommentActivity> commentActivityList;
+public class FollowerActivityRetreiver implements GetFollowingDelegate {
+    private followerRetrieverInterface delegate;
+    private ArrayList<FollowerActivity> followerActivityList;
     private String serverAddress, authToken;
 
     private Boolean UsersComplete, UsersFollowingComplete;
     private HashMap<Long, Boolean> followList;
 
-    public CommentActivityRetreiver(commentRetreiverInterface delegate) {
+    public FollowerActivityRetreiver(followerRetrieverInterface delegate) {
         this.delegate = delegate;
     }
 
@@ -49,8 +48,9 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                System.out.println("Sdad yoo");
                 OkHttpClient client = new OkHttpClient();
-                HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Activity/CommentsActivity").newBuilder();
+                HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Activity/FollowersActivity").newBuilder();
                 httpBuilder.addEncodedQueryParameter("pageNumber", "0");
                 Request request = new Request.Builder()
                         .url(httpBuilder.build())
@@ -61,7 +61,7 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
                 try {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()){
-                        commentActivityList = CustomJsonMapper.getCommentActivityList(response);
+                        followerActivityList = CustomJsonMapper.getFollowerActivityList(response);
                         getUserDetails();
                         getFollowing();
                     }else {
@@ -95,10 +95,10 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         });
     }
     private void getUserDetails() {
-        if (commentActivityList != null) {
+        if (followerActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
-            for (CommentActivity commentActivity : commentActivityList) {
-                userList.add(commentActivity.getUserId());
+            for (FollowerActivity followerActivity : followerActivityList) {
+                userList.add(followerActivity.getUserId());
             }
             if (userList.size() > 0) {
                 OkHttpClient client = new OkHttpClient();
@@ -119,10 +119,10 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
                                 if (!jsonArray.isNull(i)) {
                                     JSONObject tempObject = jsonArray.getJSONObject(i);
                                     if (tempObject != null) {
-                                        commentActivityList.get(i).setUser(CustomJsonMapper.getUserFromObject(tempObject));
+                                        followerActivityList.get(i).setUser(CustomJsonMapper.getUserFromObject(tempObject));
                                     }
                                 } else {
-                                    commentActivityList.get(i).setUser(DefaultCreator.createBlankUser());
+                                    followerActivityList.get(i).setUser(DefaultCreator.createBlankUser());
                                 }
                             }
                             UsersComplete = true;
@@ -139,17 +139,17 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
                     requestfailed();
                 }
             } else {
-                delegate.completed(true, commentActivityList);
+                delegate.followerCompleted(true, followerActivityList);
             }
 
         }
     }
 
     private void getFollowing(){
-        if (commentActivityList != null) {
+        if (followerActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
-            for (CommentActivity commentActivity : commentActivityList) {
-                userList.add(commentActivity.getUserId());
+            for (FollowerActivity followerActivity : followerActivityList) {
+                userList.add(followerActivity.getUserId());
             }
             FollowingRetrieving followingRetrieving = new FollowingRetrieving(userList, this, null);
         }
@@ -159,18 +159,18 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         if (UsersFollowingComplete && UsersComplete){
             for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
                Long key = entry.getKey();
-               for (int i =0; i < commentActivityList.size(); i ++){
-                   if (Objects.equals(commentActivityList.get(i).getUser().getId(), key)){
-                       commentActivityList.get(i).getUser().setFollowing(followList.get(key));
+               for (int i =0; i < followerActivityList.size(); i ++){
+                   if (Objects.equals(followerActivityList.get(i).getUser().getId(), key)){
+                       followerActivityList.get(i).getUser().setFollowing(followList.get(key));
                    }
                }
             }
-            delegate.completed(true, commentActivityList);
+            delegate.followerCompleted(true, followerActivityList);
         }
     }
 
     private void requestfailed(){
-        delegate.completed(false, null);
+        delegate.followerCompleted(false, null);
     }
 
     @Override

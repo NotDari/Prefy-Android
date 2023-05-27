@@ -1,6 +1,7 @@
 package com.daribear.prefy.Utils;
 
 import com.daribear.prefy.Activity.Comment.CommentActivity;
+import com.daribear.prefy.Activity.Followers.FollowerActivity;
 import com.daribear.prefy.Activity.Votes.VoteActivity;
 import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Comments.FullComment;
@@ -34,6 +35,8 @@ public class    CustomJsonMapper {
             Long postsNumber = jsonObject.optLong("postsNumber");
             Long votesNumber = jsonObject.optLong("votesNumber");
             Long prefsNumber = jsonObject.optLong("prefsNumber");
+            Long followerNumber = jsonObject.optLong("followerNumber");
+            Long followingNumber = jsonObject.optLong("followingNumber");
             String bio = jsonObject.optString("bio");
             String vk = jsonObject.optString("vk");
             String instagram = jsonObject.optString("instagram");
@@ -48,6 +51,8 @@ public class    CustomJsonMapper {
             user.setPostsNumber(postsNumber);
             user.setVotesNumber(votesNumber);
             user.setPrefsNumber(prefsNumber);
+            user.setFollowerNumber(followerNumber);
+            user.setFollowingNumber(followingNumber);
             user.setBio(bio);
             user.setVk(vk);
             user.setInstagram(instagram);
@@ -71,6 +76,8 @@ public class    CustomJsonMapper {
             Long postsNumber = jsonObject.optLong("postsNumber");
             Long votesNumber = jsonObject.optLong("votesNumber");
             Long prefsNumber = jsonObject.optLong("prefsNumber");
+            Long followerNumber = jsonObject.optLong("followerNumber");
+            Long followingNumber = jsonObject.optLong("followingNumber");
             String bio = jsonObject.optString("bio");
             String vk = jsonObject.optString("vk");
             String instagram = jsonObject.optString("instagram");
@@ -87,6 +94,8 @@ public class    CustomJsonMapper {
             user.setPostsNumber(postsNumber);
             user.setVotesNumber(votesNumber);
             user.setPrefsNumber(prefsNumber);
+            user.setFollowerNumber(followerNumber);
+            user.setFollowingNumber(followingNumber);
             user.setBio(bio);
             user.setVk(vk);
             user.setInstagram(instagram);
@@ -133,6 +142,29 @@ public class    CustomJsonMapper {
 
 
             return commentActivityList;
+        }catch (JSONException | IOException e) {
+            System.out.println("Sdad exception:" + e + "\n " + response.body().toString());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ArrayList<FollowerActivity> getFollowerActivityList(Response response){
+        try {
+            String responseString = response.body().string();
+            JSONArray jsonArray = new JSONArray(responseString);
+            ArrayList<FollowerActivity> followerActivityList= new ArrayList<>();
+            for (int i =0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = (jsonArray.getJSONObject(i));
+                FollowerActivity followerActivity = new FollowerActivity();
+                followerActivity.setUserId(jsonObject.getLong("userId"));
+                followerActivity.setOccurrenceDate(jsonObject.getDouble("occurrenceDate"));
+                followerActivity.setFollowed(jsonObject.getBoolean("followed"));
+                followerActivityList.add(followerActivity);
+            }
+
+
+            return followerActivityList;
         }catch (JSONException | IOException e) {
             System.out.println("Sdad exception:" + e + "\n " + response.body().toString());
             e.printStackTrace();

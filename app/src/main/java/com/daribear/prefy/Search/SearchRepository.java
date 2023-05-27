@@ -6,6 +6,7 @@ import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.Profile.User;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStringDelegate{
     private static SearchRepository instance;
@@ -20,8 +21,8 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         currentSearch = "";
         if (internetAvailable == null){
             internetAvailable = new MutableLiveData<>();
+            getData();
         }
-        getData();
     }
 
     public static SearchRepository getInstance(){
@@ -67,8 +68,10 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
 
     public void setCurrentSearch(String currentSearch) {
         pageNumber = 0;
-        this.currentSearch = currentSearch;
-        getData();
+        if (!this.currentSearch.equals(currentSearch)) {
+            this.currentSearch = currentSearch;
+            getData();
+        }
     }
 
     public void reset(){
@@ -94,6 +97,22 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
                 dataLoading = true;
             }
         }
+    }
+
+    public void setFollowing(Long userId, Boolean following){
+        ArrayList<User> userList = searchlistMutable.getValue();
+        Boolean changed = false;
+        for (int i =0; i < userList.size(); i++){
+            if (Objects.equals(userList.get(i).getId(), userId)){
+                System.out.println("SdadAPP altered, userId:" + userId + " , following:" + following );
+                changed = true;
+                userList.get(i).setFollowing(following);
+            }
+        }
+        if (changed){
+            searchlistMutable.setValue(userList);
+        }
+
     }
 
 

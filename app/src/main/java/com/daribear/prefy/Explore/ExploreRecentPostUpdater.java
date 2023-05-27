@@ -5,6 +5,8 @@ import com.daribear.prefy.Utils.CustomJsonCreator;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.customClasses.FullPost;
 import com.daribear.prefy.customClasses.StandardPost;
@@ -14,7 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
@@ -23,14 +29,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ExploreRecentPostUpdater {
+public class ExploreRecentPostUpdater implements GetFollowingDelegate {
     private Integer pageNumber;
     private Integer limitCount;
     private ExploreRecentUpdateInterface delegate;
     private ExplorePostSet explorePostSet;
-    private Boolean recentPostUsers, userVotesDone;
+    private Boolean recentPostUsers, userVotesDone, userFollowingDone;
     private String serverAddress, authToken;
     private OkHttpClient client;
+
+    private HashMap<Long, Boolean> followList;
 
     public ExploreRecentPostUpdater(Integer limitCount, Integer pageNumber, ExploreRecentUpdateInterface delegate) {
         this.limitCount = limitCount;
@@ -42,6 +50,7 @@ public class ExploreRecentPostUpdater {
     public void initExecutor(){
         recentPostUsers = false;
         userVotesDone = false;
+        userFollowingDone = false;
         serverAddress = ServerAdminSingleton.getInstance().getServerAddress();
         authToken = ServerAdminSingleton.getInstance().getServerAuthToken();
         initRecentPosts();
@@ -80,6 +89,7 @@ public class ExploreRecentPostUpdater {
                             explorePostSet.setPostList(postList);
                             getCurrentUserPostVotes();
                             getRecentPostsUsers();
+                            getUsersFollowing();
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
@@ -190,10 +200,37 @@ public class ExploreRecentPostUpdater {
 
     }
 
-
+    private void getUsersFollowing(){
+        ArrayList<Long> idList = new ArrayList<>();
+        for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
+            idList.add(explorePostSet.getPostList().get(i).getStandardPost().getUserId());
+        }
+        FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, ExploreRecentPostUpdater.this, null);
+    }
     private void operationCompleted(){
-        if (recentPostUsers && userVotesDone){
+        if (recentPostUsers && userVotesDone && userFollowingDone){
+            if (followList != null) {
+                for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
+                    Long key = entry.getKey();
+                    for (int i = 0; i < explorePostSet.getPostList().size(); i++) {
+                        if (Objects.equals(explorePostSet.getPostList().get(i).getUser().getId(), key)) {
+                            explorePostSet.getPostList().get(i).getUser().setFollowing(followList.get(key));
+                        }
+                    }
+                }
+            }
             delegate.completed(true, explorePostSet);
+        }
+    }
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful){
+            userFollowingDone = true;
+            this.followList = followList;
+            operationCompleted();
+        } else {
+            delegate.completed(false, null);
         }
     }
 }

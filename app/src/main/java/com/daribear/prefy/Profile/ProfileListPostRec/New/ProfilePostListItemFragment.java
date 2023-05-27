@@ -119,6 +119,14 @@ public class ProfilePostListItemFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_global_commentsFragment, bundle);
             }
         });
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("user", user);
+                Navigation.findNavController(view).navigate(R.id.action_global_userProfile, bundle);
+            }
+        });
         initVote();
     }
 

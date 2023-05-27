@@ -12,6 +12,8 @@ public class DefaultCreator {
         user.setPostsNumber(0L);
         user.setPrefsNumber(0L);
         user.setVotesNumber(0L);
+        user.setFollowingNumber(0L);
+        user.setFollowerNumber(0L);
         user.setProfileImageURL("none");
         user.setUsername("Deleted User");
         user.setBio("This user has been deleted");

@@ -184,7 +184,7 @@ public class UploadEndpoint {
                                 voteCursor.moveToNext();
                             }
                         }
-                                Cursor activityClearCursor = db.rawQuery("Select * FROM UploadActivityClear", null);
+                        Cursor activityClearCursor = db.rawQuery("Select * FROM UploadActivityClear", null);
                         if (activityClearCursor.moveToFirst()){
                             for (int i =0; i < activityClearCursor.getCount(); i ++){
                                 String type = activityClearCursor.getString(activityClearCursor.getColumnIndexOrThrow("Type"));
@@ -194,7 +194,10 @@ public class UploadEndpoint {
                                         currentActivityName = "newCommentsCount";
                                     } else if (type.equals("Votes")){
                                         currentActivityName = "newVotesCount";
-                                    } else {
+                                    } else if (type.equals("Followers")){
+                                        currentActivityName = "newFollowsCount";
+                                    }
+                                    else {
                                         CompletedCount += 1;
                                         checkCompleted();
                                     }
@@ -479,6 +482,55 @@ public class UploadEndpoint {
                                 });
                             }
                         }
+                        Cursor followCursor = db.rawQuery("Select * FROM UploadFollowTable", null);
+                        if (followCursor.moveToFirst()){
+                            for (int i = 0; i < followCursor.getCount(); i++){
+                                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Integer follow = DatabaseUtils.getIntegerWithNull(followCursor, "Follow");
+                                        Boolean followBool = (follow == 1);
+                                        Long followingUserId = DatabaseUtils.getLongWithNull(followCursor, "FollowingUserId");
+                                        Long userID = DatabaseUtils.getLongWithNull(followCursor, "UserId");
+
+                                        HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Follows/Follow").newBuilder();
+                                        JSONObject jsonObject = new JSONObject();
+                                        try {
+                                            jsonObject.put("followId", followingUserId);
+                                            jsonObject.put("userId", userID);
+                                            jsonObject.put("follow", followBool);
+                                        } catch (JSONException e) {
+                                            CompletedCount += 1;
+                                            checkCompleted();
+                                        }
+                                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                        Request request = new Request.Builder()
+                                                .url(httpBuilder.build())
+                                                .method("POST", body)
+                                                .addHeader("Content-Type", "application/json")
+                                                .addHeader("Authorization", authToken)
+                                                .build();
+
+                                        try {
+                                            Response response = client.newCall(request).execute();
+                                            if (response.isSuccessful()) {
+                                                CompletedCount += 1;
+                                                SuccessfulCount += 1;
+                                                removeFollowFromDb(db, userID, followingUserId);
+                                                checkCompleted();
+                                            } else {
+                                                CompletedCount += 1;
+                                                checkCompleted();
+                                            }
+                                        } catch (IOException e) {
+                                            CompletedCount += 1;
+                                            checkCompleted();
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
                     } else {
                         checking = false;
                     }
@@ -520,6 +572,8 @@ public class UploadEndpoint {
         db.delete("UploadComments","text=? and CreationDate=?",new String[]{comment.getText(), comment.getCreationDate().toString()});
     }
 
+
+
     public void removeReportFromDb(SQLiteDatabase db, Report report){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
@@ -532,6 +586,13 @@ public class UploadEndpoint {
                 " SET " + "Count" + " = " + "Count" + " - 1" +
                 " WHERE " + "Type" + " = ?", new String[] {"Delete"});
         db.delete("UploadDeleteTable","UserId=? and ItemId=? and Type=?",new String[]{userId.toString(), itemId.toString(), type.toString()});
+    }
+
+    public void removeFollowFromDb(SQLiteDatabase db, Long userId, Long userFollowId){
+        db.execSQL("UPDATE " + "UploadTasks" +
+                " SET " + "Count" + " = " + "Count" + " - 1" +
+                " WHERE " + "Type" + " = ?", new String[] {"Follow"});
+        db.delete("UploadFollowTable","UserId=? and FollowingUserId=?",new String[]{userId.toString(), userFollowId.toString()});
     }
 
     private void checkCompleted(){

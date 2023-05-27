@@ -3,6 +3,8 @@ package com.daribear.prefy.Comments;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.GetInternet;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -13,6 +15,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,9 +26,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class getCommentsExecutor {
+public class getCommentsExecutor implements GetFollowingDelegate {
     private Long postId;
-    private ArrayList<Comment> commentList;
     private CommentRetreiverInterface delegate;
     private ArrayList<User> userList;
     private ArrayList<FullRecComment> fullCommentList;
@@ -31,6 +35,7 @@ public class getCommentsExecutor {
     private Integer currentCommentCount = 0;
     private DocumentSnapshot documentSnapshot;
     private String serverAddress, authToken;
+
 
     public getCommentsExecutor(Long postId, CommentRetreiverInterface delegate) {
         this.postId = postId;
@@ -41,6 +46,7 @@ public class getCommentsExecutor {
 
 
     public void initExecutor(){
+        System.out.println("Sdad successHI!");
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -73,7 +79,8 @@ public class getCommentsExecutor {
                                 fullRecComment.setMinimised(false);
                                 fullCommentList.add(fullRecComment);
                             }
-                            success();
+                            getUserFollowing();
+
                         }else {
                             ErrorChecker.checkForStandardError(response);
                             delegate.complete(false, true, new ArrayList<>(), null);
@@ -86,15 +93,47 @@ public class getCommentsExecutor {
                     delegate.complete(false, true ,new ArrayList<>(), null);
                 }
 
-                commentList = new ArrayList<>();
 
             }
         });
     }
 
+    private void getUserFollowing(){
+        if (fullCommentList.size() == 0){
+            success();
+        } else {
+            ArrayList<Long> idList = new ArrayList<>();
+            for (int i = 0; i < fullCommentList.size(); i++) {
+                idList.add(fullCommentList.get(i).getFullComment().getComment().getUser().getId());
+            }
+
+            FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, this, null);
+        }
+
+
+    }
+
+
 
 
     private void success(){
         delegate.complete(true, false, fullCommentList, 0);
+    }
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful) {
+            for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
+                Long key = entry.getKey();
+                for (int i = 0; i < fullCommentList.size(); i++) {
+                    if (Objects.equals(fullCommentList.get(i).getFullComment().getComment().getUser().getId(), key)) {
+                        fullCommentList.get(i).getFullComment().getComment().getUser().setFollowing(followList.get(key));
+                    }
+                }
+            }
+            success();
+        }else {
+            delegate.complete(false, false, null, null);
+        }
     }
 }

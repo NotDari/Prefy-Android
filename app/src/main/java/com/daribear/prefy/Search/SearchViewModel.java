@@ -39,4 +39,8 @@ public class SearchViewModel extends ViewModel {
         searchRepo.viewScrolled();
     }
 
+    public void followChange(Long userId, Boolean following){
+        searchRepo.setFollowing(userId, following);
+    }
+
 }

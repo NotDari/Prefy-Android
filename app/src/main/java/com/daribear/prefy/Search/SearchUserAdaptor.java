@@ -83,14 +83,14 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView profileImage;
-        private TextView VoteCount, PrefCount;
+        private TextView FollowerCount, PostCount;
         private TextView bio, username, fullname;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.SearchItemProfileImageView);
-            VoteCount = itemView.findViewById(R.id.SearchItemVotesCount);
-            PrefCount = itemView.findViewById(R.id.SearchItemPrefsCount);
+            FollowerCount = itemView.findViewById(R.id.SearchItemFollowersCount);
+            PostCount = itemView.findViewById(R.id.SearchItemPostsCount);
             fullname = itemView.findViewById(R.id.SearchItemFullnameText);
             username = itemView.findViewById(R.id.SearchItemUsernameText);
             bio = itemView.findViewById(R.id.SearchItemBioText);
@@ -98,8 +98,20 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
     }
 
     private void initCounts(ViewHolder holder, int position){
-        holder.PrefCount.setText(searchUserArrayList.get(position).getPrefsNumber() + " preferences");
-        holder.VoteCount.setText(searchUserArrayList.get(position).getVotesNumber() + " votes");
+        String followeradditionalText;
+        String postadditionalText;
+        if (searchUserArrayList.get(position).getFollowerNumber() == 1){
+            followeradditionalText = " follower";
+        } else {
+            followeradditionalText = " followers";
+        }
+        if (searchUserArrayList.get(position).getPostsNumber() == 1){
+            postadditionalText = " post";
+        } else {
+            postadditionalText = " posts";
+        }
+        holder.FollowerCount.setText(searchUserArrayList.get(position).getFollowerNumber() + followeradditionalText);
+        holder.PostCount.setText(searchUserArrayList.get(position).getPostsNumber() + postadditionalText);
     }
 
 

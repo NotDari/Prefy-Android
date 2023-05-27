@@ -21,6 +21,7 @@ import com.daribear.prefy.Profile.ProfilePostsRec.NewProfilePostsGateway;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.Utils;
+import com.google.android.material.button.MaterialButton;
 
 public class HomeProfileFragment extends Fragment{
     private String username, imageUrl;
@@ -30,11 +31,12 @@ public class HomeProfileFragment extends Fragment{
     private TextView accountNameText, ProfileUsername;
     private NewProfilePostsGateway gateway;
     private CurrentUserViewModel viewModel;
-    private Long prefCount, voteCount, postCount, idPref;
+    private Long prefCount, voteCount, postCount, idPref, followerCount, followingCount;
     private RecyclerView recView;
     private TextView noInternetText;
     private ProgressBar progressBar;
     private RelativeLayout noPostsLayout;
+
 
     @Nullable
     @Override
@@ -78,6 +80,8 @@ public class HomeProfileFragment extends Fragment{
             imageUrl = utils.loadString(getString(R.string.save_profileP_pref), "");
             postCount = utils.loadLong(getString(R.string.save_postCount_pref), 0);
             voteCount = utils.loadLong(getString(R.string.save_voteCount_pref), 0);
+            followerCount = utils.loadLong(getString(R.string.save_follower_pref), 0);
+            followingCount = utils.loadLong(getString(R.string.save_following_pref), 0);
             Boolean verified = utils.loadBoolean(getString(R.string.save_verified_pref), false);
             //String twitter = utils.loadString(getString(R.string.save), "");
             prefCount = utils.loadLong(getString(R.string.save_prefCount_pref), 0);
@@ -90,6 +94,8 @@ public class HomeProfileFragment extends Fragment{
             user.setPrefsNumber(prefCount);
             user.setVotesNumber(voteCount);
             user.setPostsNumber(postCount);
+            user.setFollowerNumber(followerCount);
+            user.setFollowingNumber(followingCount);
             user.setFullname(fullname);
             initGateway(view, user);
             //progressBar.setVisibility(View.VISIBLE);

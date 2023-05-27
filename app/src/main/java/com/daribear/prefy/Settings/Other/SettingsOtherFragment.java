@@ -48,15 +48,17 @@ public class SettingsOtherFragment extends Fragment {
 
     private void initTermsAndPrivacy(View view){
         Context context = view.getContext();
-        Button termsButton, privacyButton;
+        Button termsButton, privacyButton, cookieButton, acceptableUseButton;
         termsButton = view.findViewById(R.id.SettingsOtherTermsConditions);
         privacyButton = view.findViewById(R.id.SettingsOtherPrivacyPolicy);
+        cookieButton = view.findViewById(R.id.SettingsOtherCookiePolicy);
+        acceptableUseButton = view.findViewById(R.id.SettingsOtherAcceptableUsePolicy);
         termsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://daribear.com");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.terms_and_conditions));
                 sendIntent.setType("text/plain");
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);
@@ -68,7 +70,31 @@ public class SettingsOtherFragment extends Fragment {
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://daribear.com");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.privacy_policy));
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                context.startActivity(shareIntent);
+            }
+        });
+        cookieButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.cookie_policy));
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                context.startActivity(shareIntent);
+            }
+        });
+        acceptableUseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.acceptable_use));
                 sendIntent.setType("text/plain");
 
                 Intent shareIntent = Intent.createChooser(sendIntent, null);

@@ -101,7 +101,6 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
 
         postDialog.show();
          */
-
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
         bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         bottomSheetDialog.setContentView(R.layout.post_pop_up_dialog);

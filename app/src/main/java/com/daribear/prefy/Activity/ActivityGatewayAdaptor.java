@@ -2,12 +2,15 @@ package com.daribear.prefy.Activity;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daribear.prefy.Activity.Comment.CommentActivity;
 import com.daribear.prefy.Activity.Comment.CommentRecAdaptor;
+import com.daribear.prefy.Activity.Followers.FollowerActivity;
+import com.daribear.prefy.Activity.Followers.FollowerRecAdaptor;
 import com.daribear.prefy.Activity.Votes.VoteActivity;
 import com.daribear.prefy.Activity.Votes.VoteRecAdaptor;
 
@@ -20,6 +23,7 @@ public class ActivityGatewayAdaptor {
     private RecyclerView recView;
     private CommentRecAdaptor commentAdaptor;
     private VoteRecAdaptor voteAdaptor;
+    private FollowerRecAdaptor followerAdaptor;
 
     public ActivityGatewayAdaptor(Integer recViewId, View view, Context context, RecyclerView recView) {
         RecViewId = recViewId;
@@ -70,6 +74,27 @@ public class ActivityGatewayAdaptor {
         voteAdaptor.notifyDataSetChanged();
     }
 
+
+    public void displayEmptyFollower(ArrayList<FollowerActivity> followerActivityList){
+        recView = view.findViewById(RecViewId);
+        this.context = recView.getContext();
+        followerAdaptor = new FollowerRecAdaptor(followerActivityList);
+        recView.setAdapter(followerAdaptor);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context){
+            @Override
+            public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                lp.height = getHeight() / 7;
+                return super.checkLayoutParams(lp);
+            }
+        };
+        recView.setLayoutManager(linearLayoutManager);
+        recView.setNestedScrollingEnabled(false);
+    }
+
+    public void updateFollowerData(ArrayList<FollowerActivity> followerActivityList){
+        followerAdaptor.setFollowerActivityList(followerActivityList);
+        followerAdaptor.notifyDataSetChanged();
+    }
 
 
 

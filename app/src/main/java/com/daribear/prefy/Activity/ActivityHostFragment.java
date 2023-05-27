@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daribear.prefy.Activity.Comment.ActivityCommentsFragment;
+import com.daribear.prefy.Activity.Followers.ActivityFollowersFragment;
 import com.daribear.prefy.Activity.Votes.ActivityVotesFragment;
 import com.daribear.prefy.R;
 import com.google.android.material.tabs.TabLayout;
@@ -27,7 +28,7 @@ import java.util.Arrays;
 public class ActivityHostFragment extends Fragment {
     private ViewPager2 viewpager;
     private TabLayout tablayout;
-    private ArrayList<String> TabNames = new ArrayList<>(Arrays.asList("Votes", "Comments"));
+    private ArrayList<String> TabNames = new ArrayList<>(Arrays.asList("Votes", "Comments", "Followers"));
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActivityViewModel viewModel;
     private Boolean refreshing = false;
@@ -112,6 +113,9 @@ class ActivityCollectionAdaptor extends FragmentStateAdapter {
             case 1:
                 fragment = new ActivityCommentsFragment();
                 break;
+            case 2:
+                fragment = new ActivityFollowersFragment();
+                break;
             default:
                 fragment = new ActivityVotesFragment();
                 break;
@@ -123,6 +127,6 @@ class ActivityCollectionAdaptor extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

@@ -12,7 +12,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -21,10 +26,27 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.Executors;
+
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class ResetPasswordFragment extends Fragment {
     private MaterialButton submitButton, backButton;
     private EditText detailsEditText;
+
+    private Boolean emailLoading;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,48 +80,59 @@ public class ResetPasswordFragment extends Fragment {
     }
 
     private void initSubmit(String details){
+        emailLoading = false;
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (details != null){
             if (!details.isEmpty()){
-                if (details.contains("@")){
-                    auth.sendPasswordResetEmail(details)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ResetPasswordFragment.this.getContext(), "Email Sent", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ResetPasswordFragment.this.getContext(), "Failed to find account", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-                else {
-                    DatabaseReference fDatabase = FirebaseDatabase.getInstance().getReference();
-                    fDatabase.child("authentication").child(details).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                if (!emailLoading) {
+                    emailLoading = true;
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
                         @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if (task.isSuccessful()){
-                                String email = task.getResult().getValue().toString();
-                                auth.sendPasswordResetEmail(email)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        public void run() {
+                            OkHttpClient okHttpClient = new OkHttpClient();
+                            HttpUrl.Builder httpBuilder = HttpUrl.parse(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Login/ResetPassword").newBuilder();
+                            httpBuilder.addEncodedQueryParameter("login", details);
+                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), "");
+                            Request request = new Request.Builder()
+                                    .url(httpBuilder.build())
+                                    .method("POST", body)
+                                    .addHeader("Content-Type", "application/json")
+                                    .build();
+                            try {
+                                Response response = okHttpClient.newCall(request).execute();
+                                if (response.isSuccessful()) {
+                                    if (!isDetached()){
+                                        getActivity().runOnUiThread(new Runnable() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(ResetPasswordFragment.this.getContext(), "Email Sent", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(ResetPasswordFragment.this.getContext(), "Failed to find account" + email, Toast.LENGTH_SHORT).show();
-                                                }
+                                            public void run() {
+                                                Toast.makeText(ResetPasswordFragment.this.getContext(), "Email Sent", Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                            } else {
-                                Toast.makeText(ResetPasswordFragment.this.getContext(), "Failed to find account", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    if (!isDetached()){
+                                        System.out.println("Sdad failed:" + response.body().string());
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(ResetPasswordFragment.this.getContext(), "Failed to find account", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+                            } catch (IOException e) {
+                                if (!isDetached()){
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(ResetPasswordFragment.this.getContext(), "Unknown Error", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                             }
                         }
                     });
                 }
-
-
 
             } else {
                 Toast.makeText(ResetPasswordFragment.this.getContext(), "Please enter a valid username", Toast.LENGTH_SHORT).show();

@@ -168,6 +168,7 @@ public class SearchFragment extends Fragment {
 
     private void initEditTextListener(){
         activeText = "";
+
         TextWatcher textWatcher = new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -179,7 +180,6 @@ public class SearchFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
                 //searchViewModel.setCurrentSearch(s.toString());
-
                 searchViewModel.setCurrentSearch(s.toString());
 
             }

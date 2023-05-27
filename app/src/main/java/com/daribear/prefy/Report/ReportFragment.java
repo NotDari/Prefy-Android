@@ -29,7 +29,7 @@ import java.util.Arrays;
 public class ReportFragment extends Fragment {
     private String type;
     private LinearLayout categoryLayout;
-    private ArrayList<String> categoryList = new ArrayList<>(Arrays.asList("Spam","Abuse", "Sexually inappropriate", "Violent or prohibited content", "Scam or misleading", "Offence"));
+    private ArrayList<String> categoryList = new ArrayList<>(Arrays.asList("Spam","Abuse", "Sexually inappropriate", "Violent or prohibited content", "Scam or misleading", "Offensive"));
     private TextView titleIssue, reportSubmittedText;
     private Boolean reportSubmitted;
     private BottomNavigationView bottomNav;

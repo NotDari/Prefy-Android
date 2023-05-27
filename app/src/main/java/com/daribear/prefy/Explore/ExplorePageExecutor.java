@@ -3,7 +3,10 @@ package com.daribear.prefy.Explore;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Utils.CustomJsonCreator;
 import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.customClasses.FullPost;
 import com.daribear.prefy.customClasses.StandardPost;
@@ -14,6 +17,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
@@ -23,10 +29,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ExplorePageExecutor {
+public class ExplorePageExecutor implements GetFollowingDelegate {
     private String type;
     private ArrayList<FullPost> fullFeaturedPostArrayList;
-    private Boolean featuredPostUsers, recentPostUsers, userVotesDone;
+    private Boolean featuredPostUsers, featuredUsersFollowing,  recentPostUsers, recentUsersFollowing, userVotesDone;
     private ExplorePostSet explorePostSet;
     private ExploreWholeInterface delegate;
     private Integer limitCount, pageNumber;
@@ -34,6 +40,9 @@ public class ExplorePageExecutor {
     private Boolean update;
     private String serverAddress, authToken;
     private OkHttpClient client;
+
+    private HashMap<Long , Boolean> featuredFollowing, recentFollowing;
+
 
     public ExplorePageExecutor(String type, ExploreWholeInterface delegate, Integer limitCount, Integer pageNumber, Boolean update) {
         this.type = type;
@@ -59,6 +68,8 @@ public class ExplorePageExecutor {
     private void setChecksToFalse(){
         featuredPostUsers = false;
         recentPostUsers = false;
+        recentUsersFollowing = false;
+        featuredUsersFollowing = false;
         userVotesDone = false;
         serverAddress = ServerAdminSingleton.getInstance().getServerAddress();
         authToken = ServerAdminSingleton.getInstance().getServerAuthToken();
@@ -91,6 +102,7 @@ public class ExplorePageExecutor {
                         fullFeaturedPostArrayList.add(fullPost);
                     }
                     getFeaturedPostsUsers();
+                    getFeaturedPostsFollowing();
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
                 }
@@ -110,7 +122,7 @@ public class ExplorePageExecutor {
 
 
     private void getFeaturedPostsUsers(){
-        System.out.println("Sdad adsad!" + fullFeaturedPostArrayList.size());
+
         if (fullFeaturedPostArrayList.size() == 0){
             featuredPostUsers = true;
             operationCompleted();
@@ -161,6 +173,21 @@ public class ExplorePageExecutor {
     }
 
 
+    private void getFeaturedPostsFollowing(){
+        if (fullFeaturedPostArrayList.size() == 0) {
+            featuredUsersFollowing = true;
+            operationCompleted();
+        } else {
+            ArrayList<Long> idList = new ArrayList<>();
+            for (int i = 0; i < fullFeaturedPostArrayList.size(); i++) {
+                idList.add(fullFeaturedPostArrayList.get(i).getUser().getId());
+            }
+            FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, this, "Featured");
+
+        }
+    }
+
+
     private void initRecentPosts(){
         client = new OkHttpClient();
         ArrayList<FullPost> postList = new ArrayList<>();
@@ -191,6 +218,7 @@ public class ExplorePageExecutor {
                     explorePostSet.setPostList(postList);
                     getCurrentUserPostVotes();
                     getRecentPostsUsers();
+                    getRecentPostsFollowing();
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
                     delegate.completed(false, update, explorePostSet, null);
@@ -271,13 +299,17 @@ public class ExplorePageExecutor {
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     for (int i = 0; i < jsonArray.length(); i ++){
-                        JSONObject tempObject = jsonArray.getJSONObject(i);
-                        User user = CustomJsonMapper.getUserFromObject(tempObject);
-                        int[] indexList = IntStream.range(0, explorePostSet.getPostList().size())
-                                .filter(f -> explorePostSet.getPostList().get(f).getStandardPost().getUserId().equals(user.getId()))
-                                .toArray();
-                        for (int z = 0; z < indexList.length; z++) {
-                            explorePostSet.getPostList().get(indexList[z]).setUser(user);
+                        if (!jsonArray.isNull(i)) {
+                            JSONObject tempObject = jsonArray.getJSONObject(i);
+                            User user = CustomJsonMapper.getUserFromObject(tempObject);
+                            int[] indexList = IntStream.range(0, explorePostSet.getPostList().size())
+                                    .filter(f -> explorePostSet.getPostList().get(f).getStandardPost().getUserId().equals(user.getId()))
+                                    .toArray();
+                            for (int z = 0; z < indexList.length; z++) {
+                                explorePostSet.getPostList().get(indexList[z]).setUser(user);
+                            }
+                        } else {
+                            explorePostSet.getPostList().get(i).setUser(DefaultCreator.createBlankUser());
                         }
 
                     }
@@ -297,16 +329,66 @@ public class ExplorePageExecutor {
 
     }
 
+    private void getRecentPostsFollowing(){
+        if (explorePostSet.getPostList().size() == 0) {
+            recentUsersFollowing = true;
+            operationCompleted();
+        } else {
+            ArrayList<Long> idList = new ArrayList<>();
+            for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
+                idList.add(explorePostSet.getPostList().get(i).getStandardPost().getUserId());
+            }
+            FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, this, "Recent");
 
-
-    private void operationCompleted(){
-        System.out.println("Sdad awooga:" + featuredPostUsers + recentPostUsers + userVotesDone);
-        if (featuredPostUsers && recentPostUsers && userVotesDone){
-            delegate.completed(true, update, explorePostSet, fullFeaturedPostArrayList);
         }
     }
 
 
 
+    private void operationCompleted(){
+        if (featuredPostUsers && recentPostUsers && userVotesDone && recentUsersFollowing && featuredUsersFollowing){
+            if (featuredFollowing != null) {
+                for (Map.Entry<Long, Boolean> entry : featuredFollowing.entrySet()) {
+                    Long key = entry.getKey();
+                    for (int i = 0; i < fullFeaturedPostArrayList.size(); i++) {
+                        if (Objects.equals(fullFeaturedPostArrayList.get(i).getUser().getId(), key)) {
+                            fullFeaturedPostArrayList.get(i).getUser().setFollowing(featuredFollowing.get(key));
+                        }
+                    }
+                }
+            }
+            if (recentFollowing != null) {
+                for (Map.Entry<Long, Boolean> entry : recentFollowing.entrySet()) {
+                    Long key = entry.getKey();
+                    for (int i = 0; i < explorePostSet.getPostList().size(); i++) {
+                        if (Objects.equals(explorePostSet.getPostList().get(i).getUser().getId(), key)) {
+                            explorePostSet.getPostList().get(i).getUser().setFollowing(recentFollowing.get(key));
+                        }
+                    }
+                }
+            }
+            delegate.completed(true, update, explorePostSet, fullFeaturedPostArrayList);
+        }
+    }
 
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful){
+            if (type.equals("Featured")){
+                this.featuredFollowing = followList;
+                featuredUsersFollowing = true;
+            } else if (type.equals("Recent")){
+                this.recentFollowing = followList;
+                recentUsersFollowing = true;
+            }else {
+                delegate.completed(false, null, null, null);
+            }
+
+
+            operationCompleted();
+        } else {
+            delegate.completed(false, null, null, null);
+        }
+    }
 }

@@ -1,9 +1,12 @@
 package com.daribear.prefy.Activity.Votes;
 
+import com.daribear.prefy.Activity.Comment.CommentActivity;
 import com.daribear.prefy.Utils.CustomJsonCreator;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 
 import org.json.JSONArray;
@@ -12,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,13 +24,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class VoteActivityRetreiver {
+public class VoteActivityRetreiver implements GetFollowingDelegate {
     private voteActivityRetreiverInterface delegate;
     private ArrayList<VoteActivity> voteActivityList;
-    private Boolean userRetrieved, postRetrieved;
+    private Boolean userRetrieved, postRetrieved, userFollowingRetrieved;
     private ArrayList<VoteActivity> removePostList;
     private Integer postCounter, userDetailsCounter;
     private String serverAddress, authToken;
+    private HashMap<Long, Boolean> followList;
 
     public VoteActivityRetreiver(voteActivityRetreiverInterface delegate) {
         this.delegate = delegate;
@@ -36,6 +41,7 @@ public class VoteActivityRetreiver {
         voteActivityList = new ArrayList<>();
         userRetrieved = false;
         postRetrieved = false;
+        userFollowingRetrieved = false;
         serverAddress = ServerAdminSingleton.getInstance().getServerAddress();
         authToken = ServerAdminSingleton.getInstance().getServerAuthToken();
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -58,6 +64,7 @@ public class VoteActivityRetreiver {
                         voteActivityList = CustomJsonMapper.getPartialVoteActivityList(response);
                         if (voteActivityList.size() > 0) {
                             getUserDetails();
+                            getFollowing();
                             getPostDetails();
                         } else {
                             delegate.votecompleted(true, new ArrayList<>());
@@ -175,117 +182,16 @@ public class VoteActivityRetreiver {
         }
 
     }
-    /**
 
-    public void initExecutor(){
-        voteActivityList = new ArrayList<>();
-        userRetrieved = false;
-        postRetrieved = false;
-        ff = FirebaseFirestore.getInstance();
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                DatabaseReference fDatabase = FirebaseDatabase.getInstance().getReference();
-
-                fDatabase.child("activity").child(uid).child("votes").orderByChild("postCreationDate").limitToLast(10).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (DataSnapshot dataValues : task.getResult().getChildren()){
-                                VoteActivity voteActivity = dataValues.getValue(VoteActivity.class);
-                                voteActivity.setPostKey(dataValues.getKey());
-                                voteActivityList.add(voteActivity);
-                            }
-                            Collections.reverse(voteActivityList);
-                            getUserDetails();
-                            getPostDetails();
-                        } else{
-                            delegate.votecompleted(false, null);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        System.out.println("Sdad task failed: onFailureListener" + e);
-                    }
-                });
+    private void getFollowing(){
+        if (voteActivityList != null) {
+            ArrayList<Long> userList = new ArrayList<>();
+            for (VoteActivity voteActivity : voteActivityList) {
+                userList.add(voteActivity.getLastUserId());
             }
-        });
-    }
-
-
-    private void getUserDetails(){
-        userDetailsCounter = 0;
-        if (voteActivityList != null){
-            if (voteActivityList.size() > 0){
-                System.out.println("Sdad voteActivitySize:" + voteActivityList.size());
-                for (int i = 0; i < voteActivityList.size(); i++){
-                    int finalI = i;
-                    ff.collection("Users").document(voteActivityList.get(i).getLastUserId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
-                                if (task.getResult().exists()) {
-                                    System.out.println("Sdad voteActivitySizeLater:" + voteActivityList.size());
-                                    voteActivityList.get(finalI).setUser(FirebaseUtils.retreiveUser(task.getResult()));
-                                }
-                            } else{
-                                delegate.votecompleted(false, null);
-                            }
-                            userDetailsCounter += 1;
-                            if (userDetailsCounter == voteActivityList.size()){
-                                System.out.println("Sdad done");
-                                userRetrieved = true;
-                                completeSuccess();
-                                //delegate.completed(true, voteActivityList);
-                            }
-                        }
-                    });
-
-                }
-            } else {
-                delegate.votecompleted(true, new ArrayList<>());
-            }
-        }
-
-
-    }
-
-    private void getPostDetails(){
-        removePostList = new ArrayList<>();
-        postCounter = 0;
-        for (int i = 0; i < voteActivityList.size(); i++){
-            int finalI = i;
-            ff.collection("Posts").document(voteActivityList.get(i).getPostKey()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()){
-                        if (task.getResult().exists()) {
-
-                            voteActivityList.get(finalI).setPost(FirebaseUtils.retreiveStandardPost(task.getResult()));
-                            postCounter += 1;
-                        } else {
-                            removePostList.add(voteActivityList.get(finalI));
-                            postCounter += 1;
-                        }
-
-                    } else{
-                        delegate.votecompleted(false, null);
-                    }
-                    if (postCounter == voteActivityList.size()){
-                        postRetrieved = true;
-                        completeSuccess();
-
-                    }
-                }
-            });
-
-
+            FollowingRetrieving followingRetrieving = new FollowingRetrieving(userList, this, null);
         }
     }
-
-     */
 
     private void requestfailed(){
         delegate.votecompleted(false, null);
@@ -293,13 +199,24 @@ public class VoteActivityRetreiver {
 
     private void completeSuccess(){
         System.out.println("Sdad completeSuccess:" + postRetrieved + userRetrieved);
-        if (postRetrieved && userRetrieved){
+        if (postRetrieved && userRetrieved && userFollowingRetrieved){
             if (removePostList != null){
                 for (VoteActivity voteActivity : removePostList ){
                     voteActivityList.remove(voteActivity);
                 }
             }
             delegate.votecompleted(true, voteActivityList);
+        }
+    }
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful){
+            userFollowingRetrieved = true;
+            this.followList = followList;
+            completeSuccess();
+        } else {
+            delegate.votecompleted(false, null);
         }
     }
 }

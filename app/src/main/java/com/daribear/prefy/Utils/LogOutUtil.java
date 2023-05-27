@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class LogOutUtil {
-    private static final ArrayList<String> tableList = new ArrayList<>(Arrays.asList("PopularPostsUsers","PopularPostsPopularPosts", "UploadTasks", "UploadVotes", "UploadActivityClear", "UploadComments" ));
+    private static final ArrayList<String> tableList = new ArrayList<>(Arrays.asList("PopularPostsUsers","PopularPostsPopularPosts", "UploadTasks", "UploadVotes", "UploadActivityClear", "UploadComments", "UploadDeleteTable", "UploadFollowTable"));
 
     public static void Logout(Activity activity){
         clearSharedPrefs(activity.getApplicationContext());

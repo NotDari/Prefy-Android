@@ -4,39 +4,46 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 
 import com.daribear.prefy.Comments.Comment;
+import com.daribear.prefy.Comments.CommentDeleted;
 import com.daribear.prefy.Comments.CommentReplyClicked;
+import com.daribear.prefy.DeleteDialog.DeleteDialog;
+import com.daribear.prefy.DeleteDialog.DeleteDialogDelegate;
+import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-public class CommentReplyPopUp {
+public class CommentReplyPopUp implements DeleteDialogDelegate {
     private Comment comment;
     private BottomSheetDialog commentDialog;
     private Boolean changeCoordinates = false;
     private Integer changeCoordinatesX, changeCoordinatesY;
     private Activity ownerActivity;
-    private CommentReplyClicked commentDelegate;
+    private CommentReplyClicked commentReplyDelegate;
+    private CommentDeleted commentDeletedDelegate;
 
 
-    public CommentReplyPopUp(Comment comment, Activity ownerActivity,CommentReplyClicked commentDelegate ) {
+
+    public CommentReplyPopUp(Comment comment, Activity ownerActivity,CommentReplyClicked commentReplyDelegate, CommentDeleted commentDeletedDelegate) {
         this.comment = comment;
         this.ownerActivity = ownerActivity;
-        this.commentDelegate = commentDelegate;
+        this.commentReplyDelegate = commentReplyDelegate;
+        this.commentDeletedDelegate = commentDeletedDelegate;
     }
 
 
 
     private void setUpViews(Dialog postDialog){
-        RelativeLayout replyLayout = postDialog.findViewById(R.id.CommentDialogReplyLayout);
-        RelativeLayout profileLayout = postDialog.findViewById(R.id.CommentDialogProfileLayout);
-        RelativeLayout reportLayout = postDialog.findViewById(R.id.CommentDialogReportLayout);
-        RelativeLayout deleteLayout = postDialog.findViewById(R.id.CommentDialogDeleteLayout);
+        ConstraintLayout replyLayout = postDialog.findViewById(R.id.CommentDialogReplyLayout);
+        ConstraintLayout profileLayout = postDialog.findViewById(R.id.CommentDialogProfileLayout);
+        ConstraintLayout reportLayout = postDialog.findViewById(R.id.CommentDialogReportLayout);
+        ConstraintLayout deleteLayout = postDialog.findViewById(R.id.CommentDialogDeleteLayout);
         Utils utils = new Utils(ownerActivity);
         View deleteView = postDialog.findViewById(R.id.CommentDialogDeleteView);
         if (comment.getUser().getId().equals(utils.loadLong(ownerActivity.getString(R.string.save_user_id), 0))){
@@ -50,7 +57,7 @@ public class CommentReplyPopUp {
             @Override
             public void onClick(View view) {
                 Toast.makeText(ownerActivity, "Reply" + comment.getReplyID() + " " + comment.getCommentId(), Toast.LENGTH_SHORT).show();
-                commentDelegate.subReplyClicked(comment.getUser().getUsername(), comment.getReplyID(), comment.getCommentId());
+                commentReplyDelegate.subReplyClicked(comment.getUser().getUsername(), comment.getReplyID(), comment.getCommentId());
                 postDialog.dismiss();
             }
         });
@@ -67,34 +74,22 @@ public class CommentReplyPopUp {
         reportLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /**
-                if (fullComment != null) {
+                if (comment != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("Type", "Comment");
-                    bundle.putParcelable("comment", fullComment.getComment());
+                    bundle.putParcelable("comment", comment);
                     Navigation.findNavController(ownerActivity, R.id.FragmentContainerView).navigate(R.id.action_global_reportFragment, bundle);
                     postDialog.dismiss();
                 } else {
                     Toast.makeText(ownerActivity, "An error has occurred", Toast.LENGTH_SHORT).show();
                 }
-                 */
             }
         });
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO Fix deleteLAY
-                /**
-                 FirebaseFirestore ff = FirebaseFirestore.getInstance();
-                 WriteBatch batch = ff.batch();
-                 DocumentReference commentRef = ff.collection("Comments").document(fullComment.getComment().getKey());
-                 batch.delete(commentRef);
-                 DocumentReference postRef = ff.collection("Posts").document(fullComment.getComment().getPostId());
-                 batch.update(postRef, "commentsNumber", FieldValue.increment(-1));
-                 batch.commit();
-                 postDialog.dismiss();
-                 commentDeleteDelegate.deleteClicked(fullComment);
-                 */
+                postDialog.dismiss();
+                DeleteDialog.getInstance(ownerActivity, CommentReplyPopUp.this::deleteClicked, "Comment").show();
             }
         });
     }
@@ -118,4 +113,9 @@ public class CommentReplyPopUp {
 
     }
 
+    @Override
+    public void deleteClicked() {
+        UploadController.saveDelete(commentDialog.getContext().getApplicationContext(), "Comment", comment.getCommentId());
+        commentDeletedDelegate.deleteClicked(comment.getCommentId());
+    }
 }

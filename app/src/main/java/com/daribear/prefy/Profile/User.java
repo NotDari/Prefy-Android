@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +22,19 @@ public class User implements Parcelable{
     private Long postsNumber;
     private Long votesNumber;
     private Long prefsNumber;
+
+    private Long followerNumber;
+
+    private Long followingNumber;
     private Long rating;
     private String bio;
     private String vk;
     private String instagram;
     private String twitter;
     private Boolean verified;
+
+    private Boolean following;
+
 
 
 
@@ -38,6 +46,8 @@ public class User implements Parcelable{
         postsNumber = in.readLong();
         votesNumber = in.readLong();
         prefsNumber = in.readLong();
+        followerNumber = in.readLong();
+        followingNumber = in.readLong();
         rating = in.readLong();
         bio = in.readString();
         vk = in.readString();
@@ -45,8 +55,10 @@ public class User implements Parcelable{
         twitter = in.readString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             verified = in.readBoolean();
+            following = in.readBoolean();
         } else {
             verified = in.readByte() != 0;
+            following = in.readByte() != 0;
         }
 
 
@@ -66,6 +78,8 @@ public class User implements Parcelable{
         dest.writeLong(postsNumber);
         dest.writeLong(votesNumber);
         dest.writeLong(prefsNumber);
+        dest.writeLong(followerNumber);
+        dest.writeLong(followingNumber);
         dest.writeValue(rating);
         dest.writeString(bio);
         dest.writeString(vk);
@@ -73,8 +87,10 @@ public class User implements Parcelable{
         dest.writeString(twitter);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             dest.writeBoolean(verified);
+            dest.writeBoolean(following);
         } else {
             dest.writeByte((byte) (verified ? 1 : 0));
+            dest.writeByte((byte) (following ? 1 : 0));
         }
 
 

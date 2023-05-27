@@ -243,6 +243,8 @@ class log_in_fragment : Fragment() {
         sharedprefs.putStringSharedPref(getString(R.string.save_vk_pref), user.vk);
         sharedprefs.putBooleanSharedPref(getString(R.string.save_verified_pref), user.verified)
         sharedprefs.putLongSharedPref(getString(R.string.save_user_id), user.id)
+        sharedprefs.putLongSharedPref(getString(R.string.save_follower_pref), user.followerNumber)
+        sharedprefs.putLongSharedPref(getString(R.string.save_following_pref), user.followingNumber)
         ServerAdminSingleton.getInstance().alterLoggedInUser(context)
         usernameDone = true
         fullnameDone = true

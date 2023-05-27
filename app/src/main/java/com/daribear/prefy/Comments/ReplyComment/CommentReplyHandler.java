@@ -5,10 +5,12 @@ import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.daribear.prefy.Comments.Comment;
+import com.daribear.prefy.Comments.CommentDeleted;
 import com.daribear.prefy.Comments.CommentListAdaptor;
 import com.daribear.prefy.Comments.CommentReplyClicked;
 import com.daribear.prefy.Comments.FullRecComment;
@@ -16,7 +18,7 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
-public class CommentReplyHandler implements ReplyDelegate{
+public class CommentReplyHandler implements ReplyDelegate, CommentReplyDeletedDelegate {
     private FullRecComment fullRecComment;
     private CommentListAdaptor.CommentItemViewHolder viewHolder;
     private Activity parentActivity;
@@ -69,7 +71,7 @@ public class CommentReplyHandler implements ReplyDelegate{
             }
             if (!fullRecComment.getMinimised()){
                 for (int i = 0; i < fullRecComment.getRepliesShown(); i ++){
-                    CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate );
+                    CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate, CommentReplyHandler.this::deletedReply);
                     replyLay.addView(commentReplyItem);
                 }
             }
@@ -90,7 +92,7 @@ public class CommentReplyHandler implements ReplyDelegate{
                         if (fullRecComment.getFullComment().getCommentReplyList().size() != replyCount) {
                             if ((repliesAvailable - replyCount) > 5) {
                                 for (int i = replyCount; i < replyCount + 5; i++) {
-                                    CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate);
+                                    CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate, CommentReplyHandler.this::deletedReply);
                                     replyLay.addView(commentReplyItem);
                                     fullRecComment.setRepliesShown(fullRecComment.getRepliesShown() + 1);
                                 }
@@ -98,7 +100,7 @@ public class CommentReplyHandler implements ReplyDelegate{
                             } else {
                                 if (repliesAvailable - replyCount > 0) {
                                     for (int i = replyCount; i < replyCount + (repliesAvailable - replyCount); i++) {
-                                        CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate);
+                                        CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate, CommentReplyHandler.this::deletedReply);
                                         replyLay.addView(commentReplyItem);
                                         fullRecComment.setRepliesShown(fullRecComment.getRepliesShown() + 1);
                                     }
@@ -117,7 +119,7 @@ public class CommentReplyHandler implements ReplyDelegate{
 
                     }else {
                         for (int i =0; i < (commentsRemaining); i ++){
-                            CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate);
+                            CommentReplyItem commentReplyItem = new CommentReplyItem(replyLay.getContext(), fullRecComment.getFullComment().getCommentReplyList().get(i), displayMetrics, parentActivity, commentDelegate, CommentReplyHandler.this::deletedReply);
                             replyLay.addView(commentReplyItem);
                             viewHolder.bottomView.setVisibility(View.GONE);
                             fullRecComment.setRepliesShown(fullRecComment.getRepliesShown() + 1);
@@ -150,6 +152,19 @@ public class CommentReplyHandler implements ReplyDelegate{
             commentsRemaining = repliesAvailable - fullRecComment.getRepliesShown();
         }else {
 
+        }
+    }
+
+
+
+
+
+    @Override
+    public void deletedReply(CommentReplyItem commentReplyItem) {
+
+        LinearLayout replyLay = viewHolder.replyLayout;
+        if (commentReplyItem != null) {
+            replyLay.removeView(commentReplyItem);
         }
     }
 }

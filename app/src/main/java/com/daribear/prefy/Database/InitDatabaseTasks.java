@@ -26,5 +26,9 @@ public class InitDatabaseTasks {
         deleteContentValues.put("Type", "Delete");
         deleteContentValues.put("Count", 0);
         db.insert("UploadTasks", null, deleteContentValues);
+        ContentValues followContentValues = new ContentValues();
+        followContentValues.put("Type", "Follow");
+        followContentValues.put("Count", 0);
+        db.insert("UploadTasks", null, followContentValues);
     }
 }

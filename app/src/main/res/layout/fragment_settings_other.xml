@@ -78,6 +78,33 @@
         android:textAllCaps="false"
         android:layout_marginTop="30dp"
         android:layout_below="@id/SettingsOtherTermsConditions"/>
+    <Button
+        android:id="@+id/SettingsOtherCookiePolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:drawableRight="@drawable/right_arrow"
+        android:drawableTint="@color/text_color"
+        android:textColor="@color/text_color"
+        android:text="Cookie Policy"
+        android:gravity="start|center_vertical"
+        android:textAllCaps="false"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/SettingsOtherPrivacyPolicy"/>
+
+    <Button
+        android:id="@+id/SettingsOtherAcceptableUsePolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:drawableRight="@drawable/right_arrow"
+        android:drawableTint="@color/text_color"
+        android:textColor="@color/text_color"
+        android:text="Acceptable Use Policy"
+        android:gravity="start|center_vertical"
+        android:textAllCaps="false"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/SettingsOtherCookiePolicy"/>
 
 
 

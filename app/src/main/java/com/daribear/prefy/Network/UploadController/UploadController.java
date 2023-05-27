@@ -21,6 +21,8 @@ public class UploadController {
     private static final String ReportTableName = "UploadReports";
 
     private static final String DeleteTableName = "UploadDeleteTable";
+
+    private static final String FollowTableName = "UploadFollowTable";
     private static final String Count = "Count";
 
     public static void saveVote(Context appContext, HashMap<String, Object> Vote){
@@ -54,8 +56,8 @@ public class UploadController {
                     " SET " + Count + " = " + Count + " + 1" +
                     " WHERE " + "Type" + " = ?", new String[] {"ActivityClear"});
             db.insert(ActivityClearTableName, null, contentValues);
-            attemptUpload(appContext);
         }
+        attemptUpload(appContext);
     }
 
     public static void saveComment(Context appContext, Comment comment){
@@ -103,6 +105,45 @@ public class UploadController {
         contentValues.put("UserId", ServerAdminSingleton.getInstance().getLoggedInId());
         db.insert(DeleteTableName, null, contentValues);
         attemptUpload(appContext);
+    }
+
+
+    public static void saveFollow(Context appContext, Long FollowingUserId , Boolean Follow){
+        System.out.println("Sdad follow: " + Follow);
+        SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
+
+        Cursor checkCursor = db.rawQuery("SELECT * FROM " + FollowTableName +
+                " WHERE " + "FollowingUserId" + " = ?", new String[] {FollowingUserId.toString()});
+        if (checkCursor.moveToFirst()){
+            Boolean dataFollowing = (checkCursor.getInt(checkCursor.getColumnIndexOrThrow("Follow")) == 1);
+            if (dataFollowing != Follow){
+                Integer tempBool;
+                if (Follow){
+                    tempBool = 1;
+                }else {
+                    tempBool = 0;
+                }
+                db.execSQL("UPDATE " + FollowTableName +
+                        " SET " + "Follow"  + " = " + tempBool +
+                        " WHERE " + "FollowingUserId" + " = ?", new String[] {FollowingUserId.toString()});
+            }
+        } else {
+            Integer tempBool;
+            if (Follow){
+                tempBool = 1;
+            }else {
+                tempBool = 0;
+            }
+            db.execSQL("UPDATE " + UploadTableName +
+                    " SET " + Count + " = " + Count + " + 1" +
+                    " WHERE " + "Type" + " = ?", new String[] {"Follow"});
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("FollowingUserId", FollowingUserId);
+            contentValues.put("Follow", tempBool);
+            contentValues.put("UserId", ServerAdminSingleton.getInstance().getLoggedInId());
+            db.insert(FollowTableName, null, contentValues);
+            attemptUpload(appContext);
+        }
     }
 
     public static void attemptUpload(Context appContext){

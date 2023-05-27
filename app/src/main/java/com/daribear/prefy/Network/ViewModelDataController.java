@@ -20,6 +20,7 @@ public class ViewModelDataController {
         ActivityRepository activityRepo = ActivityRepository.getInstance();
         activityRepo.getCommentData();
         activityRepo.getVoteData();
+        activityRepo.getFollowerData();
         ExploreRepository exploreRepo = ExploreRepository.getInstance();
         exploreRepo.init();
         CurrentUserRepository userRepo = CurrentUserRepository.getInstance();

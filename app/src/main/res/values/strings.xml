@@ -1,15 +1,13 @@
 <resources>
     <string name="app_name">Prefy</string>
 
-    <string name="login_agreement_Text">By making an account, you agree to our <a href="http://www.google.com">Terms and Conditions</a>. See how we collect and use your data in our privacy policy, and your cookies in our cookie policy</string>
+    <string name="login_agreement_Text">By making an account, you agree to our <a href="https://daribear.com/apps/prefy/terms-conditions">Terms and Conditions</a>. See how we collect and use your data in our <a href="https://daribear.com/apps/prefy/prefy-privacy-policy">privacy policy</a>, and your cookies in our <a href="https://daribear.com/apps/prefy/prefy-cookie-policy">cookie policy</a></string>
 
-
-
-    <!-- http://100.68.142.3:8090
-
-      !-->
-
-    <!-- Usually it would be http://10.0.2.2:8090  , but it has be changed to allow external !-->
+    <!-- Links !-->
+    <string name="privacy_policy">https://daribear.com/apps/prefy/prefy-privacy-policy</string>
+    <string name="cookie_policy">https://daribear.com/apps/prefy/prefy-cookie-policy</string>
+    <string name="terms_and_conditions">https://daribear.com/apps/prefy/prefy-terms-conditions</string>
+    <string name="acceptable_use">https://daribear.com/apps/prefy/prefy-acceptable-use-policy</string>
 
 
     <!-- Strings that are re-used !-->
@@ -32,6 +30,8 @@
     <string name="save_verified_pref">verified_save</string>
     <string name="save_bio_pref">profileBio_save</string>
     <string name="save_auth_token_pref">authToken_save</string>
+    <string name="save_follower_pref">followerNumber_save</string>
+    <string name="save_following_pref">followingNumber_save</string>
     <string name="dark_mode_pref">dark_mode</string>
     <string name="auto_scroll_pref">auto_scroll</string>
     <string name="no_saved_cache_pref">No_Cache_Pref</string>

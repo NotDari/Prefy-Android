@@ -17,5 +17,9 @@ public class DatabaseUtils {
         return (cursor.isNull(cursor.getColumnIndexOrThrow(field))) ? null : cursor.getString(cursor.getColumnIndexOrThrow(field));
     }
 
+    public static Integer getIntegerWithNull(Cursor cursor, String field ){
+        return (cursor.isNull(cursor.getColumnIndexOrThrow(field))) ? null : cursor.getInt(cursor.getColumnIndexOrThrow(field));
+    }
+
 
 }

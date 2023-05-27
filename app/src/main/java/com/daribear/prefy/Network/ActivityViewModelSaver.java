@@ -37,38 +37,40 @@ public class ActivityViewModelSaver {
     private void savePopular(){
         NewPopularViewModel popViewModel = new NewPopularViewModel();
         popViewModel.init(ApplicationContext);
-        PopularPostSet popularPostSet = popViewModel.singleDataCheck().getPopularPostSet();
-        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(ApplicationContext);
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        if (popularPostSet!= null) {
-            if (popularPostSet.getPostList().size() > 0) {
-                //db.execSQL("delete from " + popularpostTableName);
-                db.execSQL("delete from " + popularstandardpostTableName);
-                db.execSQL("delete from " + popularuserTableName);
-                //db.execSQL("delete from " + popularuserInfoTableName);
+        if (popViewModel.singleDataCheck().getPopularPostSet() != null) {
+            PopularPostSet popularPostSet = popViewModel.singleDataCheck().getPopularPostSet();
+            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(ApplicationContext);
+            SQLiteDatabase db = databaseHelper.getWritableDatabase();
+            if (popularPostSet != null) {
+                if (popularPostSet.getPostList().size() > 0) {
+                    //db.execSQL("delete from " + popularpostTableName);
+                    db.execSQL("delete from " + popularstandardpostTableName);
+                    db.execSQL("delete from " + popularuserTableName);
+                    //db.execSQL("delete from " + popularuserInfoTableName);
 
-                Integer limitCounter = 15;
-                if (popularPostSet.getPostList().size() < limitCounter) {
-                    if (popularPostSet.getPostList().size() <= popularPostSet.getUserList().size()) {
-                        limitCounter = popularPostSet.getPostList().size();
-                    } else {
-                        limitCounter = popularPostSet.getUserList().size();
-                    }
-                }
-
-                for (int i = 0; i < limitCounter; i++) {
-                    if (popularPostSet.getPostList().get(i).getCurrentVote().equals("none")) {
-                        ContentValues standardPostContent = CacheContentTools.getStandardPostContent(popularPostSet.getPostList().get(i));
-                        Cursor countCursor = db.rawQuery("Select * FROM " + popularstandardpostTableName + " WHERE postId = " + popularPostSet.getPostList().get(i).getPostId(), null);
-                        if (countCursor.getCount() <= 0) {
-                            db.insert(popularstandardpostTableName, null, standardPostContent);
-
-
-                            ContentValues userContent = CacheContentTools.getUserContent(popularPostSet.getUserList().get(i));
-                            db.insert(popularuserTableName, null, userContent);
+                    Integer limitCounter = 15;
+                    if (popularPostSet.getPostList().size() < limitCounter) {
+                        if (popularPostSet.getPostList().size() <= popularPostSet.getUserList().size()) {
+                            limitCounter = popularPostSet.getPostList().size();
+                        } else {
+                            limitCounter = popularPostSet.getUserList().size();
                         }
                     }
 
+                    for (int i = 0; i < limitCounter; i++) {
+                        if (popularPostSet.getPostList().get(i).getCurrentVote().equals("none")) {
+                            ContentValues standardPostContent = CacheContentTools.getStandardPostContent(popularPostSet.getPostList().get(i));
+                            Cursor countCursor = db.rawQuery("Select * FROM " + popularstandardpostTableName + " WHERE postId = " + popularPostSet.getPostList().get(i).getPostId(), null);
+                            if (countCursor.getCount() <= 0) {
+                                db.insert(popularstandardpostTableName, null, standardPostContent);
+
+
+                                ContentValues userContent = CacheContentTools.getUserContent(popularPostSet.getUserList().get(i));
+                                db.insert(popularuserTableName, null, userContent);
+                            }
+                        }
+
+                    }
                 }
             }
         }

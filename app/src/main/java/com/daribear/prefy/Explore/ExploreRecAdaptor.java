@@ -127,11 +127,11 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (originalSize > 0){
             notifyItemRangeRemoved(1 , originalSize + 1);
         }
+        this.explorePostSet = explorePostSet;
         if (explorePostSet.getPostList().size() > 0) {
-            this.explorePostSet = explorePostSet;
+
             notifyDataSetChanged();
             //notifyItemRangeInserted(1, explorePostSet.getPostList().size());
-        } else {
         }
     }
 

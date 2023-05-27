@@ -20,11 +20,12 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.daribear.prefy.Comments.Comment;
+import com.daribear.prefy.Comments.CommentDeleted;
 import com.daribear.prefy.Comments.CommentReplyClicked;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.dateSinceSystem;
 
-public class CommentReplyItem extends FrameLayout {
+public class CommentReplyItem extends FrameLayout implements CommentDeleted {
     private Comment comment;
 
     private TextView usernameText, commentText, timeSinceText;
@@ -32,16 +33,21 @@ public class CommentReplyItem extends FrameLayout {
     private ImageButton moreButton;
     private View bottomView;
     private Activity ownerActivity;
-    private CommentReplyClicked commentDelegate;
+    private CommentReplyClicked commentReplyDelegate;
 
-    public CommentReplyItem(Context context, Comment comment, DisplayMetrics displayMetrics, Activity ownerActivity, CommentReplyClicked commentDelegate) {
+    private CommentReplyDeletedDelegate commentReplyDeletedDelegate;
+
+
+
+    public CommentReplyItem(Context context, Comment comment, DisplayMetrics displayMetrics, Activity ownerActivity, CommentReplyClicked commentReplyDelegate, CommentReplyDeletedDelegate commentReplyDeletedDelegate) {
         super(context);
         this.comment = comment;
         this.ownerActivity = ownerActivity;
         init(context);
         setImageSize((int) (displayMetrics.widthPixels * .1));
         resizeImageButon(displayMetrics);
-        this.commentDelegate = commentDelegate;
+        this.commentReplyDelegate = commentReplyDelegate;
+        this.commentReplyDeletedDelegate = commentReplyDeletedDelegate;
     }
 
     private void resizeImageButon(DisplayMetrics displayMetrics){
@@ -71,11 +77,10 @@ public class CommentReplyItem extends FrameLayout {
         handleViews();
     }
     private void handleViews(){
-
         moreButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommentReplyPopUp dialog = new CommentReplyPopUp(comment, ownerActivity, commentDelegate );
+                CommentReplyPopUp dialog = new CommentReplyPopUp(comment, ownerActivity, commentReplyDelegate, CommentReplyItem.this::deleteClicked);
                 dialog.initDialog();
             }
         });
@@ -120,5 +125,8 @@ public class CommentReplyItem extends FrameLayout {
     }
 
 
-
+    @Override
+    public void deleteClicked(Long commentId) {
+        commentReplyDeletedDelegate.deletedReply(CommentReplyItem.this);
+    }
 }

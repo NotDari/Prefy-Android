@@ -6,6 +6,8 @@ import com.daribear.prefy.Utils.CustomJsonCreator;
 import com.daribear.prefy.Utils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.customClasses.FullPost;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +18,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
@@ -24,7 +29,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ExploreCategoriesRetreiver {
+public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
     private ExploreCategoryInterface delegate;
     //private Long lastCreationDate;
     private Integer pageNumber;
@@ -34,7 +39,9 @@ public class ExploreCategoriesRetreiver {
     private DatabaseReference mDatabase;
     private String serverAddress, authToken;
 
-    private Boolean usersDone = false, votesDone = false;
+    private Boolean usersDone = false, votesDone = false, followingDone = false;
+
+    private HashMap<Long, Boolean> followList;
 
 
     public ExploreCategoriesRetreiver(ExploreCategoryInterface delegate, Integer pageNumber, String categoryChoice, Integer limitCount) {
@@ -91,6 +98,7 @@ public class ExploreCategoriesRetreiver {
                             explorePostSet.setPostList(postList);
                             getUsers();
                             getUserCurrentVotes();
+                            getUsersFollowing();
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
@@ -104,7 +112,6 @@ public class ExploreCategoriesRetreiver {
                 }
 
 
-                //"\uf8ff" is one of the last characters in Unicode so by ending at this, we get all the posts with just the desired uid
             }
         });
 
@@ -209,10 +216,44 @@ public class ExploreCategoriesRetreiver {
         }
     }
 
+    private void getUsersFollowing(){
+        if (explorePostSet.getPostList().size() == 0){
+            followingDone = true;
+            operationCompleted();
+        } else {
+            ArrayList<Long> idList = new ArrayList<>();
+            for (int i = 0; i < explorePostSet.getPostList().size(); i++) {
+                idList.add(explorePostSet.getPostList().get(i).getUser().getId());
+            }
+            FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, this, null);
+        }
+    }
+
 
     private void operationCompleted(){
-        if (usersDone && votesDone) {
+        if (usersDone && votesDone && followingDone) {
+            if (followList != null) {
+                for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
+                    Long key = entry.getKey();
+                    for (int i = 0; i < explorePostSet.getPostList().size(); i++) {
+                        if (Objects.equals(explorePostSet.getPostList().get(i).getUser().getId(), key)) {
+                            explorePostSet.getPostList().get(i).getUser().setFollowing(followList.get(key));
+                        }
+                    }
+                }
+            }
             delegate.Completed(true, explorePostSet);
+        }
+    }
+
+    @Override
+    public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
+        if (successful){
+            followingDone = true;
+            this.followList = followList;
+            operationCompleted();
+        }else {
+            delegate.Completed(false, null);
         }
     }
 }

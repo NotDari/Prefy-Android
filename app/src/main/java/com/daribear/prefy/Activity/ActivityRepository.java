@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.daribear.prefy.Activity.Comment.CommentActivity;
 import com.daribear.prefy.Activity.Comment.CommentActivityRetreiver;
 import com.daribear.prefy.Activity.Comment.commentRetreiverInterface;
+import com.daribear.prefy.Activity.Followers.FollowerActivity;
+import com.daribear.prefy.Activity.Followers.FollowerActivityRetreiver;
+import com.daribear.prefy.Activity.Followers.followerRetrieverInterface;
 import com.daribear.prefy.Activity.Votes.VoteActivity;
 import com.daribear.prefy.Activity.Votes.VoteActivityRetreiver;
 import com.daribear.prefy.Activity.Votes.voteActivityRetreiverInterface;
@@ -12,10 +15,17 @@ import com.daribear.prefy.Activity.Votes.voteActivityRetreiverInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityRepository implements commentRetreiverInterface, voteActivityRetreiverInterface {
+import lombok.Getter;
+
+
+
+public class ActivityRepository implements commentRetreiverInterface, voteActivityRetreiverInterface, followerRetrieverInterface {
     private static ActivityRepository instance;
     private MutableLiveData<List<CommentActivity>> commentActivityMutable;
     private MutableLiveData<List<VoteActivity>> voteActivityMutable;
+    @Getter
+    private MutableLiveData<List<FollowerActivity>> followerActivityMutable;
+
     private MutableLiveData<Boolean> internetAvailable;
     private MutableLiveData<Boolean> dataRefreshing;
 
@@ -52,6 +62,19 @@ public class ActivityRepository implements commentRetreiverInterface, voteActivi
         voteExecutor.initExecutor();
         if (voteActivityMutable == null) {
             voteActivityMutable = new MutableLiveData<>();
+        }
+        if (dataRefreshing == null){
+            dataRefreshing = new MutableLiveData<>();
+            dataRefreshing.setValue(true);
+        }
+        return null;
+    }
+
+    public MutableLiveData<FollowerActivity> getFollowerData(){
+        FollowerActivityRetreiver followerExecutor = new FollowerActivityRetreiver(this);
+        followerExecutor.initExecutor();
+        if (followerActivityMutable == null) {
+            followerActivityMutable = new MutableLiveData<>();
         }
         if (dataRefreshing == null){
             dataRefreshing = new MutableLiveData<>();
@@ -122,5 +145,14 @@ public class ActivityRepository implements commentRetreiverInterface, voteActivi
         if (dataRefreshing.getValue()){
             dataRefreshing.postValue(false);
         }
+    }
+
+
+    @Override
+    public void followerCompleted(Boolean successful, ArrayList<FollowerActivity> followerActivityList) {
+        if (successful){
+            this.followerActivityMutable.postValue(followerActivityList);
+        }
+        taskComplete(successful);
     }
 }

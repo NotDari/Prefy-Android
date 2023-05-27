@@ -42,6 +42,7 @@
             app:layout_constraintTop_toTopOf="@id/CommentListItemUsername"
             app:layout_constraintBottom_toBottomOf="@id/CommentListItemTimeSince"
             app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/text_color"
             android:src="@drawable/more"
             android:background="@android:color/transparent"
             android:padding="10dp"/>

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.Navigation;
 
 import com.daribear.prefy.DeleteDialog.DeleteDialog;
@@ -44,10 +45,10 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
     }
 
     private void setUpViews(Dialog postDialog){
-        RelativeLayout replyLayout = postDialog.findViewById(R.id.CommentDialogReplyLayout);
-        RelativeLayout profileLayout = postDialog.findViewById(R.id.CommentDialogProfileLayout);
-        RelativeLayout reportLayout = postDialog.findViewById(R.id.CommentDialogReportLayout);
-        RelativeLayout deleteLayout = postDialog.findViewById(R.id.CommentDialogDeleteLayout);
+        ConstraintLayout replyLayout = postDialog.findViewById(R.id.CommentDialogReplyLayout);
+        ConstraintLayout profileLayout = postDialog.findViewById(R.id.CommentDialogProfileLayout);
+        ConstraintLayout reportLayout = postDialog.findViewById(R.id.CommentDialogReportLayout);
+        ConstraintLayout deleteLayout = postDialog.findViewById(R.id.CommentDialogDeleteLayout);
         Utils utils = new Utils(ownerActivity);
         View deleteView = postDialog.findViewById(R.id.CommentDialogDeleteView);
         if (fullComment.getComment().getUser().getId().equals(utils.loadLong(ownerActivity.getString(R.string.save_user_id), 0))){

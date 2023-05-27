@@ -99,6 +99,7 @@ class login_activity : AppCompatActivity() {
 
             setDefaultsAsync(R.xml.remote_config_defaults)
             ServerAdminSingleton.getInstance().serverAddress = FirebaseRemoteConfig.getInstance().getString("Api_link")
+            println("Sdad server: " + ServerAdminSingleton.getInstance().serverAddress)
             AdTracker.getInstance().setTotals(FirebaseRemoteConfig.getInstance().getLong("interstitial_popular_frequency").toInt(), FirebaseRemoteConfig.getInstance().getLong("interstitial_other_frequency").toInt())
             fetchAndActivate().addOnCompleteListener { task ->
                 val updated = task.result
@@ -107,6 +108,7 @@ class login_activity : AppCompatActivity() {
                     if (updated) {
                         ServerAdminSingleton.getInstance().serverAddress =
                             FirebaseRemoteConfig.getInstance().getString("Api_link")
+                        println("Sdad server updated: " + ServerAdminSingleton.getInstance().serverAddress)
                     }
                 } else {
                     Log.d("TAG", "Config params updated: $updated")

@@ -10,6 +10,7 @@
     <color name="grey">#939499</color>
     <color name="dark_grey_transparentish">#B34a494b</color>
     <color name="white_transparentish">#B3FFFFFF</color>
+    <color name="both_transparentish">#B3FFFFFF</color>
     <color name="red">#fc0313</color>
     <color name="very_transparent_red">#40fc0313</color>
     <color name="fully_transparent">#00ff0000</color>
@@ -23,6 +24,9 @@
     <color name="black_lowOpacity">#40000000</color>
     <color name="search_bar_colour">#F5F5F5</color>
     <color name="explore_bar_colour">#F2F2F2</color>
+
+    <color name="follow_button">#94d2bd</color>
+    <color name="unfollow_button">#cbc0d3</color>
 
     <!-- Fragment Background Colour !-->
     <color name="fragment_background">#FFFFFFFF</color>

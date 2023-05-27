@@ -1,6 +1,7 @@
 package com.daribear.prefy.Utils;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
@@ -10,6 +11,8 @@ public class ServerAdminSingleton {
     private String serverAddress;
     private String serverAuthToken;
     private Long loggedInId;
+
+    private SQLiteDatabase sqLiteDatabase;
 
     public static ServerAdminSingleton getInstance(){
         if (instance == null){
@@ -45,6 +48,14 @@ public class ServerAdminSingleton {
 
     public Long getLoggedInId() {
         return loggedInId;
+    }
+
+    public SQLiteDatabase getSqLiteDatabase() {
+        return sqLiteDatabase;
+    }
+
+    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
     }
 
     public static User getCurrentUser(Context appContext){
