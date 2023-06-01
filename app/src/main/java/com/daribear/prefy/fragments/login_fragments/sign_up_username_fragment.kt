@@ -14,9 +14,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.daribear.prefy.R
 import com.daribear.prefy.Utils.ServerAdminSingleton
-import com.daribear.prefy.Utils.usernameValidityChecker
+import com.daribear.prefy.Utils.GeneralUtils.usernameValidityChecker
+import com.daribear.prefy.databinding.FragmentSignUpUsernameBinding
 import com.google.android.material.button.MaterialButton
-import kotlinx.android.synthetic.main.fragment_sign_up_username.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -26,11 +26,19 @@ import java.util.concurrent.Executors
 
 
 class sign_up_username_fragment : Fragment() {
+    private var _binding: FragmentSignUpUsernameBinding? = null
+
+    private val binding get() = _binding!!
+
     private var buttonActive = false
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         handleBottomText()
-        return inflater.inflate(R.layout.fragment_sign_up_username, container, false)
+        _binding = FragmentSignUpUsernameBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,8 +47,8 @@ class sign_up_username_fragment : Fragment() {
     }
 
     private fun handlesignupUsername(){
-        val userNameNextButton: MaterialButton = signUpNextMaterialButton
-        val editText: EditText = usernameEditText
+        val userNameNextButton: MaterialButton = binding.signUpNextMaterialButton
+        val editText: EditText = binding.usernameEditText
         userNameNextButton.setOnClickListener {
             if (!buttonActive) {
                 buttonActive = true
@@ -136,5 +144,9 @@ class sign_up_username_fragment : Fragment() {
                 val navController = navHostFragment.navController
                 navController.navigate(R.id.action_global_log_in_fragment)
             }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

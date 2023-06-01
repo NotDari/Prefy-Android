@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
+import com.daribear.prefy.Utils.ParcelableHelper;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,7 @@ import lombok.Setter;
 public class User implements Parcelable{
     private String username;
     private String profileImageURL;
+
     private Long id;
     private String fullname;
     private Long postsNumber;
@@ -26,7 +29,6 @@ public class User implements Parcelable{
     private Long followerNumber;
 
     private Long followingNumber;
-    private Long rating;
     private String bio;
     private String vk;
     private String instagram;
@@ -39,27 +41,21 @@ public class User implements Parcelable{
 
 
     protected User(Parcel in) {
-        username = in.readString();
-        profileImageURL = in.readString();
-        id = in.readLong();
-        fullname = in.readString();
-        postsNumber = in.readLong();
-        votesNumber = in.readLong();
-        prefsNumber = in.readLong();
-        followerNumber = in.readLong();
-        followingNumber = in.readLong();
-        rating = in.readLong();
-        bio = in.readString();
-        vk = in.readString();
-        instagram = in.readString();
-        twitter = in.readString();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            verified = in.readBoolean();
-            following = in.readBoolean();
-        } else {
-            verified = in.readByte() != 0;
-            following = in.readByte() != 0;
-        }
+        username = ParcelableHelper.readStringFromParcel(in);
+        profileImageURL = ParcelableHelper.readStringFromParcel(in);
+        id = ParcelableHelper.readLongFromParcel(in);
+        fullname = ParcelableHelper.readStringFromParcel(in);
+        postsNumber = ParcelableHelper.readLongFromParcel(in);
+        votesNumber = ParcelableHelper.readLongFromParcel(in);
+        prefsNumber = ParcelableHelper.readLongFromParcel(in);
+        followerNumber = ParcelableHelper.readLongFromParcel(in);
+        followingNumber = ParcelableHelper.readLongFromParcel(in);
+        bio = ParcelableHelper.readStringFromParcel(in);
+        vk = ParcelableHelper.readStringFromParcel(in);
+        instagram = ParcelableHelper.readStringFromParcel(in);
+        twitter = ParcelableHelper.readStringFromParcel(in);
+        verified = ParcelableHelper.readBooleanFromParcel(in);
+        following = ParcelableHelper.readBooleanFromParcel(in);
 
 
     }
@@ -71,29 +67,21 @@ public class User implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(username);
-        dest.writeString(profileImageURL);
-        dest.writeLong(id);
-        dest.writeString(fullname);
-        dest.writeLong(postsNumber);
-        dest.writeLong(votesNumber);
-        dest.writeLong(prefsNumber);
-        dest.writeLong(followerNumber);
-        dest.writeLong(followingNumber);
-        dest.writeValue(rating);
-        dest.writeString(bio);
-        dest.writeString(vk);
-        dest.writeString(instagram);
-        dest.writeString(twitter);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            dest.writeBoolean(verified);
-            dest.writeBoolean(following);
-        } else {
-            dest.writeByte((byte) (verified ? 1 : 0));
-            dest.writeByte((byte) (following ? 1 : 0));
-        }
-
-
+        ParcelableHelper.writeStringToParcel(dest,username);
+        ParcelableHelper.writeStringToParcel(dest,profileImageURL);
+        ParcelableHelper.writeLongToParcel(dest, id);
+        ParcelableHelper.writeStringToParcel(dest,fullname);
+        ParcelableHelper.writeLongToParcel(dest, postsNumber);
+        ParcelableHelper.writeLongToParcel(dest, votesNumber);
+        ParcelableHelper.writeLongToParcel(dest, prefsNumber);
+        ParcelableHelper.writeLongToParcel(dest,followerNumber);
+        ParcelableHelper.writeLongToParcel(dest, followingNumber);
+        ParcelableHelper.writeStringToParcel(dest,bio);
+        ParcelableHelper.writeStringToParcel(dest,vk);
+        ParcelableHelper.writeStringToParcel(dest,instagram);
+        ParcelableHelper.writeStringToParcel(dest,twitter);
+        ParcelableHelper.writeBooleanToParcel(dest, verified);
+        ParcelableHelper.writeBooleanToParcel(dest, following);
     }
 
     @SuppressWarnings("unused")
@@ -108,6 +96,8 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+
+
 
 
 }

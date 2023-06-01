@@ -16,7 +16,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 
 
 public class PreferencesFragment extends Fragment {

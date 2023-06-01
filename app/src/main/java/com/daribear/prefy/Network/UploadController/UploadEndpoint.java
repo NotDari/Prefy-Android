@@ -1,5 +1,6 @@
 package com.daribear.prefy.Network.UploadController;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,8 +12,7 @@ import com.daribear.prefy.Database.DatabaseHelper;
 import com.daribear.prefy.Database.DatabaseUtils;
 import com.daribear.prefy.Report.Report;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.TestTool;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +36,15 @@ public class UploadEndpoint {
     private String serverAddress, authToken;
     private OkHttpClient client;
     private Long userId;
+
+    private final String uploadVotesTable = "UploadVotes";
+    private final String uploadTasksTable = "UploadTasks";
+    private final String uploadActivityClearTable = "UploadActivityClear";
+    private final String uploadCommentsTable = "UploadComments";
+    private final String uploadReportsTable = "UploadReports";
+    private final String uploadDeleteTable = "UploadDeleteTable";
+    private final String uploadFollowTable = "UploadFollowTable";
+
 
     public UploadEndpoint(Context appContext) {
         this.appContext = appContext;
@@ -66,7 +75,7 @@ public class UploadEndpoint {
                     CompletedCount = 0;
                     SuccessfulCount = 0;
                     client = new OkHttpClient();
-                    String query = "Select Count FROM UploadTasks";
+                    String query = "Select Count FROM " + uploadTasksTable;
                     Cursor cursor = db.rawQuery(query, null);
                     if (cursor.moveToFirst()){
                         for (int i =0; i < cursor.getCount(); i ++) {
@@ -75,7 +84,7 @@ public class UploadEndpoint {
                         }
                     }
                     if (IntegerCount > 0){
-                        Cursor voteCursor = db.rawQuery("Select * FROM UploadVotes", null);
+                        Cursor voteCursor = db.rawQuery("Select * FROM " + uploadVotesTable, null);
                         if (voteCursor.moveToFirst()){
                             for (int i = 0; i < voteCursor.getCount(); i ++){
                                 Long PostId = voteCursor.getLong(voteCursor.getColumnIndexOrThrow("PostId"));
@@ -184,7 +193,7 @@ public class UploadEndpoint {
                                 voteCursor.moveToNext();
                             }
                         }
-                        Cursor activityClearCursor = db.rawQuery("Select * FROM UploadActivityClear", null);
+                        Cursor activityClearCursor = db.rawQuery("Select * FROM " + uploadActivityClearTable, null);
                         if (activityClearCursor.moveToFirst()){
                             for (int i =0; i < activityClearCursor.getCount(); i ++){
                                 String type = activityClearCursor.getString(activityClearCursor.getColumnIndexOrThrow("Type"));
@@ -296,7 +305,7 @@ public class UploadEndpoint {
                                 activityClearCursor.moveToNext();
                             }
                         }
-                        Cursor commentCursor = db.rawQuery("Select * FROM UploadComments", null);
+                        Cursor commentCursor = db.rawQuery("Select * FROM " + uploadCommentsTable, null);
                         if (commentCursor.moveToFirst()){
                             for (int i = 0; i < commentCursor.getCount(); i++){
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -355,7 +364,7 @@ public class UploadEndpoint {
                                 });
                             }
                         }
-                        Cursor reportCursor = db.rawQuery("Select * FROM UploadReports", null);
+                        Cursor reportCursor = db.rawQuery("Select * FROM " + uploadReportsTable, null);
                         if (reportCursor.moveToFirst()){
                             for (int i =0; i < reportCursor.getCount(); i ++){
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -411,7 +420,7 @@ public class UploadEndpoint {
                                 });
                             }
                         }
-                        Cursor deleteCursor = db.rawQuery("Select * FROM UploadDeleteTable", null);
+                        Cursor deleteCursor = db.rawQuery("Select * FROM " + uploadDeleteTable, null);
                         if (deleteCursor.moveToFirst()){
                             for (int i =0; i < deleteCursor.getCount(); i ++){
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -482,48 +491,61 @@ public class UploadEndpoint {
                                 });
                             }
                         }
-                        Cursor followCursor = db.rawQuery("Select * FROM UploadFollowTable", null);
+                        Cursor followCursor = db.rawQuery("Select * FROM " + uploadFollowTable, null);
                         if (followCursor.moveToFirst()){
                             for (int i = 0; i < followCursor.getCount(); i++){
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                                     @Override
                                     public void run() {
+
+                                        Integer failedCount = followCursor.getInt(followCursor.getColumnIndexOrThrow("failedCount"));
                                         Integer follow = DatabaseUtils.getIntegerWithNull(followCursor, "Follow");
                                         Boolean followBool = (follow == 1);
                                         Long followingUserId = DatabaseUtils.getLongWithNull(followCursor, "FollowingUserId");
                                         Long userID = DatabaseUtils.getLongWithNull(followCursor, "UserId");
+                                        if (failedCount <= 4){
 
-                                        HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Follows/Follow").newBuilder();
-                                        JSONObject jsonObject = new JSONObject();
-                                        try {
-                                            jsonObject.put("followId", followingUserId);
-                                            jsonObject.put("userId", userID);
-                                            jsonObject.put("follow", followBool);
-                                        } catch (JSONException e) {
-                                            CompletedCount += 1;
-                                            checkCompleted();
-                                        }
-                                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                        Request request = new Request.Builder()
-                                                .url(httpBuilder.build())
-                                                .method("POST", body)
-                                                .addHeader("Content-Type", "application/json")
-                                                .addHeader("Authorization", authToken)
-                                                .build();
 
-                                        try {
-                                            Response response = client.newCall(request).execute();
-                                            if (response.isSuccessful()) {
-                                                CompletedCount += 1;
-                                                SuccessfulCount += 1;
-                                                removeFollowFromDb(db, userID, followingUserId);
-                                                checkCompleted();
-                                            } else {
+                                            HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Follows/Follow").newBuilder();
+                                            JSONObject jsonObject = new JSONObject();
+                                            try {
+                                                jsonObject.put("followId", followingUserId);
+                                                jsonObject.put("userId", userID);
+                                                jsonObject.put("follow", followBool);
+                                            } catch (JSONException e) {
                                                 CompletedCount += 1;
                                                 checkCompleted();
                                             }
-                                        } catch (IOException e) {
+                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                            Request request = new Request.Builder()
+                                                    .url(httpBuilder.build())
+                                                    .method("POST", body)
+                                                    .addHeader("Content-Type", "application/json")
+                                                    .addHeader("Authorization", authToken)
+                                                    .build();
+                                            System.out.println("Sdad followFailedTracker Before sending request");
+
+                                            try {
+                                                Response response = client.newCall(request).execute();
+                                                System.out.println("Sdad followFailedTracker response: " + response);
+                                                if (response.isSuccessful()) {
+                                                    CompletedCount += 1;
+                                                    SuccessfulCount += 1;
+                                                    removeFollowFromDb(db, userID, followingUserId);
+                                                    checkCompleted();
+                                                } else {
+                                                    updateFollowFailedCount(db, failedCount, userID, followingUserId);
+                                                    CompletedCount += 1;
+                                                    checkCompleted();
+                                                }
+                                            } catch (IOException e) {
+                                                CompletedCount += 1;
+                                                checkCompleted();
+                                            }
+                                        } else {
                                             CompletedCount += 1;
+                                            SuccessfulCount += 1;
+                                            removeFollowFromDb(db, userID, followingUserId);
                                             checkCompleted();
                                         }
 
@@ -548,7 +570,6 @@ public class UploadEndpoint {
             db.execSQL("UPDATE " + "UploadTasks" +
                     " SET " + "Count" + " = " + "Count" + " - 1" +
                     " WHERE " + "Type" + " = ?", new String[] {"Vote"});
-            TestTool.getInstance().changeVoteCount(-1);
             db.delete("UploadVotes","PostId=? and Vote=?",new String[]{PostId.toString(),Vote});
         }
         Cursor popCursor = db.rawQuery("Select * FROM PopularPostsPopularPosts WHERE postId = " + PostId, null);
@@ -593,6 +614,13 @@ public class UploadEndpoint {
                 " SET " + "Count" + " = " + "Count" + " - 1" +
                 " WHERE " + "Type" + " = ?", new String[] {"Follow"});
         db.delete("UploadFollowTable","UserId=? and FollowingUserId=?",new String[]{userId.toString(), userFollowId.toString()});
+    }
+
+    public void updateFollowFailedCount(SQLiteDatabase db, Integer originalFailedCount, Long userId, Long userFollowId){
+
+        ContentValues cv = new ContentValues();
+        cv.put("failedCount", originalFailedCount + 1);
+        db.update(uploadFollowTable, cv, "UserId=? and FollowingUserId=?",new String[]{userId.toString(), userFollowId.toString()});
     }
 
     private void checkCompleted(){

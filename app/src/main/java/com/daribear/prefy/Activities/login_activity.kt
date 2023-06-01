@@ -1,16 +1,16 @@
 package com.daribear.prefy.Activities
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.daribear.prefy.Ads.AdTracker
 import com.daribear.prefy.R
 import com.daribear.prefy.Utils.ServerAdminSingleton
-import com.daribear.prefy.Utils.Utils
+import com.daribear.prefy.Utils.SharedPreferences.Utils
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
@@ -18,16 +18,17 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import kotlinx.android.synthetic.main.profile_header_item.*
+import com.google.firebase.remoteconfig.*
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 
 class login_activity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val sharedpreferences = Utils(applicationContext)
+        val sharedpreferences =
+            Utils(applicationContext)
         //Checking if nightmode
         //Checking if nightmode
         if (sharedpreferences.loadBoolean(applicationContext.getString(R.string.dark_mode_pref), false)) {
@@ -61,7 +62,8 @@ class login_activity : AppCompatActivity() {
     }
 
     private fun handleUsernameLogin(){
-        val sharedPrefs = Utils(baseContext);
+        val sharedPrefs =
+            Utils(baseContext);
         if (sharedPrefs.loadLong(getString(R.string.save_user_id), -1) != -1L){
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -88,7 +90,9 @@ class login_activity : AppCompatActivity() {
     }
 
     private fun getDefaultSettings(){
+        println("Sdad hello!?")
         FirebaseApp.initializeApp(this)
+
         FirebaseRemoteConfig.getInstance().apply {
 
 
@@ -97,11 +101,11 @@ class login_activity : AppCompatActivity() {
                 .build()
             setConfigSettingsAsync(configSettings)
 
-            setDefaultsAsync(R.xml.remote_config_defaults)
+
             ServerAdminSingleton.getInstance().serverAddress = FirebaseRemoteConfig.getInstance().getString("Api_link")
             println("Sdad server: " + ServerAdminSingleton.getInstance().serverAddress)
             AdTracker.getInstance().setTotals(FirebaseRemoteConfig.getInstance().getLong("interstitial_popular_frequency").toInt(), FirebaseRemoteConfig.getInstance().getLong("interstitial_other_frequency").toInt())
-            fetchAndActivate().addOnCompleteListener { task ->
+            fetchAndActivate().addOnCompleteListener() { task ->
                 val updated = task.result
                 if (task.isSuccessful) {
                     val updated = task.result
@@ -111,10 +115,12 @@ class login_activity : AppCompatActivity() {
                         println("Sdad server updated: " + ServerAdminSingleton.getInstance().serverAddress)
                     }
                 } else {
+                    Log.w("TAG", "Config update error with exception: " + task.exception)
                     Log.d("TAG", "Config params updated: $updated")
                 }
             }
         }
+
     }
 
 

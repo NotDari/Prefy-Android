@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.LogOutUtil;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 

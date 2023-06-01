@@ -29,9 +29,9 @@ import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.Utils;
-import com.daribear.prefy.Utils.dateSinceSystem;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 

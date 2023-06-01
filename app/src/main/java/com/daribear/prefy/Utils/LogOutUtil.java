@@ -10,10 +10,12 @@ import com.daribear.prefy.Activity.ActivityRepository;
 import com.daribear.prefy.Database.DatabaseHelper;
 import com.daribear.prefy.Database.InitDatabaseTasks;
 import com.daribear.prefy.Explore.ExploreRepository;
+import com.daribear.prefy.Popular.NewPopularSystem.NewPopularRepository;
 import com.daribear.prefy.Popular.OldPopularSystem.PopularPostsRepository;
 import com.daribear.prefy.Profile.CurrentUserRepository;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Search.SearchRepository;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.ArrayList;
@@ -65,8 +67,8 @@ public class LogOutUtil {
         if (!CurrentUserRepository.isInstanceNull()){
             CurrentUserRepository.getInstance().reset();
         }
-        if (!PopularPostsRepository.isInstanceNull()){
-            PopularPostsRepository.getInstance(context).reset();
+        if (!NewPopularRepository.isInstanceNull()){
+            NewPopularRepository.getInstance(context).reset();
         }
 
     }

@@ -15,10 +15,9 @@ import android.widget.TextView;
 
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.lang.ref.WeakReference;
-import java.sql.SQLOutput;
 import java.util.HashMap;
 
 public class VoteHandler {

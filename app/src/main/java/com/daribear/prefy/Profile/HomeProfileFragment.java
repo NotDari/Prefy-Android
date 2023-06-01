@@ -20,8 +20,7 @@ import com.daribear.prefy.Network.RefreshInternet;
 import com.daribear.prefy.Profile.ProfilePostsRec.NewProfilePostsGateway;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.Utils;
-import com.google.android.material.button.MaterialButton;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 
 public class HomeProfileFragment extends Fragment{
     private String username, imageUrl;

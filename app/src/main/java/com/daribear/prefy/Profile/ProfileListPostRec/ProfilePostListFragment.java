@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,7 @@
 package com.daribear.prefy.Comments;
 
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
 import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;

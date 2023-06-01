@@ -13,11 +13,15 @@ import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.daribear.prefy.R
-import  kotlinx.android.synthetic.main.fragment_full_name.*
+import com.daribear.prefy.databinding.FragmentFullNameBinding
 import java.util.*
 
 
 class Full_name_fragment : Fragment() {
+    private var _binding: FragmentFullNameBinding? = null
+
+    private val binding get() = _binding!!
+
         private var username:String = ""
         private val args: Full_name_fragmentArgs by navArgs()
         private lateinit var DOB : Date
@@ -26,13 +30,17 @@ class Full_name_fragment : Fragment() {
         private var monthComparison : Int = 0
 
 
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (args.signUpUsername != null){
             username = args.signUpUsername.toString()
         }
         handleBottomText()
 
-        return inflater.inflate(R.layout.fragment_full_name, container, false)
+        _binding = FragmentFullNameBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
 
     }
 
@@ -43,8 +51,8 @@ class Full_name_fragment : Fragment() {
     }
 
     fun handleNextButton(){
-        val nextButton = signUpFullNameNextMaterialButton
-        val editText = FullNameEditText
+        val nextButton = binding.signUpFullNameNextMaterialButton
+        val editText = binding.FullNameEditText
         nextButton.setOnClickListener{
             var fullName: String = editText.text.toString()
             if (!fullName.isEmpty()){
@@ -67,12 +75,12 @@ class Full_name_fragment : Fragment() {
     }
 
     private fun handleDateOfBirthButton(){
-        val dobButton = DateOfBirthEditText
-        val parentsPermission = GetParentPermissionText
+        val dobButton = binding.DateOfBirthEditText
+        val parentsPermission = binding.GetParentPermissionText
         dobButton.focusable = EditText.NOT_FOCUSABLE
         val c = Calendar.getInstance()
         val datePickerDialog = DatePickerDialog(
-            context!!,
+            requireContext(),
             { view, year, monthOfYear, dayOfMonth ->
                 val monthText : String
                 when (monthOfYear + 1){
@@ -124,6 +132,11 @@ class Full_name_fragment : Fragment() {
     private fun handleBottomText(){
         val SignUpLoginTextView = requireActivity().findViewById<RelativeLayout>(R.id.SignUpLoginTextView)
         SignUpLoginTextView.isVisible = false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

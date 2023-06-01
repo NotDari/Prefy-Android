@@ -29,6 +29,7 @@ public class NewPopularViewModel extends ViewModel {
     public void init(Context applicationContext){
         this.ApplicationContext = applicationContext;
         popRepo = NewPopularRepository.getInstance(applicationContext);
+        System.out.println("Sdad popRepo original:" + popRepo);
         this.popPostSetData = popRepo.getPopularModelMutable();
         this.popularActivityMutable = popRepo.getPopularActivityMutable();
     }
@@ -65,6 +66,8 @@ public class NewPopularViewModel extends ViewModel {
     public void itemVote(Long postId, String vote){
         popRepo.itemVote(postId, vote);
     }
+
+
 
 
 

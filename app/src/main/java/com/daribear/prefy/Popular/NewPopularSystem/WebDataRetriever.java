@@ -1,11 +1,11 @@
 package com.daribear.prefy.Popular.NewPopularSystem;
 
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Popular.PopularViewModel.RetreivePopularDataInterface;
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;

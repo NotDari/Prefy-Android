@@ -1,10 +1,10 @@
 package com.daribear.prefy.Popular.PopularViewModel;
 
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 
 import org.json.JSONArray;
@@ -128,6 +128,7 @@ public class WebPopularDataExecutor {
                         for (int i = 0; i < jsonArray.length(); i ++){
                             JSONObject tempObject = jsonArray.getJSONObject(i);
                             User user = CustomJsonMapper.getUserFromObject(tempObject);
+
                             userList.add(user);
                         }
                         popularPostSet.setUserList(userList);

@@ -2,7 +2,6 @@ package com.daribear.prefy.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -12,26 +11,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.daribear.prefy.Popular.PopularPost;
-import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.CustomJsonMapper;
-import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
 import okhttp3.HttpUrl;

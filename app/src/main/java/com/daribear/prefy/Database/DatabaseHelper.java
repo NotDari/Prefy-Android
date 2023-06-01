@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sqlstatement = "CREATE TABLE PopularPostsUsers(id Long,username String, profileImageURL String, fullname String, postsNumber Long, votesNumber Long, prefsNumber Long, rating Long, bio String, vk String, instagram, String, twitter String, verified Integer);";
+        String sqlstatement = "CREATE TABLE PopularPostsUsers(id Long,username String, profileImageURL String, fullname String, postsNumber Long, votesNumber Long, prefsNumber Long, followerNumber Long, followingNumber Long,  rating Long, bio String, vk String, instagram, String, twitter String, verified Integer, following Integer);";
         db.execSQL(sqlstatement);
         sqlstatement = "CREATE TABLE PopularPostsPopularPosts(postId Long PRIMARY KEY, userId Long, leftVotes Integer, rightVotes Integer, imageURL String, question String, commentsNumber Integer, creationDate Double, allVotes Integer, currentVote String, popularDate Double);";
         db.execSQL(sqlstatement);
@@ -44,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlstatement);
         sqlstatement = "Create TABLE UploadDeleteTable(ItemId Long, Type String, UserId Long)";
         db.execSQL(sqlstatement);
-        sqlstatement = "Create TABLE UploadFollowTable(FollowingUserId Long, UserId Long, Follow Integer)";
+        sqlstatement = "Create TABLE UploadFollowTable(FollowingUserId Long, UserId Long, Follow Integer, failedCount Integer )";
         db.execSQL(sqlstatement);
         InitDatabaseTasks.init(db);
         //db.close();

@@ -102,15 +102,17 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
     public void setFollowing(Long userId, Boolean following){
         ArrayList<User> userList = searchlistMutable.getValue();
         Boolean changed = false;
-        for (int i =0; i < userList.size(); i++){
-            if (Objects.equals(userList.get(i).getId(), userId)){
-                System.out.println("SdadAPP altered, userId:" + userId + " , following:" + following );
-                changed = true;
-                userList.get(i).setFollowing(following);
+        if (userList != null) {
+            for (int i = 0; i < userList.size(); i++) {
+                if (Objects.equals(userList.get(i).getId(), userId)) {
+                    System.out.println("SdadAPP altered, userId:" + userId + " , following:" + following);
+                    changed = true;
+                    userList.get(i).setFollowing(following);
+                }
             }
-        }
-        if (changed){
-            searchlistMutable.setValue(userList);
+            if (changed) {
+                searchlistMutable.setValue(userList);
+            }
         }
 
     }

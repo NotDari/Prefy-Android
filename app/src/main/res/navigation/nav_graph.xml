@@ -42,7 +42,7 @@
         tools:layout="@layout/fragment_comments" >
         <argument
             android:name="post"
-            app:argType="com.daribear.prefy.customClasses.StandardPost" />
+            app:argType="com.daribear.prefy.customClasses.Posts.StandardPost" />
         <argument
             android:name="user"
             app:argType="com.daribear.prefy.Profile.User" />
@@ -138,7 +138,7 @@
         tools:layout="@layout/fragment_report" >
         <argument
             android:name="post"
-            app:argType="com.daribear.prefy.customClasses.StandardPost"
+            app:argType="com.daribear.prefy.customClasses.Posts.StandardPost"
             app:nullable="true"
             android:defaultValue="@null" />
         <argument
@@ -183,7 +183,7 @@
             app:argType="com.daribear.prefy.Profile.User" />
         <argument
             android:name="post"
-            app:argType="com.daribear.prefy.customClasses.StandardPost" />
+            app:argType="com.daribear.prefy.customClasses.Posts.StandardPost" />
     </fragment>
     <fragment
         android:id="@+id/popularPageHostFragment2"

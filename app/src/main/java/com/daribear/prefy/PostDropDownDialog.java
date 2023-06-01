@@ -31,8 +31,8 @@ import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.Popular.NewPopularSystem.PopularSkipDelegate;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
-import com.daribear.prefy.customClasses.FullPost;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PostDropDownDialog implements DeleteDialogDelegate , PermissionReceived {

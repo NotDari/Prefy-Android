@@ -18,10 +18,10 @@ import com.daribear.prefy.PostDropDownDialog;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.dateSinceSystem;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 import com.daribear.prefy.Votes.VoteHandler;
-import com.daribear.prefy.customClasses.FullPost;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 public class ProfilePostListItemFragment extends Fragment {
     private User user;

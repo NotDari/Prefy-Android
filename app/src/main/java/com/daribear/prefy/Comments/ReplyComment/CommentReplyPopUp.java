@@ -16,7 +16,7 @@ import com.daribear.prefy.DeleteDialog.DeleteDialog;
 import com.daribear.prefy.DeleteDialog.DeleteDialogDelegate;
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class CommentReplyPopUp implements DeleteDialogDelegate {

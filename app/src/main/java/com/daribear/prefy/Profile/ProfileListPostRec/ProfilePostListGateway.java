@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 

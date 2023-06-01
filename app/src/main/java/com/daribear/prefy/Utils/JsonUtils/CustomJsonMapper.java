@@ -1,4 +1,4 @@
-package com.daribear.prefy.Utils;
+package com.daribear.prefy.Utils.JsonUtils;
 
 import com.daribear.prefy.Activity.Comment.CommentActivity;
 import com.daribear.prefy.Activity.Followers.FollowerActivity;
@@ -6,10 +6,10 @@ import com.daribear.prefy.Activity.Votes.VoteActivity;
 import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Comments.FullComment;
 import com.daribear.prefy.Popular.PopularActivity;
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.customClasses.CustomError;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 
 import org.json.JSONArray;

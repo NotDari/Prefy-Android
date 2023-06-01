@@ -2,7 +2,6 @@ package com.daribear.prefy.Popular.NewPopularSystem;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +13,17 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.daribear.prefy.Popular.PopularPageFragment;
 import com.daribear.prefy.Popular.PopularPostVote;
 import com.daribear.prefy.PostDropDownDialog;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ItemAlterer;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.Utils;
-import com.daribear.prefy.Utils.dateSinceSystem;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 import com.daribear.prefy.Votes.VoteHandler;
-import com.daribear.prefy.customClasses.FullPost;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 
 public class PopularPageFragment2 extends Fragment implements PopularSkipDelegate{

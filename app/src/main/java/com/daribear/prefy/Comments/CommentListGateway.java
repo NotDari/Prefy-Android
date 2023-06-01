@@ -3,15 +3,13 @@ package com.daribear.prefy.Comments;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 

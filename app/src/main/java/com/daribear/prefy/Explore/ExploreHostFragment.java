@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.daribear.prefy.Network.RefreshInternet;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.NoInternetDropDown;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.List;
 

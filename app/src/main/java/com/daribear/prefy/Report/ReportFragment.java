@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;

@@ -1,4 +1,6 @@
-package com.daribear.prefy.customClasses;
+package com.daribear.prefy.customClasses.Containers;
+
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 

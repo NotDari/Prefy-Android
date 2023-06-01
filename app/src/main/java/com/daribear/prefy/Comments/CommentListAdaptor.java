@@ -23,8 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.daribear.prefy.Comments.ReplyComment.CommentReplyHandler;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.dateSinceSystem;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 

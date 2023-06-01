@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsRetreiver.ProfileHandlerInt;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 

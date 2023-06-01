@@ -5,9 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+
+
 import com.daribear.prefy.Database.DatabaseHelper;
+
 import com.daribear.prefy.Popular.NewPopularSystem.NewPopularViewModel;
 import com.daribear.prefy.Popular.PopularPostSet;
+import com.daribear.prefy.customClasses.Converter;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -58,9 +63,10 @@ public class ActivityViewModelSaver {
                     }
 
                     for (int i = 0; i < limitCounter; i++) {
-                        if (popularPostSet.getPostList().get(i).getCurrentVote().equals("none")) {
-                            ContentValues standardPostContent = CacheContentTools.getStandardPostContent(popularPostSet.getPostList().get(i));
-                            Cursor countCursor = db.rawQuery("Select * FROM " + popularstandardpostTableName + " WHERE postId = " + popularPostSet.getPostList().get(i).getPostId(), null);
+                        PopularPost popularPost = popularPostSet.getPostList().get(i);
+                        if (popularPost.getCurrentVote().equals("none")) {
+                            ContentValues standardPostContent = CacheContentTools.getStandardPostContent(popularPost);
+                            Cursor countCursor = db.rawQuery("Select * FROM " + popularstandardpostTableName + " WHERE postId = " + popularPost.getPostId(), null);
                             if (countCursor.getCount() <= 0) {
                                 db.insert(popularstandardpostTableName, null, standardPostContent);
 
@@ -68,6 +74,7 @@ public class ActivityViewModelSaver {
                                 ContentValues userContent = CacheContentTools.getUserContent(popularPostSet.getUserList().get(i));
                                 db.insert(popularuserTableName, null, userContent);
                             }
+
                         }
 
                     }

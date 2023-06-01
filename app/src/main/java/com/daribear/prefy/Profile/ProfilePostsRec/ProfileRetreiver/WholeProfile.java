@@ -2,7 +2,7 @@ package com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver;
 
 
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.customClasses.PostListContainer;
+import com.daribear.prefy.customClasses.Containers.PostListContainer;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

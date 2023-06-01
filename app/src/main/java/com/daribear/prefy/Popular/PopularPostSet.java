@@ -1,6 +1,7 @@
 package com.daribear.prefy.Popular;
 
 import com.daribear.prefy.Profile.User;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 
 import java.util.ArrayList;
 

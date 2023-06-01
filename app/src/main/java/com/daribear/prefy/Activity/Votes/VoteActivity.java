@@ -1,7 +1,7 @@
 package com.daribear.prefy.Activity.Votes;
 
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import lombok.Getter;
 import lombok.Setter;

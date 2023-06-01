@@ -31,7 +31,7 @@ import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -41,9 +41,6 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private DatabaseReference mDatabase;
-    private ArrayList<String> uidList;
-    private ArrayList<String> emailList;
     private NavHostFragment navHostFragment;
     private BottomNavigationView bottomNav;
     private PostStartActivity postStartActivity;

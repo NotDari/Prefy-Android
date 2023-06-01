@@ -16,7 +16,6 @@ import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 
 public class UserProfileFragment extends Fragment {
-    private String UID;
     private User user;
     private SwipeRefreshLayout refreshLayout;
     private Boolean destroyed;
@@ -58,7 +57,6 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void getBundle(){
-        this.UID = getArguments().getString("UID");
         this.user = getArguments().getParcelable("user");
     }
 

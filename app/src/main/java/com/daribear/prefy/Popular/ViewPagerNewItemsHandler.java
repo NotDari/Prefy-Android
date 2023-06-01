@@ -7,7 +7,8 @@ import androidx.cardview.widget.CardView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 

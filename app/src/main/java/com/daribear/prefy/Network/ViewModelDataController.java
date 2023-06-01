@@ -27,4 +27,5 @@ public class ViewModelDataController {
         userRepo.getCurrentUserData();
         UploadController.attemptUpload(ApplicationContext);
     }
+
 }

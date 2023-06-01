@@ -2,14 +2,12 @@ package com.daribear.prefy.Comments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -19,7 +17,7 @@ import com.daribear.prefy.DeleteDialog.DeleteDialog;
 import com.daribear.prefy.DeleteDialog.DeleteDialogDelegate;
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class CommentMorePopUpDialog implements DeleteDialogDelegate {

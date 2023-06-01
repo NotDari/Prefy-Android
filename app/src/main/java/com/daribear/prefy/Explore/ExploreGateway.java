@@ -15,7 +15,7 @@ import com.daribear.prefy.Explore.ExploreCollection.ExploreCollectionAdaptor;
 import com.daribear.prefy.Explore.ExploreList.ExploreListAdaptor;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 

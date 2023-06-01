@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide;
 import com.daribear.prefy.Explore.ExplorePostSet;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.dateSinceSystem;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 
 public class ExploreListAdaptor extends RecyclerView.Adapter<ExploreListAdaptor.ViewHolder> {
     private ExplorePostSet explorePostSet;

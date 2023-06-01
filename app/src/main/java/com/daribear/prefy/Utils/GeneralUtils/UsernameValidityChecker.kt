@@ -1,4 +1,4 @@
-package com.daribear.prefy.Utils
+package com.daribear.prefy.Utils.GeneralUtils
 
 import android.util.Log
 

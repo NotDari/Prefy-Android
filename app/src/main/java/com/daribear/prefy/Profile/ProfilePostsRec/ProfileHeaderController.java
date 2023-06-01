@@ -3,7 +3,6 @@ package com.daribear.prefy.Profile.ProfilePostsRec;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageButton;
@@ -12,8 +11,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 
@@ -24,7 +21,7 @@ import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ItemAlterer;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 

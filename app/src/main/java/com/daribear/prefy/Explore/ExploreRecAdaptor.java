@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.daribear.prefy.Explore.ExplorePost.ExplorePostDialog;
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,11 +19,11 @@ import com.daribear.prefy.PostDropDownDialogDelegate;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ItemAlterer;
-import com.daribear.prefy.Utils.Utils;
-import com.daribear.prefy.Utils.dateSinceSystem;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 import com.daribear.prefy.Votes.VoteHandler;
-import com.daribear.prefy.customClasses.FullPost;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDelegate {
     private Dialog dialog;

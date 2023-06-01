@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
 import com.daribear.prefy.Popular.PopularActivity;
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
 import com.daribear.prefy.Popular.PopularViewModel.RetreivePopularDataInterface;

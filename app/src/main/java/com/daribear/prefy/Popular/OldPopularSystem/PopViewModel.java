@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 public class PopViewModel extends ViewModel {
     private MutableLiveData<PopularModelPackage> popPostSetData;

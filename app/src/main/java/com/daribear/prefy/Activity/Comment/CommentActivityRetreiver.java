@@ -1,8 +1,7 @@
 package com.daribear.prefy.Activity.Comment;
 
-import com.daribear.prefy.Activity.Votes.VoteActivity;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
@@ -16,10 +15,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

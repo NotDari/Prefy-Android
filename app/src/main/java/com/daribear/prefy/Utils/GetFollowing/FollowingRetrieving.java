@@ -3,14 +3,10 @@ package com.daribear.prefy.Utils.GetFollowing;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.daribear.prefy.Profile.GetUserDetailsExecutor;
-import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsRetreiver.ProfileExecutor;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
 
 import org.json.JSONException;
 
@@ -19,7 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;

@@ -1,10 +1,11 @@
-package com.daribear.prefy.customClasses;
+package com.daribear.prefy.customClasses.Posts;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Objects;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class StandardPost implements Parcelable {
-    //TODO Make the leftVotes, RightVotes and allVotes a Long
-    private Long userId;
+@AllArgsConstructor
+public class Post implements Parcelable {
     private Integer leftVotes, rightVotes;
     private String imageURL;
     private String question;
@@ -25,22 +25,27 @@ public class StandardPost implements Parcelable {
     private String currentVote;
 
 
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        @Override
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StandardPost that = (StandardPost) o;
-        return postId.equals(that.postId);
+        Post that = (Post) o;
+        return this.postId.equals(that.postId);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(postId);
-    }
-
-    protected StandardPost(Parcel in) {
-        userId = in.readLong();
+    public Post(Parcel in) {
         leftVotes = in.readInt();
         rightVotes = in.readInt();
         imageURL = in.readString();
@@ -50,14 +55,15 @@ public class StandardPost implements Parcelable {
         postId = in.readLong();
     }
 
+
     @Override
     public int describeContents() {
         return 0;
     }
 
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(userId);
         dest.writeInt(leftVotes);
         dest.writeInt(rightVotes);
         dest.writeString(imageURL);
@@ -65,21 +71,14 @@ public class StandardPost implements Parcelable {
         dest.writeInt(commentsNumber);
         dest.writeDouble(creationDate);
         dest.writeLong(postId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(postId);
     }
 
 
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<StandardPost> CREATOR = new Parcelable.Creator<StandardPost>() {
-        @Override
-        public StandardPost createFromParcel(Parcel in) {
-            return new StandardPost(in);
-        }
 
-        @Override
-        public StandardPost[] newArray(int size) {
-            return new StandardPost[size];
-        }
-    };
 }

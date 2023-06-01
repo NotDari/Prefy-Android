@@ -1,4 +1,4 @@
-package com.daribear.prefy.Utils;
+package com.daribear.prefy.Utils.JsonUtils;
 
 import com.daribear.prefy.Comments.Comment;
 

@@ -16,7 +16,7 @@ import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsR
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
@@ -87,7 +87,7 @@ public class OtherUserDataController implements ProfileHandlerInt {
     private void loadPosts(){
         progressBar.setVisibility(View.VISIBLE);
         Integer limit = Integer.parseInt(context.getString(R.string.Search_Load_Count));
-        ProfileExecutor executor = new ProfileExecutor(user.getId(), this, true, limit, null, false);
+        ProfileExecutor executor = new ProfileExecutor(user.getId(), this, false, limit, null, false);
         executor.initExecutor();
     }
 

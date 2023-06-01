@@ -3,9 +3,9 @@ package com.daribear.prefy.Network;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,8 @@ public class CacheContentTools {
         userContent.put("fullname", user.getFullname());
         userContent.put("postsNumber", user.getPostsNumber());
         userContent.put("prefsNumber", user.getPrefsNumber());
-        userContent.put("rating", user.getRating());
+        userContent.put("followerNumber", user.getFollowerNumber());
+        userContent.put("followingNumber", user.getFollowingNumber());
         userContent.put("bio", user.getBio());
         userContent.put("vk", user.getVk());
         userContent.put("instagram", user.getInstagram());
@@ -59,18 +60,19 @@ public class CacheContentTools {
                 Long postsNumber = userCursor.getLong(userCursor.getColumnIndexOrThrow("postsNumber"));
                 Long votesNumber = userCursor.getLong(userCursor.getColumnIndexOrThrow("votesNumber"));
                 Long prefsNumber = userCursor.getLong(userCursor.getColumnIndexOrThrow("prefsNumber"));
+                Long followingNumber = userCursor.getLong(userCursor.getColumnIndexOrThrow("followingNumber"));
+                Long followersNumber = userCursor.getLong(userCursor.getColumnIndexOrThrow("followerNumber"));
                 Long rating = userCursor.getLong(userCursor.getColumnIndexOrThrow("rating"));
                 String bio = userCursor.getString(userCursor.getColumnIndexOrThrow("bio"));
                 String vk = userCursor.getString(userCursor.getColumnIndexOrThrow("vk"));
                 String instagram = userCursor.getString(userCursor.getColumnIndexOrThrow("instagram"));
                 String twitter = userCursor.getString(userCursor.getColumnIndexOrThrow("twitter"));
                 Integer verifiedInt = userCursor.getInt(userCursor.getColumnIndexOrThrow("verified"));
-
+                Integer followingInt = userCursor.getInt(userCursor.getColumnIndexOrThrow("following"));
                 user.setFullname(fullname);
                 user.setPostsNumber(postsNumber);
                 user.setVotesNumber(votesNumber);
                 user.setPrefsNumber(prefsNumber);
-                user.setRating(rating);
                 user.setBio(bio);
                 user.setVk(vk);
                 user.setInstagram(instagram);
@@ -80,9 +82,16 @@ public class CacheContentTools {
                 }else {
                     user.setVerified(false);
                 }
+                if (followingInt == 1){
+                    user.setFollowing(true);
+                } else {
+                    user.setFollowing(false);
+                }
                 user.setUsername(username);
                 user.setProfileImageURL(profileImageURL);
                 user.setId(Id);
+                user.setFollowingNumber(followingNumber);
+                user.setFollowerNumber(followersNumber);
                 userList.add(user);
                 userCursor.moveToNext();
             }

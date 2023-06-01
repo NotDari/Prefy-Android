@@ -1,7 +1,7 @@
-package com.daribear.prefy.Popular;
+package com.daribear.prefy.customClasses.Posts;
 
 
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

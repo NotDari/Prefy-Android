@@ -9,7 +9,6 @@ import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Database.DatabaseHelper;
 import com.daribear.prefy.Report.Report;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.TestTool;
 
 import java.util.HashMap;
 
@@ -38,7 +37,6 @@ public class UploadController {
             db.execSQL("UPDATE " + UploadTableName +
                     " SET " + Count + " = " + Count + " + 1" +
                     " WHERE " + "Type" + " = ?", new String[]{"Vote"});
-            TestTool.getInstance().changeVoteCount(1);
             attemptUpload(appContext);
         }
     }
@@ -141,6 +139,7 @@ public class UploadController {
             contentValues.put("FollowingUserId", FollowingUserId);
             contentValues.put("Follow", tempBool);
             contentValues.put("UserId", ServerAdminSingleton.getInstance().getLoggedInId());
+            contentValues.put("failedCount", 0);
             db.insert(FollowTableName, null, contentValues);
             attemptUpload(appContext);
         }

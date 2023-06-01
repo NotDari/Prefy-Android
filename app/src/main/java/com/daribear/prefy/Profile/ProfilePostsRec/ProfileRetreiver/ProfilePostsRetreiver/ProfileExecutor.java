@@ -2,12 +2,12 @@ package com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePosts
 
 
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.customClasses.PostListContainer;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Containers.PostListContainer;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 
 import org.json.JSONArray;

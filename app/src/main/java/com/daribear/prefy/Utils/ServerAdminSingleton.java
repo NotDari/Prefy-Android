@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 
 public class ServerAdminSingleton {
     private static ServerAdminSingleton instance;

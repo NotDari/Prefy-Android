@@ -23,7 +23,7 @@ import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Comments.CommentDeleted;
 import com.daribear.prefy.Comments.CommentReplyClicked;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.dateSinceSystem;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 
 public class CommentReplyItem extends FrameLayout implements CommentDeleted {
     private Comment comment;

@@ -17,20 +17,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.daribear.prefy.Activities.MainActivity
 import com.daribear.prefy.R
-import com.daribear.prefy.Utils.CustomJsonMapper
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper
 import com.daribear.prefy.Utils.GetInternet
 import com.daribear.prefy.Utils.ServerAdminSingleton
-import com.daribear.prefy.Utils.SharedPrefs
-import com.daribear.prefy.customClasses.CustomError
+import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs
 import com.daribear.prefy.custom_classes.UsersInfo
-import com.fasterxml.jackson.annotation.JsonCreator
+import com.daribear.prefy.databinding.FragmentLogInBinding
+import com.daribear.prefy.databinding.FragmentSignUpEmailBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.util.JsonMapper
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.fragment_sign_up_email.*
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -44,6 +42,10 @@ import java.util.concurrent.Executors
 
 
 class sign_up_email_fragment : Fragment() {
+    private var _binding: FragmentSignUpEmailBinding? = null
+
+    private val binding get() = _binding!!
+
     private lateinit var auth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private var username = ""
@@ -57,6 +59,8 @@ class sign_up_email_fragment : Fragment() {
     private var authenticationdone = false;
     private var buttonActive = false;
 
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         auth = FirebaseAuth.getInstance()
@@ -67,7 +71,9 @@ class sign_up_email_fragment : Fragment() {
             full_name = args.signUpFullName.toString()
         }
         DOB = args.dob
-        return inflater.inflate(R.layout.fragment_sign_up_email, container, false)
+        _binding = FragmentSignUpEmailBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,9 +85,9 @@ class sign_up_email_fragment : Fragment() {
     }
 
     fun handleInput(){
-        val emailEditText = EmailEditText
-        val passwordEditText = passwordEditText
-        val CreateButton = signUpCreateAccount
+        val emailEditText = binding.EmailEditText
+        val passwordEditText = binding.passwordEditText
+        val CreateButton = binding.signUpCreateAccount
         CreateButton.setOnClickListener{
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -171,19 +177,19 @@ class sign_up_email_fragment : Fragment() {
 
     private fun changeVisibility(){
         var textVisible = false;
-        passwordEditText.setOnTouchListener(object : View.OnTouchListener {
+        binding.passwordEditText.setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 val DRAWABLE_RIGHT = 2;
                 when (event?.action) {
                     MotionEvent.ACTION_DOWN ->
-                        if (event.getRawX() >= (passwordEditText.getRight() - passwordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())){
+                        if (event.getRawX() >= (binding.passwordEditText.getRight() - binding.passwordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())){
                             if (!textVisible){
-                                passwordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(passwordEditText.context, R.drawable.ic_baseline_visibility_off_24), null);
-                                passwordEditText.transformationMethod = SingleLineTransformationMethod.getInstance()
+                                binding.passwordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(binding.passwordEditText.context, R.drawable.ic_baseline_visibility_off_24), null);
+                                binding.passwordEditText.transformationMethod = SingleLineTransformationMethod.getInstance()
                                 textVisible = true
                             } else {
-                                passwordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(passwordEditText.context, R.drawable.ic_baseline_visibility_24), null);
-                                passwordEditText.transformationMethod = PasswordTransformationMethod.getInstance()
+                                binding.passwordEditText.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(binding.passwordEditText.context, R.drawable.ic_baseline_visibility_24), null);
+                                binding.passwordEditText.transformationMethod = PasswordTransformationMethod.getInstance()
                                 textVisible = false
 
                             }
@@ -244,7 +250,12 @@ class sign_up_email_fragment : Fragment() {
 
 
     private fun enableLinks() {
-        signUpTermsText?.setMovementMethod(LinkMovementMethod.getInstance())
+        binding.signUpTermsText?.setMovementMethod(LinkMovementMethod.getInstance())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

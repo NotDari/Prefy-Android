@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -25,13 +23,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.daribear.prefy.Ads.AdTracker;
-import com.daribear.prefy.Ads.Interstitial;
 import com.daribear.prefy.Popular.PopularActivity;
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Popular.PopularPostVote;
-import com.daribear.prefy.Popular.PopularViewModel.PopularActivityRetreiver;
-import com.daribear.prefy.Popular.PopularViewModel.PopularActivityRetrieverInterface;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;

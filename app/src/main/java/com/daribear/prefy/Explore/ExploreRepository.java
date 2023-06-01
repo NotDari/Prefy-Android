@@ -3,7 +3,7 @@ package com.daribear.prefy.Explore;
 import androidx.lifecycle.MutableLiveData;
 
 import com.daribear.prefy.Ads.AdTracker;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,7 @@
 package com.daribear.prefy.Activity.Votes;
 
-import com.daribear.prefy.Activity.Comment.CommentActivity;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;

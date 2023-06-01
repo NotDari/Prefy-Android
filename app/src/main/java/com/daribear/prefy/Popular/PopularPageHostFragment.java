@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.daribear.prefy.Popular.OldPopularSystem.PopViewModel;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
 import com.daribear.prefy.R;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;

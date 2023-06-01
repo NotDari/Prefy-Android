@@ -1,12 +1,8 @@
 package com.daribear.prefy.Popular.PopularViewModel;
 
-import android.content.Context;
-
-import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.google.firebase.database.DatabaseReference;
 
 import org.json.JSONException;
 

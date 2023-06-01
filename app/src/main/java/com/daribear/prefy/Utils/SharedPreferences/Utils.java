@@ -1,4 +1,4 @@
-package com.daribear.prefy.Utils;
+package com.daribear.prefy.Utils.SharedPreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -162,7 +162,7 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
         if (adaptorPosition == targetSize - 1) {
             if (type != null){
                 if (type.equals("Top")) {
-                    topDelegate.topReached(searchUserArrayList.get(searchUserArrayList.size() - 1).getRating());
+                    topDelegate.topReached();
                 }else if (type.equals("String")){
                     System.out.println("Sdad stringgg");
                     stringDelegate.topReached(searchUserArrayList.get(searchUserArrayList.size()- 1).getUsername());

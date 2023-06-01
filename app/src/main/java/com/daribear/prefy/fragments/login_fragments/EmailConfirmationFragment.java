@@ -14,9 +14,9 @@ import android.widget.Toast;
 
 import com.daribear.prefy.Activities.MainActivity;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.SharedPrefs;
+import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs;
 import com.daribear.prefy.customClasses.CustomError;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.JsonObject;
@@ -202,4 +202,6 @@ public class EmailConfirmationFragment extends Fragment {
 
         }.start();
     }
+
+
 }

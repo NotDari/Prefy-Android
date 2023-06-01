@@ -36,7 +36,7 @@ import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.NoInternetDropDown;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

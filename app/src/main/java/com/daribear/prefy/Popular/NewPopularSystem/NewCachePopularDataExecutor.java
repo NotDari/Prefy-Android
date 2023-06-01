@@ -6,10 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.daribear.prefy.Database.DatabaseHelper;
 import com.daribear.prefy.Network.CacheContentTools;
-import com.daribear.prefy.Popular.PopularPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.customClasses.StandardPost;
 
 import java.util.ArrayList;
 import java.util.List;

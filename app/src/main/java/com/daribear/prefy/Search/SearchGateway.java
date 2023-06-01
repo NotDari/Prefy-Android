@@ -90,7 +90,7 @@ public class SearchGateway implements SearchRecViewTopTargetReached, SearchRecSe
 
 
     @Override
-    public void topReached(Long rating) {
+    public void topReached() {
         if (adaptor.getItemCount() > 10) {
             SearchViewModel searchViewModel = new SearchViewModel();
             searchViewModel.init();

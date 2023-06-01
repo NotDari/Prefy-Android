@@ -1,15 +1,15 @@
 package com.daribear.prefy.Explore;
 
 import com.daribear.prefy.Profile.User;
-import com.daribear.prefy.Utils.CustomJsonCreator;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonCreator;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
 import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
-import com.daribear.prefy.customClasses.FullPost;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import org.json.JSONArray;
 import org.json.JSONException;

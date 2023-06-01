@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.Utils;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
 
 public class PersonalDetailsChoice {
     private String originalUsername , originalName, originalAbout;

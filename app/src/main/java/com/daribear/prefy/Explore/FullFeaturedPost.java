@@ -1,6 +1,6 @@
 package com.daribear.prefy.Explore;
 
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import lombok.Getter;
 import lombok.Setter;

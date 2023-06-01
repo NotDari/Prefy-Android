@@ -3,12 +3,10 @@ package com.daribear.prefy.Utils;
 import android.content.Context;
 
 import com.daribear.prefy.Explore.ExploreViewModel;
-import com.daribear.prefy.Popular.NewPopularSystem.NewPopularRepository;
 import com.daribear.prefy.Popular.NewPopularSystem.NewPopularViewModel;
-import com.daribear.prefy.Popular.OldPopularSystem.PopViewModel;
 import com.daribear.prefy.Profile.CurrentUserViewModel;
 import com.daribear.prefy.Search.SearchViewModel;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 
 public class ItemAlterer {
 
@@ -26,6 +24,7 @@ public class ItemAlterer {
 
     public static void itemVote(Long postId, String vote, Context appContext){
         NewPopularViewModel newPopularViewModel = new NewPopularViewModel();
+        newPopularViewModel.init(appContext);
         newPopularViewModel.itemVote(postId, vote);
 
         ExploreViewModel exploreViewModel = new ExploreViewModel();

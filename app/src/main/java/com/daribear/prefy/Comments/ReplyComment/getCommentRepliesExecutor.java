@@ -2,7 +2,7 @@ package com.daribear.prefy.Comments.ReplyComment;
 
 import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Comments.CommentDeleted;
-import com.daribear.prefy.Utils.CustomJsonMapper;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
 import com.daribear.prefy.Utils.GetFollowing.GetFollowingDelegate;

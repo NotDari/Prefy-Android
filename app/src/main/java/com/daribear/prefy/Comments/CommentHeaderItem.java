@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.dateSinceSystem;
-import com.daribear.prefy.customClasses.FullPost;
-import com.daribear.prefy.customClasses.StandardPost;
+import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 public class CommentHeaderItem {
     private View view;

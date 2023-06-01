@@ -2,7 +2,6 @@ package com.daribear.prefy.Explore;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -23,8 +22,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.daribear.prefy.Explore.ExplorePost.ExplorePostDialog;
 import com.daribear.prefy.R;
-import com.daribear.prefy.Utils.Utils;
-import com.daribear.prefy.customClasses.FullPost;
+import com.daribear.prefy.Utils.SharedPreferences.Utils;
+import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;

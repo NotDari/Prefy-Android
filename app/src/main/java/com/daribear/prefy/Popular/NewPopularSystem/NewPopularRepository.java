@@ -178,6 +178,14 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         this.popularActivityMutable.setValue(popularActivity);
     }
 
+    public static Boolean isInstanceNull(){
+        return (instance == null);
+    }
+
+    public void reset(){
+        instance = null;
+    }
+
 
     @Override
     public void taskCompleted(Boolean successful, PopularActivity popularActivity) {
