@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/PostDialogSaveImageGuideline"
-            android:src="@drawable/save" />
+            android:src="@drawable/baseline_save_alt_24" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/PostDialogSaveImageGuideline"
@@ -239,7 +239,7 @@
             android:layout_height="32dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/report"
+            android:src="@drawable/baseline_not_interested_24"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/text_color"
             app:layout_constraintStart_toStartOf="parent"

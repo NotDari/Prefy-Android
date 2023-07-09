@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.IntStream;
 
 import okhttp3.HttpUrl;
@@ -38,6 +39,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
     private OkHttpClient client;
 
     private HashMap<Long, Boolean> followList;
+    private ThreadPoolExecutor executor;
 
     public ExploreRecentPostUpdater(Integer limitCount, Integer pageNumber, ExploreRecentUpdateInterface delegate) {
         this.limitCount = limitCount;
@@ -56,9 +58,12 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
     }
 
     private void initRecentPosts(){
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
+        System.out.println("Sdad RPU called");
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+        executor.execute(new Runnable() {
             @Override
             public void run() {
+                System.out.println("Sdad RPU started");
                 client = new OkHttpClient();
                 ArrayList<FullPost> postList = new ArrayList<>();
                 HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/ExploreRecentPosts").newBuilder();
@@ -73,6 +78,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
                 try {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()){
+                        System.out.println("Sdad RPU Post Response");
                         try {
                             JSONArray jsonArray = new JSONArray(response.body().string());
                             for (int i = 0; i < jsonArray.length(); i ++){
@@ -86,9 +92,25 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
                             }
                             explorePostSet = new ExplorePostSet();
                             explorePostSet.setPostList(postList);
-                            getCurrentUserPostVotes();
-                            getRecentPostsUsers();
-                            getUsersFollowing();
+                            executor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getCurrentUserPostVotes();
+                                }
+                            });
+                            executor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getRecentPostsUsers();
+                                }
+                            });
+                            executor.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getUsersFollowing();
+                                }
+                            });
+
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
                         }
@@ -106,6 +128,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
     }
 
     private void getCurrentUserPostVotes(){
+        System.out.println("Sdad RPU Votes Started");
         ArrayList<Long> postIdList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
             postIdList.add(explorePostSet.getPostList().get(i).getStandardPost().getPostId());
@@ -121,10 +144,13 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
                 .build();
         System.out.println("Sdad testReq:" + request.url());
         try {
+
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
+                System.out.println("Sdad RPU Vote Response");
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
+                    System.out.println("Sdad list:" + jsonArray.toString());
                     for (int i = 0; i < jsonArray.length(); i ++){
                         String currentVote;
                         if  (jsonArray.isNull(i)){
@@ -151,6 +177,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
 
     }
     private void getRecentPostsUsers(){
+        System.out.println("Sdad RPU User Started");
         ArrayList<Long> idList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
             idList.add(explorePostSet.getPostList().get(i).getStandardPost().getUserId());
@@ -167,6 +194,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
+                System.out.println("Sdad RPU User Response");
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     for (int i = 0; i < jsonArray.length(); i ++){
@@ -206,7 +234,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
         }
         FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, ExploreRecentPostUpdater.this, null);
     }
-    private void operationCompleted(){
+    private synchronized void operationCompleted(){
         if (recentPostUsers && userVotesDone && userFollowingDone){
             if (followList != null) {
                 for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
@@ -218,6 +246,7 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
                     }
                 }
             }
+            System.out.println("Sdad RPU operationCompleted Done");
             delegate.completed(true, explorePostSet);
         }
     }

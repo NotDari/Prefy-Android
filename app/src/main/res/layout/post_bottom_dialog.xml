@@ -59,7 +59,8 @@
         android:textColorHint="@color/dark_grey_transparentish"
         android:textColor="@color/text_color"
         android:background="@android:color/transparent"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal"
+        android:maxLength="60"/>
     <View
         android:id="@+id/PostDialogImageBackground"
         android:layout_width="0dp"

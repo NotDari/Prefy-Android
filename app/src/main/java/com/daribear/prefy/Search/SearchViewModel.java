@@ -35,12 +35,21 @@ public class SearchViewModel extends ViewModel {
         return searchRepo.getCurrentSearch();
     }
 
+
+    public void refreshData(){
+        searchRepo.getData();
+    }
+
     public void viewScrolled(){
         searchRepo.viewScrolled();
     }
 
     public void followChange(Long userId, Boolean following){
         searchRepo.setFollowing(userId, following);
+    }
+
+    public void userAltered(User user){
+        searchRepo.userAltered(user);
     }
 
 }

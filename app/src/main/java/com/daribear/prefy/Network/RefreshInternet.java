@@ -32,11 +32,13 @@ public class RefreshInternet {
                 activityRepository.setDataRefreshing(true);
                 activityRepository.getVoteData();
                 activityRepository.getCommentData();
+                activityRepository.getFollowerData();
             }
         } else {
             activityRepository.setDataRefreshing(true);
             activityRepository.getVoteData();
             activityRepository.getCommentData();
+            activityRepository.getFollowerData();
         }
         NewPopularRepository popularRepository = NewPopularRepository.getInstance(appContext);
         if (popularRepository.getPopularModelMutable().getValue() != null){

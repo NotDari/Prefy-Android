@@ -150,7 +150,7 @@ public class ExploreGateway {
                             if (type.equals("Collection")) {
                                 Integer imageHeight = scrollView.getWidth() / 3;
                                 Integer scrollViewTotalHeight = scrollView.getChildAt(0).getHeight() - scrollView.getHeight();
-                                if (scrollView.getScrollY() >= (scrollViewTotalHeight - (2 * imageHeight))) {
+                                if (scrollView.getScrollY() >= (scrollViewTotalHeight - (10 * imageHeight))) {
                                     if (!scrollUpdateLoading) {
                                         ExplorePostSet explorePostSet = exploreRepo.getExplorePostSetMutable().getValue();
                                         if (explorePostSet.getPostList().size() > collectionAdaptor.getItemCount()){

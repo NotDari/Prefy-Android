@@ -24,6 +24,14 @@ public class AdTracker {
         this.otherTotal = otherTotal;
     }
 
+    public void setPopularTotal(Integer popularTotal) {
+        this.popularTotal = popularTotal;
+    }
+
+    public void setOtherTotal(Integer otherTotal) {
+        this.otherTotal = otherTotal;
+    }
+
     public static AdTracker getInstance(){
         if (instance == null){
             instance = new AdTracker();
@@ -60,4 +68,8 @@ public class AdTracker {
         }
     }
 
+    public void resetCounts(){
+        this.popularCounter = 0;
+        this.otherCounter = 0;
+    }
 }

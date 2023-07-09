@@ -102,7 +102,7 @@ public class HomeProfileFragment extends Fragment{
     }
 
     private void initGateway(View view, User user){
-        gateway = new NewProfilePostsGateway(recView, view, user, true);
+        gateway = new NewProfilePostsGateway(getActivity(),recView, view, user, true);
         gateway.displayView();
     }
 

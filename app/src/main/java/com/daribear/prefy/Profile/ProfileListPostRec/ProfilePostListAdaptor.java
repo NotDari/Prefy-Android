@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.daribear.prefy.DeleteDialog.DeleteDelegate;
 import com.daribear.prefy.PostDropDownDialog;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
@@ -28,7 +29,7 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
-public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostListAdaptor.ViewHolder> {
+public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostListAdaptor.ViewHolder>{
     private ArrayList<StandardPost> postList;
     private String username, profileImageUrl;
     private Activity parentActivity;
@@ -71,6 +72,7 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
     public int getItemCount() {
         return postList.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView totalVotes, usernameText, questionText, commentsText, timeSinceText;
@@ -180,6 +182,7 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
     }
 
     private void initMoreButton(ViewHolder holder, int position){
+        PostDropDownDialog dialog = new PostDropDownDialog(holder.moreButton.getContext(), parentActivity,null, null);
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,12 +191,12 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
                 User user = ServerAdminSingleton.getCurrentUser(parentActivity.getApplicationContext());
                 fullPost.setUser(user);
                 Boolean loggedUserPost = user.getId().equals(ServerAdminSingleton.getCurrentUser(parentActivity.getApplicationContext()).getId());
-                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), loggedUserPost, parentActivity,fullPost, null, null);
+
                 int test1[] = new int[2];
                 holder.moreButton.getLocationOnScreen(test1);
                 Integer bottomNavHeight = parentActivity.findViewById(R.id.BottomNav).getHeight();
+                dialog.setDetails(loggedUserPost, fullPost);
                 dialog.setCoordinates(0, test1[1] + holder.moreButton.getHeight() / 2);
-
                 dialog.setImageDrawable(holder.imageView.getDrawable());
                 dialog.initDialog();
             }

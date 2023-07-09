@@ -23,13 +23,14 @@ import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class LogOutUtil {
-    private static final ArrayList<String> tableList = new ArrayList<>(Arrays.asList("PopularPostsUsers","PopularPostsPopularPosts", "UploadTasks", "UploadVotes", "UploadActivityClear", "UploadComments", "UploadDeleteTable", "UploadFollowTable"));
+    private static final ArrayList<String> tableList = new ArrayList<>(Arrays.asList("PopularPostsUsers","PopularPostsPopularPosts", "UploadTasks", "UploadVotes", "UploadReports", "UploadActivityClear", "UploadComments", "UploadDeleteTable", "UploadFollowTable"));
 
     public static void Logout(Activity activity){
-        clearSharedPrefs(activity.getApplicationContext());
-        clearServerAdmin(activity.getApplicationContext());
-        resetViewModels(activity.getApplicationContext());
-        clearDatabases(activity.getApplicationContext());
+        Context context = activity.getApplicationContext();
+        clearSharedPrefs(context);
+        clearServerAdmin(context);
+        resetViewModels(context);
+        clearDatabases(context);
         clearCrashlytics();
     }
 

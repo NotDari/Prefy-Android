@@ -2,6 +2,7 @@ package com.daribear.prefy.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -30,13 +31,22 @@ import com.daribear.prefy.SubmitPost.SubmitPostDialog;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
+import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.remoteconfig.ConfigUpdate;
+import com.google.firebase.remoteconfig.ConfigUpdateListener;
+import com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
 
@@ -46,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     private PostStartActivity postStartActivity;
 
     private PermissionChecker permissionChecker;
+
+    private ConfigUpdateListenerRegistration remoteConfigListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initAuthSaving();
         initDownload();
+        getRemoteConfig();
         setContentView(R.layout.activity_main);
         handleBottomNav();
         onNavigationItemChanged();
         ErrorChecker.setActivity(this);
         loadAds();
+
 
     }
 
@@ -167,6 +181,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void getRemoteConfig(){
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        remoteConfigListener = mFirebaseRemoteConfig.addOnConfigUpdateListener(new ConfigUpdateListener() {
+            @Override
+            public void onUpdate(ConfigUpdate configUpdate) {
+                mFirebaseRemoteConfig.activate().addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (configUpdate.getUpdatedKeys().contains("Api_link")) {
+                            ServerAdminSingleton.getInstance().setServerAddress(mFirebaseRemoteConfig.getString("Api_link"));
+                        }
+                        Integer adCounterChanged = 0;
+                        if (configUpdate.getUpdatedKeys().contains("interstitial_popular_frequency")){
+                            AdTracker.getInstance().setPopularTotal((int) mFirebaseRemoteConfig.getLong("interstitial_popular_frequency"));
+                            adCounterChanged = 1;
+                        }
+                        if (configUpdate.getUpdatedKeys().contains("interstitial_other_frequency")){
+                            AdTracker.getInstance().setOtherTotal((int) mFirebaseRemoteConfig.getLong("interstitial_other_frequency"));
+                            adCounterChanged = 1;
+                        }
+                        if (adCounterChanged == 1){
+                            AdTracker.getInstance().resetCounts();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(FirebaseRemoteConfigException error) {
+                Log.w("TAG", "Config update error with code: " + error.getCode(), error);
+            }
+        });
+    }
+
     public void alterBottomNavVisibility(Boolean visible){
         if (visible){
             bottomNav.setVisibility(View.VISIBLE);
@@ -214,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         ServerAdminSingleton.getInstance().setSqLiteDatabase(null);
+        remoteConfigListener.remove();
         super.onDestroy();
     }
 

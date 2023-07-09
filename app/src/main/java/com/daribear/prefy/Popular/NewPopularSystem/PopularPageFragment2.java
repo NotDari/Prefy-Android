@@ -33,7 +33,7 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
     private PopularPostVote delegate;
     private RelativeLayout leftCLick;
     private RelativeLayout rightClick;
-    private ImageView mainImage;
+    private ImageView mainImage, verifiedImage;
     private TextView totalVotesTextView;
 
 
@@ -52,6 +52,9 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
         Bundle args = getArguments();
         user = args.getParcelable("user");
         post = args.getParcelable("post");
+        if (!post.getCurrentVote().equals("none")){
+            voted(autoScroll, true, true);
+        }
     }
 
     public void initViews(View view){
@@ -65,6 +68,12 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
         postDateText.setText((dateSinceSystem.getTimeSince(post.getCreationDate())));
         mainImage = view.findViewById(R.id.PopularItemQuestionImage);
         ImageView profileImage = view.findViewById(R.id.PopularItemUserImage);
+        verifiedImage = view.findViewById(R.id.PopularItemVerified);
+        if (user.getVerified()){
+            verifiedImage.setVisibility(View.VISIBLE);
+        } else {
+            verifiedImage.setVisibility(View.GONE);
+        }
         if (user.getProfileImageURL() != null ) {
             if (!user.getProfileImageURL().isEmpty() && !user.getProfileImageURL().equals("none")){
                 Glide.with(profileImage)
@@ -112,6 +121,7 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
         });
 
         ImageView optionsButton = view.findViewById(R.id.PopularItemOptionsButton);
+        PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), getActivity(),null, null);
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,12 +129,13 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
                 fullPost.setUser(user);
                 fullPost.setStandardPost(post);
                 Boolean loggedUserPost = user.getId().equals(ServerAdminSingleton.getCurrentUser(getContext().getApplicationContext()).getId());
-                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), loggedUserPost, getActivity(),fullPost, null, null);
+
                 int[] point = new int[2];
                 view.getLocationOnScreen(point); // or getLocationInWindow(point)
                 int x = point[0];
                 int y = point[1];
                 Integer bottomNavHeight = getActivity().findViewById(R.id.BottomNav).getHeight();
+                dialog.setDetails(loggedUserPost, fullPost);
                 dialog.setImageDrawable(mainImage.getDrawable());
 
                 dialog.setCoordinates(0, bottomNavHeight);
@@ -155,7 +166,6 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
-                    ItemAlterer.itemVote(post.getPostId(), "right", view.getContext().getApplicationContext());
                 } else {
                     voted(true, false, false);
                 }
@@ -171,7 +181,6 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
-                    ItemAlterer.itemVote(post.getPostId(), "left", view.getContext().getApplicationContext());
                 } else {
                     voted(true, false, false);
                 }
@@ -207,13 +216,19 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        leftCLick = null;
+        rightClick = null;
 
+    }
 
     @Override
     public void skipClicked() {
         if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
             VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "skip", "Popular");
-            voted(autoScroll, true, true);
+            voted(autoScroll, true, false);
             VoteHandler.saveVote(PopularPageFragment2.this.getContext().getApplicationContext(),post.getPostId(), "skip");
 
         } else {

@@ -216,9 +216,27 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                     }
                     explorePostSet = new ExplorePostSet();
                     explorePostSet.setPostList(postList);
-                    getCurrentUserPostVotes();
-                    getRecentPostsUsers();
-                    getRecentPostsFollowing();
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            getCurrentUserPostVotes();
+                        }
+                    });
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            getRecentPostsUsers();
+                        }
+                    });
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            getRecentPostsFollowing();
+                        }
+                    });
+
+
+
                 } catch (JSONException | IOException e) {
                     e.printStackTrace();
                     delegate.completed(false, update, explorePostSet, null);
@@ -248,9 +266,11 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", authToken)
                 .build();
+        System.out.println("Sdad all req: " + CustomJsonCreator.createArrayStringFromLong(postIdList) + " ; " + ServerAdminSingleton.getInstance().getLoggedInId().toString());
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
+                System.out.println("Sdad all repSuc");
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     for (int i = 0; i < jsonArray.length(); i ++){
@@ -270,9 +290,11 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                 }
 
             }else {
+                System.out.println("Sdad all repFail: " + response.body().string());
                 delegate.completed(false, update, explorePostSet, fullFeaturedPostArrayList);
             }
         } catch (IOException e) {
+            System.out.println("Sdad allException:" + e);
             delegate.completed(false, update, explorePostSet, fullFeaturedPostArrayList);
         }
     }
@@ -345,7 +367,8 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
 
 
 
-    private void operationCompleted(){
+    private synchronized void operationCompleted(){
+        System.out.println("Sdad opComp" + featuredPostUsers + recentPostUsers + userVotesDone + recentUsersFollowing + featuredUsersFollowing);
         if (featuredPostUsers && recentPostUsers && userVotesDone && recentUsersFollowing && featuredUsersFollowing){
             if (featuredFollowing != null) {
                 for (Map.Entry<Long, Boolean> entry : featuredFollowing.entrySet()) {
@@ -367,6 +390,7 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                     }
                 }
             }
+            System.out.println("Sdad opComp final!");
             delegate.completed(true, update, explorePostSet, fullFeaturedPostArrayList);
         }
     }

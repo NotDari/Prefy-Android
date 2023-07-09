@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.daribear.prefy.Comments.Comment;
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.CurrentTime;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -183,7 +184,7 @@ public class ReportFragment extends Fragment {
             report.setCommentId(null);
             report.setRepCategory(reason);
             report.setType(type);
-            report.setCreationDate((double) System.currentTimeMillis());
+            report.setCreationDate((double) CurrentTime.getCurrentTime());
         }
         UploadController.saveReport(getActivity().getApplicationContext(),report);
         /**
@@ -213,7 +214,7 @@ public class ReportFragment extends Fragment {
             report.setCommentId(comment.getCommentId());
             report.setRepCategory(reason);
             report.setType(type);
-            report.setCreationDate((double) System.currentTimeMillis());
+            report.setCreationDate((double) CurrentTime.getCurrentTime());
         }
         UploadController.saveReport(getActivity().getApplicationContext(),report);
         /**

@@ -140,6 +140,7 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
             Integer originalSize = this.explorePostSet.getPostList().size();
             Integer additionItems = explorePostSet.getPostList().size();
             for (int i = 0; i < additionItems; i ++){
+                System.out.println("Sdad currentVote:" + explorePostSet.getPostList().get(i).getStandardPost().getCurrentVote());
                 this.explorePostSet.getPostList().add(explorePostSet.getPostList().get(i));
             }
             notifyDataSetChanged();

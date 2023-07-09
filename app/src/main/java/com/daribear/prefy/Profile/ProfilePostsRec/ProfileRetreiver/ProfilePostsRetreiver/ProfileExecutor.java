@@ -27,20 +27,17 @@ public class ProfileExecutor {
     private Long id;
     private ProfileHandlerInt delegate;
     private ArrayList<StandardPost> postList;
-    private Boolean onlyPosts, update;
+    private Boolean update;
     private Integer limit;
-    private String endPoint;
     private Integer pageNumber;
 
     private String serverAddress, authToken;
 
 
-    public ProfileExecutor(Long id, ProfileHandlerInt delegate, Boolean onlyPosts, Integer limit, Integer pageNumber, Boolean update) {
+    public ProfileExecutor(Long id, ProfileHandlerInt delegate, Integer limit, Integer pageNumber, Boolean update) {
         this.id = id;
         this.delegate = delegate;
-        this.onlyPosts = onlyPosts;
         this.limit = limit;
-        this.endPoint = endPoint;
         this.update = update;
         this.pageNumber = pageNumber;
     }

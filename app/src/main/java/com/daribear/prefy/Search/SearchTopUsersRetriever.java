@@ -1,6 +1,7 @@
 package com.daribear.prefy.Search;
 
 import com.daribear.prefy.Profile.User;
+import com.daribear.prefy.Utils.DefaultCreator;
 import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
@@ -43,6 +44,7 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                System.out.println("Sdad following starte:");
                 searchUserArrayList = new ArrayList<>();
                 OkHttpClient client = new OkHttpClient();
                 HttpUrl.Builder httpBuilder = HttpUrl.parse(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Users/TopUsers").newBuilder();
@@ -60,9 +62,14 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
                         try {
                             JSONArray jsonArray = new JSONArray(response.body().string());
                             for (int i = 0; i < jsonArray.length(); i ++){
-                                JSONObject tempObject = jsonArray.getJSONObject(i);
-                                if (tempObject != null){
-                                    User user = CustomJsonMapper.getUserFromObject(tempObject);
+                                if (!jsonArray.isNull(i)) {
+                                    JSONObject tempObject = jsonArray.getJSONObject(i);
+                                    if (tempObject != null) {
+                                        User user = CustomJsonMapper.getUserFromObject(tempObject);
+                                        searchUserArrayList.add(user);
+                                    }
+                                } else {
+                                    User user = DefaultCreator.createBlankUser();
                                     searchUserArrayList.add(user);
                                 }
                             }
@@ -70,6 +77,7 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
                             for (User user : searchUserArrayList){
                                 idList.add(user.getId());
                             }
+                            System.out.println("Sdad followingReady");
                             FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, SearchTopUsersRetriever.this::completed, null);
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.daribear.prefy.Activities.MainActivity;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
+import com.daribear.prefy.Utils.LogOutUtil;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs;
 import com.daribear.prefy.customClasses.CustomError;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -79,8 +81,10 @@ public class EmailConfirmationFragment extends Fragment {
                             @Override
                             public void run() {
                                 OkHttpClient client = new OkHttpClient();
+                                HttpUrl.Builder httpBuilder = HttpUrl.parse(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Registration/ResendConfirmation").newBuilder();
+                                httpBuilder.addEncodedQueryParameter("login", email);
                                 Request request = new Request.Builder()
-                                        .url(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Registration/ResendConfirmation?login=\"" + email + "\"")
+                                        .url(httpBuilder.build())
                                         .method("GET", null)
                                         .addHeader("Content-Type", "application/json")
                                         .build();
@@ -96,11 +100,9 @@ public class EmailConfirmationFragment extends Fragment {
                                         });
                                     } else {
                                         resendEmailButtonActive = false;
-                                        //requestfailed();
                                     }
                                 } catch (IOException e) {
                                     resendEmailButtonActive = false;
-                                    //requestfailed();
                                 }
                             }
                         });
@@ -145,11 +147,9 @@ public class EmailConfirmationFragment extends Fragment {
                                             try {
                                                 String responseString = response.body().string();
                                                 JSONObject jsonObject = new JSONObject(responseString);
-                                                sharedPrefs.putLongSharedPref(getString(R.string.save_user_id), jsonObject.getLong("Id"));
+                                                sharedPrefs.putLongSharedPref(getString(R.string.save_user_id), jsonObject.getLong("id"));
                                                 ServerAdminSingleton.getInstance().alterLoggedInUser(getContext());
-                                                System.out.println("Sdad setId" + ServerAdminSingleton.getInstance().getLoggedInId());
                                             } catch (JSONException | IOException e){
-
                                             }
                                             Intent intent = new Intent(getActivity(), MainActivity.class);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -194,7 +194,6 @@ public class EmailConfirmationFragment extends Fragment {
 
             public void onTick(long millisUntilFinished) {
                 buttonResetCooldownTime -=1;
-                // logic to set the EditText could go here
             }
 
             public void onFinish() {

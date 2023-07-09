@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.daribear.prefy.Ads.AdTracker
 import com.daribear.prefy.R
+import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity
 import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.SharedPreferences.Utils
 import com.google.android.material.snackbar.Snackbar
@@ -16,15 +17,16 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
+
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.*
+import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
 
 class login_activity : AppCompatActivity() {
-    private lateinit var auth: FirebaseAuth
+    private lateinit var configUpdateListener : ConfigUpdateListenerRegistration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val sharedpreferences =
@@ -70,6 +72,7 @@ class login_activity : AppCompatActivity() {
             startActivity(intent)
         } else {
             setContentView(R.layout.activity_login)
+            PlayIntegrity.getInstance().getResponse(applicationContext)
         }
     }
 
@@ -92,38 +95,50 @@ class login_activity : AppCompatActivity() {
     private fun getDefaultSettings(){
         println("Sdad hello!?")
         FirebaseApp.initializeApp(this)
-
-        FirebaseRemoteConfig.getInstance().apply {
-
-
-            val configSettings = FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(20)
-                .build()
-            setConfigSettingsAsync(configSettings)
-
-
-            ServerAdminSingleton.getInstance().serverAddress = FirebaseRemoteConfig.getInstance().getString("Api_link")
-            println("Sdad server: " + ServerAdminSingleton.getInstance().serverAddress)
-            AdTracker.getInstance().setTotals(FirebaseRemoteConfig.getInstance().getLong("interstitial_popular_frequency").toInt(), FirebaseRemoteConfig.getInstance().getLong("interstitial_other_frequency").toInt())
-            fetchAndActivate().addOnCompleteListener() { task ->
-                val updated = task.result
-                if (task.isSuccessful) {
-                    val updated = task.result
-                    if (updated) {
-                        ServerAdminSingleton.getInstance().serverAddress =
-                            FirebaseRemoteConfig.getInstance().getString("Api_link")
-                        println("Sdad server updated: " + ServerAdminSingleton.getInstance().serverAddress)
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 20
+        }
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        ServerAdminSingleton.getInstance().serverAddress = remoteConfig.getString("Api_link")
+        AdTracker.getInstance().setTotals(remoteConfig.getLong("interstitial_popular_frequency").toInt(), remoteConfig.getLong("interstitial_other_frequency").toInt())
+        configUpdateListener = remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
+            override fun onUpdate(configUpdate : ConfigUpdate) {
+                if (!isDestroyed) {
+                    remoteConfig.activate().addOnCompleteListener {
+                        if (configUpdate.updatedKeys.contains("Api_link")) {
+                            ServerAdminSingleton.getInstance().serverAddress = remoteConfig.getString("Api_link")
+                        }
+                        var adCounterChanged = 0
+                        if (configUpdate.updatedKeys.contains("interstitial_popular_frequency")){
+                            AdTracker.getInstance().setPopularTotal(remoteConfig.getLong("interstitial_popular_frequency").toInt())
+                            adCounterChanged = 1
+                        }
+                        if (configUpdate.updatedKeys.contains("interstitial_other_frequency")){
+                            AdTracker.getInstance().setOtherTotal(remoteConfig.getLong("interstitial_other_frequency").toInt())
+                            adCounterChanged = 1
+                        }
+                        if (adCounterChanged == 1){
+                            AdTracker.getInstance().resetCounts()
+                        }
                     }
-                } else {
-                    Log.w("TAG", "Config update error with exception: " + task.exception)
-                    Log.d("TAG", "Config params updated: $updated")
+
+
+
                 }
             }
-        }
+
+            override fun onError(error : FirebaseRemoteConfigException) {
+                Log.w("TAG", "Config update error with code: " + error.code, error)
+            }
+        })
 
     }
 
-
+    override fun onDestroy() {
+        this.configUpdateListener.remove()
+        super.onDestroy()
+    }
 
 
 

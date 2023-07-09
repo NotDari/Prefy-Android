@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.ItemAlterer;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.lang.ref.WeakReference;
@@ -202,7 +203,7 @@ public class VoteHandler {
 
     public static void voteSubmitted(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String sideClicked, String viewType){
         String currentVote = post.getCurrentVote();
-
+        System.out.println("Sdad currentVote:" + post.getCurrentVote());
         if (currentVote != null){
             if (currentVote.equals("none") || currentVote.equals("skip")){
                 startVoteDetails(post, imageView, leftImageView, rightImageView, sideClicked, viewType);
@@ -417,5 +418,6 @@ public class VoteHandler {
         insertMap.put("PostId", id);
         insertMap.put("Vote", vote);
         UploadController.saveVote(context, insertMap);
+        ItemAlterer.itemVote(id, vote, context.getApplicationContext());
     }
 }

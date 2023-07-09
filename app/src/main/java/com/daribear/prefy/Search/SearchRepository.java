@@ -99,6 +99,22 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         }
     }
 
+    public void userAltered(User user){
+        ArrayList<User> userList = searchlistMutable.getValue();
+        Boolean changed = false;
+        if (userList != null) {
+            for (int i = 0; i < userList.size(); i++) {
+                if (Objects.equals(userList.get(i).getId(), user.getId())) {
+                    changed = true;
+                    userList.set(i, user);
+                }
+            }
+            if (changed) {
+                searchlistMutable.setValue(userList);
+            }
+        }
+    }
+
     public void setFollowing(Long userId, Boolean following){
         ArrayList<User> userList = searchlistMutable.getValue();
         Boolean changed = false;

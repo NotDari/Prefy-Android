@@ -14,16 +14,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.daribear.prefy.DeleteDialog.DeleteDelegate;
 import com.daribear.prefy.PostDropDownDialog;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.ItemAlterer;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 import com.daribear.prefy.Votes.VoteHandler;
 import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
-public class ProfilePostListItemFragment extends Fragment {
+public class ProfilePostListItemFragment extends Fragment implements DeleteDelegate {
     private User user;
     private StandardPost post;
     private ImageView userImage, backButton, postImage;
@@ -97,6 +99,7 @@ public class ProfilePostListItemFragment extends Fragment {
                 Navigation.findNavController(backButton).navigateUp();
             }
         });
+        PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), getActivity(), null, ProfilePostListItemFragment.this);
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,7 +107,7 @@ public class ProfilePostListItemFragment extends Fragment {
                 fullPost.setUser(user);
                 fullPost.setStandardPost(post);
                 Boolean loggedUserPost = user.getId().equals(ServerAdminSingleton.getCurrentUser(getContext().getApplicationContext()).getId());
-                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), loggedUserPost, getActivity(),fullPost, null, null);
+                dialog.setDetails(loggedUserPost, fullPost);
                 dialog.setImageDrawable(postImage.getDrawable());
 
                 dialog.initDialog();
@@ -157,5 +160,13 @@ public class ProfilePostListItemFragment extends Fragment {
                 .load(R.drawable.user_photo)
                 .circleCrop()
                 .into(userImage);
+    }
+
+    @Override
+    public void itemDeleted() {
+        if (!isDetached()) {
+            Navigation.findNavController(optionsButton).navigateUp();
+            ItemAlterer.deleteItem(post, getActivity());
+        }
     }
 }

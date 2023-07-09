@@ -34,7 +34,7 @@ public class PopularPageFragment extends Fragment{
     private PopularPostVote delegate;
     private RelativeLayout leftCLick;
     private RelativeLayout rightClick;
-    private ImageView mainImage;
+    private ImageView mainImage, verifiedImage;
     private TextView totalVotesTextView;
 
 
@@ -66,6 +66,12 @@ public class PopularPageFragment extends Fragment{
         postDateText.setText((dateSinceSystem.getTimeSince(post.getCreationDate())));
         mainImage = view.findViewById(R.id.PopularItemQuestionImage);
         ImageView profileImage = view.findViewById(R.id.PopularItemUserImage);
+        verifiedImage = view.findViewById(R.id.PopularItemVerified);
+        if (user.getVerified()){
+            verifiedImage.setVisibility(View.VISIBLE);
+        } else {
+            verifiedImage.setVisibility(View.GONE);
+        }
         if (user.getProfileImageURL() != null ) {
             if (!user.getProfileImageURL().isEmpty() && !user.getProfileImageURL().equals("none")){
                 Glide.with(profileImage)
@@ -113,6 +119,7 @@ public class PopularPageFragment extends Fragment{
         });
 
         ImageView optionsButton = view.findViewById(R.id.PopularItemOptionsButton);
+        PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), getActivity(),null, null);
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,12 +127,13 @@ public class PopularPageFragment extends Fragment{
                 fullPost.setUser(user);
                 fullPost.setStandardPost(post);
                 Boolean loggedUserPost = user.getId().equals(ServerAdminSingleton.getCurrentUser(getContext().getApplicationContext()).getId());
-                PostDropDownDialog dialog = new PostDropDownDialog(view.getContext(), loggedUserPost, getActivity(),fullPost, null, null);
+
                 int[] point = new int[2];
                 view.getLocationOnScreen(point); // or getLocationInWindow(point)
                 int x = point[0];
                 int y = point[1];
                 Integer bottomNavHeight = getActivity().findViewById(R.id.BottomNav).getHeight();
+                dialog.setDetails(loggedUserPost, fullPost);
                 dialog.setImageDrawable(mainImage.getDrawable());
 
                 dialog.setCoordinates(0, bottomNavHeight);

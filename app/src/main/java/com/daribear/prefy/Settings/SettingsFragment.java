@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.LogOutUtil;
@@ -54,8 +55,12 @@ public class SettingsFragment extends Fragment {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View buttonView) {
-                LogOutUtil.Logout(getActivity());
-                LogOutUtil.changeActivity(getActivity());
+                if (getActivity() == null) {
+                    Toast.makeText(getContext().getApplicationContext(), "Logout Failed", Toast.LENGTH_SHORT).show();
+                } else {
+                    LogOutUtil.Logout(getActivity());
+                    LogOutUtil.changeActivity(getActivity());
+                }
             }
         });
         cancelButton = view.findViewById(R.id.SettingsTopBarBack);

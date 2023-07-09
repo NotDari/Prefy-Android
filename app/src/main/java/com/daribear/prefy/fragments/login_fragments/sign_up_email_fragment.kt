@@ -12,20 +12,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.daribear.prefy.Activities.MainActivity
 import com.daribear.prefy.R
 import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper
 import com.daribear.prefy.Utils.GetInternet
+import com.daribear.prefy.Utils.PlayIntegrity.IntegrityDelegate
+import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity
 import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs
 import com.daribear.prefy.custom_classes.UsersInfo
 import com.daribear.prefy.databinding.FragmentLogInBinding
 import com.daribear.prefy.databinding.FragmentSignUpEmailBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -41,12 +40,11 @@ import java.util.Date
 import java.util.concurrent.Executors
 
 
-class sign_up_email_fragment : Fragment() {
+class sign_up_email_fragment : androidx.fragment.app.Fragment() {
     private var _binding: FragmentSignUpEmailBinding? = null
 
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
     private lateinit var db: DatabaseReference
     private var username = ""
     private var full_name = ""
@@ -63,7 +61,7 @@ class sign_up_email_fragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        auth = FirebaseAuth.getInstance()
+        //auth = FirebaseAuth.getInstance()
         if (args.signUpUsername != null){
             username = args.signUpUsername.toString()
         }
@@ -103,60 +101,7 @@ class sign_up_email_fragment : Fragment() {
                 val spf = SimpleDateFormat("yyyy-MM-dd");
                 val dateOfBirth = spf.format(DOB);
                 json.put("DOB", dateOfBirth)
-                Executors.newSingleThreadExecutor().execute(){
-                    val client = OkHttpClient()
-                    val body = RequestBody.create(
-                        MediaType.parse("application/json"), json.toString()
-                    )
-                    val request = Request.Builder()
-                        .url(ServerAdminSingleton.getInstance().serverAddress +"/prefy/v1/Registration")
-                        .method("POST", body)
-                        .addHeader("Content-Type", "application/json")
-                        .build()
-                    try {
-                        val response: Response = client.newCall(request).execute()
-                        if (response.isSuccessful) {
-                            activity?.runOnUiThread {
-                                val directions = sign_up_email_fragmentDirections.actionSignUpEmailFragmentToEmailConfirmationFragment(email, password)
-                                findNavController().navigate(directions) }
-
-                        } else {
-                            val customError = CustomJsonMapper.getCustomError(response)
-                            var message : String
-                            if (customError == null){
-                                message = "Couldn't connect to server"
-                            }else {
-                                when (customError.customCode) {
-                                    12 -> message = "Email not valid"
-                                    13 -> message = "Email already in use"
-                                    else -> {
-                                        message = "Couldn't connect to server"
-                                    }
-                                }
-                            }
-                            activity?.runOnUiThread {
-                                Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
-                            }
-                            buttonActive = false
-
-                        }
-                    } catch (i: IOException) {
-                        buttonActive = false
-                        if (!GetInternet.isInternetAvailable()){
-                            activity?.runOnUiThread {
-                                Toast.makeText(requireActivity(), ("No internet"), Toast.LENGTH_LONG).show()
-                            }
-                        } else {
-                            activity?.runOnUiThread {
-                                Toast.makeText(requireActivity(), ("Unknown Error"), Toast.LENGTH_LONG).show()
-                                val directions = sign_up_email_fragmentDirections.actionGlobalSignUpUsernameFragment()
-                                findNavController().navigate(directions)
-                            }
-                        }
-
-
-                    }
-                }
+                getToken(json)
 
                 /**
                 auth.createUserWithEmailAndPassword(email, password)
@@ -171,6 +116,91 @@ class sign_up_email_fragment : Fragment() {
                         }
                     }
                 */
+            }
+        }
+    }
+
+    private fun getToken(json: JSONObject){
+        val playIntegrity : PlayIntegrity = PlayIntegrity.getInstance()
+        if (playIntegrity.token == null){
+            println("Sdad hello!")
+            playIntegrity.setIntegrityDelegate(IntegrityDelegate {
+                if (it.success){
+                    json.put("token", it.token)
+                    sendRequest(json)
+                } else {
+                    playIntegrity.setIntegrityDelegate(null)
+                    activity?.runOnUiThread{
+                        buttonActive = false
+                        Toast.makeText(
+                            requireActivity(),
+                            "Couldn't connect to server",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+
+                }
+            })
+        } else {
+            json.put("token", playIntegrity.token)
+            sendRequest(json)
+        }
+    }
+
+    fun sendRequest(json : JSONObject){
+        Executors.newSingleThreadExecutor().execute(){
+            val client = OkHttpClient()
+            val body = RequestBody.create(
+                MediaType.parse("application/json"), json.toString()
+            )
+            val request = Request.Builder()
+                .url(ServerAdminSingleton.getInstance().serverAddress +"/prefy/v1/Registration")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/json")
+                .build()
+            try {
+                val response: Response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    activity?.runOnUiThread {
+                        val directions = sign_up_email_fragmentDirections.actionSignUpEmailFragmentToEmailConfirmationFragment(email, password)
+                        findNavController().navigate(directions) }
+
+                } else {
+                    val customError = CustomJsonMapper.getCustomError(response)
+                    var message : String
+                    if (customError == null){
+                        message = "Couldn't connect to server"
+                    }else {
+                        when (customError.customCode) {
+                            12 -> message = "Email not valid"
+                            13 -> message = "Email already in use"
+                            else -> {
+                                message = "Couldn't connect to server"
+                            }
+                        }
+                    }
+                    activity?.runOnUiThread {
+                        Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show()
+                    }
+                    buttonActive = false
+
+                }
+            } catch (i: IOException) {
+                buttonActive = false
+                if (!GetInternet.isInternetAvailable()){
+                    activity?.runOnUiThread {
+                        Toast.makeText(requireActivity(), ("No internet"), Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    activity?.runOnUiThread {
+                        Toast.makeText(requireActivity(), ("Unknown Error"), Toast.LENGTH_LONG).show()
+                        val directions = sign_up_email_fragmentDirections.actionGlobalSignUpUsernameFragment()
+                        findNavController().navigate(directions)
+                    }
+                }
+
+
             }
         }
     }
@@ -201,33 +231,6 @@ class sign_up_email_fragment : Fragment() {
         })
     }
 
-    fun addUser(email:String){
-        db = Firebase.database.reference
-        val user = kotlinUser(username, "none")
-        val userInfo = UsersInfo(full_name)
-        val uid: String
-        if (auth.currentUser != null){
-            val Fireuser : FirebaseUser = auth.currentUser!!
-            uid = Fireuser.uid.toString()
-            db.child("users").child(uid).setValue(user).addOnCompleteListener{
-                userdone = true
-                checkDone()
-                }
-            db.child("usersInfo").child(uid).setValue(userInfo).addOnCompleteListener{
-                fullnamedone = true
-                checkDone()
-            }
-            val authentication: MutableMap<String, Any> = java.util.HashMap()
-            authentication[username] = email
-            db.child("authentication").setValue(authentication).addOnCompleteListener{
-                authenticationdone = true;
-                checkDone()
-            }
-        } else {
-            Log.d("Auth", "NO LOGGED IN USER")
-        }
-
-    }
     private fun checkDone(){
         if (authenticationdone && fullnamedone && userdone){
             val sharedprefs = SharedPrefs(requireActivity())

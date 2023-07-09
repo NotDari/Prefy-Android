@@ -48,7 +48,8 @@
             android:textColor="@color/grey"
             android:textColorHint="@color/grey"
             android:hint="Enter a username"
-            android:inputType="text" />
+            android:inputType="text"
+            android:maxLength="30"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signUpNextMaterialButton"

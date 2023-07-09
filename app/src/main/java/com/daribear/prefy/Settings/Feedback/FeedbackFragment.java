@@ -14,17 +14,39 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daribear.prefy.Profile.GetUserDetailsExecutor;
+import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsRetreiver.ProfileExecutor;
 import com.daribear.prefy.R;
-import com.google.firebase.auth.FirebaseAuth;
+
+import com.daribear.prefy.Utils.CurrentTime;
+import com.daribear.prefy.Utils.ErrorChecker;
+import com.daribear.prefy.Utils.GetFollowing.FollowingRetrieving;
+import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
+import com.daribear.prefy.Utils.ServerAdminSingleton;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class FeedbackFragment extends Fragment {
     private ImageView backButton;
     private TextView continueButton;
     private EditText editText;
+    private Boolean suggestionLoading;
 
 
 
@@ -56,14 +78,52 @@ public class FeedbackFragment extends Fragment {
     private void initContinue(View view){
         editText = view.findViewById(R.id.FeedBackEditText);
         continueButton = view.findViewById(R.id.FeedbackContinueButton);
+        suggestionLoading = false;
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!editText.getText().toString().isEmpty()){
+                    if (!suggestionLoading){
+                        suggestionLoading = true;
+                        Suggestion suggestion = new Suggestion();
+                        suggestion.setCreationDate(((Long)CurrentTime.getCurrentTime()).doubleValue());
+                        suggestion.setSuggestionText(editText.getText().toString());
+                        suggestion.setUserId(ServerAdminSingleton.getInstance().getLoggedInId());
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        Executors.newSingleThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    OkHttpClient client = new OkHttpClient();
+                                    RequestBody body = RequestBody.create(MediaType.parse("application/json"), objectMapper.writeValueAsString(suggestion));
+                                    Request request = new Request.Builder()
+                                            .url(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Suggestions/Submit" )
+                                            .method("POST", body)
+                                            .addHeader("Content-Type", "application/json")
+                                            .addHeader("Authorization", ServerAdminSingleton.getInstance().getServerAuthToken())
+                                            .build();
+
+                                    Response response = client.newCall(request).execute();
+                                    if (response.isSuccessful()){
+                                        showToast(true);
+
+                                    }else {
+                                        ErrorChecker.checkForStandardError(response);
+                                        showToast(false);
+                                    }
+                                } catch (IOException | JSONException e) {
+                                    showToast(false);
+                                }
+                            }
+                        });
+                    }
+
+
+
                     HashMap<String, Object> feedbackMap = new HashMap<>();
-                    feedbackMap.put("uid", FirebaseAuth.getInstance().getUid());
+                    feedbackMap.put("id", ServerAdminSingleton.getInstance().getLoggedInId());
                     feedbackMap.put("Feedback", editText.getText().toString());
-                    Double time= (double) System.currentTimeMillis();
+                    Double time= (double) CurrentTime.getCurrentTime();
                     Double date = time / 1000;
                     Long finalTime = date.longValue();
                     FirebaseFirestore.getInstance().collection("Feedback").document(finalTime.toString()).set(feedbackMap);
@@ -74,6 +134,24 @@ public class FeedbackFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void showToast(Boolean success){
+        if (!isDetached()){
+            if (getActivity() != null){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (success) {
+                            Toast.makeText(getContext(), "Sent Feedback!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Failed to send feedback", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                suggestionLoading = false;
+            }
+        }
     }
 
 

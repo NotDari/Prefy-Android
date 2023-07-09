@@ -50,7 +50,8 @@
                 android:textColorHint="@color/grey"
                 android:hint="Full name"
                 android:inputType="textPersonName"
-                android:layout_marginBottom="15dp"/>
+                android:layout_marginBottom="15dp"
+                android:maxLength="30"/>
             <EditText
                 android:id="@+id/DateOfBirthEditText"
                 android:layout_width="0dp"

@@ -92,6 +92,7 @@ public class SearchDataRetriever implements GetFollowingDelegate {
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful) {
             operationCompleted(followList);
+
         } else {
             delegate.stringCompleted(false, false, null, null);
         }

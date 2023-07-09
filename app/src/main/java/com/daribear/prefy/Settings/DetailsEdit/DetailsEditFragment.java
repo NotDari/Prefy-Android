@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -117,62 +118,62 @@ public class DetailsEditFragment extends Fragment {
                 this.defaultValue = utils.loadString(getString(R.string.save_username_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.username);
                 currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter a username", false);
+                createEditText(view, "Enter a username", false, 30);
                 initUsernameSaveButton();
                 break;
             case "FullName":
                 this.defaultValue = utils.loadString(getString(R.string.save_fullname_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.fullname);
                 currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter your name", true);
+                createEditText(view, "Enter your name", true, 30);
                 initSaveFullName();
                 break;
             case "Bio":
                 this.defaultValue = utils.loadString(getString(R.string.save_bio_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.bio);
                 currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter a bio", true);
+                createEditText(view, "Enter a bio", true, 150);
                 initSaveBio();
                 break;
             case "Instagram":
                 this.defaultValue = utils.loadString(getString(R.string.save_instagram_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.instagram);
                 currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter your username", true);
+                createEditText(view, "Enter your username", true, 30);
                 initSocialMediaSave(detail);
                 break;
             case "Twitter":
                 this.defaultValue = utils.loadString(getString(R.string.save_twitter_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.twitter);
                 currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter your username", true);
+                createEditText(view, "Enter your username", true, 30);
                 initSocialMediaSave(detail);
                 break;
             case "VK":
                 this.defaultValue = utils.loadString(getString(R.string.save_vk_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.vk);
                 currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter your username", true);
+                createEditText(view, "Enter your username", true, 30);
                 initSocialMediaSave(detail);
                 break;
             case "Email":
                 this.defaultValue = utils.loadString(getString(R.string.save_email_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.ic_form_icon);
                 //currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter your email", false);
+                createEditText(view, "Enter your email", false, 25);
                 break;
             case "Password":
                 this.defaultValue = utils.loadString(getString(R.string.save_password_pref), "");
                 currentDrawable = ContextCompat.getDrawable(appContext, R.drawable.ic_form_icon);
                 //currentDrawable.setTint(ContextCompat.getColor(appContext, R.color.grey));
-                createEditText(view, "Enter your new password", false);
+                createEditText(view, "Enter your new password", false, 25);
                 break;
 
         }
         titleText.setText(detail);
     }
 
-    private void createEditText(View view, String extraText, Boolean nullable){
+    private void createEditText(View view, String extraText, Boolean nullable, Integer characterLim){
         editText = new EditText(view.getContext());
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -190,6 +191,11 @@ public class DetailsEditFragment extends Fragment {
         editText.setCompoundDrawablesRelativeWithIntrinsicBounds(currentDrawable, null, null, null);
         editText.setCompoundDrawablePadding((int) (width * .03));
         editText.setText(defaultValue);
+        if (characterLim != null){
+            InputFilter[] filterArray = new InputFilter[1];
+            filterArray[0] = new InputFilter.LengthFilter(characterLim);
+            editText.setFilters(filterArray);
+        }
 
         relLay.addView(editText, relLp);
         TextWatcher textWatcher = new TextWatcher() {
@@ -296,6 +302,7 @@ public class DetailsEditFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alterButtons();
                 Uri imageURI = profileImageSelector.getCurrentURI();
                 Bitmap tempBitmap = null;
                 Boolean errorChecker = false;
@@ -312,7 +319,7 @@ public class DetailsEditFragment extends Fragment {
                     scaled.compress(Bitmap.CompressFormat.JPEG, 80 /* Ignored for PNGs */, blob);
                     byte[] bitmapdata = blob.toByteArray();
 
-                    StorageReference fStorageReference = FirebaseStorage.getInstance().getReference("test-posts");
+                    StorageReference fStorageReference = FirebaseStorage.getInstance().getReference("Posts/" + ServerAdminSingleton.getInstance().getLoggedInId() + "/ProfileImages");
                     String uniqueID = UUID.randomUUID().toString();
                     StorageReference fileReference = fStorageReference.child(uniqueID);
                     FirebaseFirestore ff = FirebaseFirestore.getInstance();
@@ -348,7 +355,8 @@ public class DetailsEditFragment extends Fragment {
                                                 Response response = client.newCall(request).execute();
                                                 if (response.isSuccessful()) {
                                                     utils.saveString(getString(R.string.save_profileP_pref), photoLink);
-                                                    ToastOnOtherThread("Profile Image Changed" + photoLink);
+                                                    ToastOnOtherThread("Profile Image Changed");
+                                                    otherThreadBack();
                                                 } else {
                                                     fileReference.delete();
                                                     ToastOnOtherThread("Failed to upload Image");
@@ -661,7 +669,9 @@ public class DetailsEditFragment extends Fragment {
 
     private void alterButtons(){
         if (!isDetached()) {
-            editText.setEnabled(false);
+            if (editText != null) {
+                editText.setEnabled(false);
+            }
             saveButton.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.teal_200));
             backButton.setColorFilter(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.grey));
             backButton.setEnabled(false);

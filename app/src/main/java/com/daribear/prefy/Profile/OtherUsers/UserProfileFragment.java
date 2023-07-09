@@ -48,7 +48,7 @@ public class UserProfileFragment extends Fragment {
         destroyed = false;
         RecyclerView recView = view.findViewById(R.id.ProfileRecView);
         NewProfilePostsGateway gateway;
-        gateway = new NewProfilePostsGateway(recView, view, user, false);
+        gateway = new NewProfilePostsGateway(getActivity(),recView, view, user, false);
 
         gateway.displayView();
         controller = new OtherUserDataController(view,gateway, view.getContext(),user, getActivity());

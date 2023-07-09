@@ -1,10 +1,12 @@
 package com.daribear.prefy.Utils.GeneralUtils;
 
+import com.daribear.prefy.Utils.CurrentTime;
+
 public class dateSinceSystem {
     private static final Double MONTH_IN_MILLIS = 2629800000.0, YEAR_IN_MILLIS = 31557600000.0, WEEK_IN_MILLIS = 604800016.56, DAY_IN_MILLIS = 86400000.0, HOUR_IN_MILLIS = 3600000.0, MINUTE_IN_MILLIS = 60000.0, SECONDS_IN_MILLIS = 60000.0;
 
     public static String getTimeSince(Double originalDate){
-        Double currentDate = (double) System.currentTimeMillis();
+        Double currentDate = (double) CurrentTime.getCurrentTime();
         Double difference = currentDate - (originalDate* 1000);
         Integer result = 0;
         String outcome = "";

@@ -15,7 +15,7 @@ public class ServerAdminSingleton {
 
     private SQLiteDatabase sqLiteDatabase;
 
-    public static ServerAdminSingleton getInstance(){
+    public static synchronized ServerAdminSingleton getInstance(){
         if (instance == null){
             instance = new ServerAdminSingleton();
         }

@@ -245,6 +245,7 @@ public class SearchFragment extends Fragment {
                 public void onClick(View v) {
                     if (!dataRefreshing) {
                         searchViewModel.setCurrentSearch(searchEditText.getText().toString());
+                        searchViewModel.refreshData();
                         progressBar.setVisibility(View.VISIBLE);
                         noInternetText.setVisibility(View.GONE);
                         dataRefreshing = true;

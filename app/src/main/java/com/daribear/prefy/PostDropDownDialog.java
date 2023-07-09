@@ -30,6 +30,7 @@ import com.daribear.prefy.DeleteDialog.DeleteDialogDelegate;
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.Popular.NewPopularSystem.PopularSkipDelegate;
 import com.daribear.prefy.Profile.User;
+import com.daribear.prefy.Utils.CurrentTime;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
 import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
@@ -53,16 +54,23 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
 
     private Boolean popular;
     private PopularSkipDelegate popSkipDelegate;
+    private BottomSheetDialog bottomSheetDialog;
 
-    public PostDropDownDialog(Context context, Boolean loggedUserPost, Activity ownerActivity, FullPost fullPost, PostDropDownDialogDelegate exploreDelegate, DeleteDelegate deleteDelegate) {
+    public PostDropDownDialog(Context context, Activity ownerActivity, PostDropDownDialogDelegate exploreDelegate, DeleteDelegate deleteDelegate) {
         this.context = context;
-        this.loggedUserPost = loggedUserPost;
         this.ownerActivity = ownerActivity;
-        this.user = fullPost.getUser();
-        this.post = fullPost.getStandardPost();
         this.exploreDelegate = exploreDelegate;
         this.delegateDelegate = deleteDelegate;
         popular = false;
+        bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
+        bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        bottomSheetDialog.setContentView(R.layout.post_pop_up_dialog);
+    }
+
+    public void setDetails(Boolean loggedUserPost, FullPost fullPost){
+        this.loggedUserPost = loggedUserPost;
+        this.user = fullPost.getUser();
+        this.post = fullPost.getStandardPost();
     }
 
     public void setPopular(PopularSkipDelegate popSkipDelegate){
@@ -101,12 +109,12 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
 
         postDialog.show();
          */
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
-        bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        bottomSheetDialog.setContentView(R.layout.post_pop_up_dialog);
-        this.postDialog = bottomSheetDialog;
-        setUpViews();
-        bottomSheetDialog.show();
+
+        if (!bottomSheetDialog.isShowing()) {
+            this.postDialog = bottomSheetDialog;
+            setUpViews();
+            bottomSheetDialog.show();
+        }
 
     }
 
@@ -230,7 +238,7 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
 
 
     private void saveImage(){
-        Double currentDate = (double) System.currentTimeMillis();
+        Double currentDate = (double) CurrentTime.getCurrentTime();
         MediaStore.Images.Media.insertImage(context.getContentResolver(), imageBit, ("Prefy-" + currentDate), "test");
         Toast.makeText(ownerActivity, "Image Saved", Toast.LENGTH_SHORT).show();
         postDialog.dismiss();

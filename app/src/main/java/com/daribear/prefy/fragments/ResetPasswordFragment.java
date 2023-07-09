@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
+
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -66,7 +66,6 @@ public class ResetPasswordFragment extends Fragment {
 
     private void initSubmit(String details){
         emailLoading = false;
-        FirebaseAuth auth = FirebaseAuth.getInstance();
         if (details != null){
             if (!details.isEmpty()){
                 if (!emailLoading) {

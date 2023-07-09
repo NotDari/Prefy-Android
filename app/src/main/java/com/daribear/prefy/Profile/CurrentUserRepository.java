@@ -41,15 +41,27 @@ public class CurrentUserRepository implements ProfileHandlerInt {
 
     public void itemVote(Long postId, String vote){
         if (wholeProfileMutable.getValue() != null) {
+            Boolean changed = false;
             WholeProfile wholeProfile = wholeProfileMutable.getValue();
             if (wholeProfile != null) {
                 ArrayList<StandardPost> postList = wholeProfile.getPostListContainer().getPostList();
                 for (int i = 0; i < postList.size(); i++) {
                     if (postId.equals(postList.get(i).getPostId())) {
+                        if (vote.equals("right")){
+                            changed = true;
+                            postList.get(i).setRightVotes(postList.get(i).getRightVotes() + 1);
+                        } else if (vote.equals("left")) {
+                            changed = true;
+                            postList.get(i).setLeftVotes(postList.get(i).getLeftVotes() + 1);
+                        } else {
+                            changed = false;
+                        }
                         postList.get(i).setCurrentVote(vote);
                     }
                 }
-                wholeProfileMutable.setValue(wholeProfile);
+                if (changed) {
+                    wholeProfileMutable.setValue(wholeProfile);
+                }
             }
         }
     }

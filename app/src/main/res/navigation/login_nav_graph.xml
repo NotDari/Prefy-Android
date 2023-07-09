@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_log_in_fragment_to_resetPasswordFragment"
             app:destination="@id/resetPasswordFragment" />
+        <action
+            android:id="@+id/action_log_in_fragment_to_emailConfirmationFragment"
+            app:destination="@id/emailConfirmationFragment" />
     </fragment><action android:id="@+id/action_global_log_in_fragment" app:destination="@id/log_in_fragment"/><action android:id="@+id/action_global_sign_up_username_fragment" app:destination="@id/sign_up_username_fragment"/>
     <fragment
         android:id="@+id/resetPasswordFragment"

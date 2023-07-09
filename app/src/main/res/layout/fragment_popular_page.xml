@@ -35,6 +35,17 @@
             android:text="username"
             android:textColor="@color/text_color"
             android:layout_marginStart="5dp"/>
+
+        <ImageView
+            android:id="@+id/PopularItemVerified"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_verified_svg"
+            app:layout_constraintStart_toEndOf="@id/PopularItemUsername"
+            app:layout_constraintTop_toTopOf="@id/PopularItemUsername"
+            app:layout_constraintBottom_toBottomOf="@id/PopularItemUsername"
+            app:layout_constraintDimensionRatio="1:1"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/PopularItemPostDate"
             android:layout_width="wrap_content"

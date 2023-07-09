@@ -166,14 +166,15 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
     }
 
     private void initOptions(ViewHolder holder, int position){
+        PostDropDownDialog dialog = new PostDropDownDialog(holder.optionsButton.getContext(), activity, null, null);
         holder.optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FullPost fullPost = postList.get(position);
                 Boolean loggedUserPost = fullPost.getUser().getId().equals(ServerAdminSingleton.getCurrentUser(holder.optionsButton.getContext().getApplicationContext()).getId());
-                PostDropDownDialog dialog = new PostDropDownDialog(holder.optionsButton.getContext(), loggedUserPost, activity,fullPost, null, null);
-                dialog.setImageDrawable(holder.imageView.getDrawable());
 
+                dialog.setDetails(loggedUserPost, fullPost);
+                dialog.setImageDrawable(holder.imageView.getDrawable());
                 dialog.initDialog();
             }
         });

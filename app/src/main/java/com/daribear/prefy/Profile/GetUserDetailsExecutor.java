@@ -70,7 +70,7 @@ public class GetUserDetailsExecutor implements ProfileHandlerInt, GetFollowingDe
                             }
                             followingDone = true;
                         }
-                        ProfileExecutor profileExecutor = new ProfileExecutor(id, GetUserDetailsExecutor.this::taskDone, false, 18, null, false);
+                        ProfileExecutor profileExecutor = new ProfileExecutor(id, GetUserDetailsExecutor.this::taskDone,  18, null, false);
                         profileExecutor.initExecutor();
 
                     }else {

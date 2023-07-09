@@ -87,8 +87,8 @@ public class OtherUserDataController implements ProfileHandlerInt {
     private void loadPosts(){
         progressBar.setVisibility(View.VISIBLE);
         Integer limit = Integer.parseInt(context.getString(R.string.Search_Load_Count));
-        ProfileExecutor executor = new ProfileExecutor(user.getId(), this, false, limit, null, false);
-        executor.initExecutor();
+        GetUserDetailsExecutor getUserDetailsExecutor = new GetUserDetailsExecutor(user.getId(), this);
+        getUserDetailsExecutor.initExecutor();
     }
 
 
@@ -115,9 +115,9 @@ public class OtherUserDataController implements ProfileHandlerInt {
                             firstLoadDone = true;
                         } else {
                             gateway.setInitPosts(postList);
-                            gateway.updateUserInfo( user);
-
                         }
+                        gateway.updateUserInfo(wholeProfile.getUser());
+
                     }
                     else {
                         if (!firstLoadDone){

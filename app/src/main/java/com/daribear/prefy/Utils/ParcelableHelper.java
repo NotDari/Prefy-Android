@@ -50,4 +50,15 @@ public class ParcelableHelper {
             return isPresent ? (p.readByte() != 0) : null;
         }
     }
+    public static void writeDoubleToParcel(Parcel p, Double d){
+        p.writeByte((byte)(d != null ? 1 : 0));
+        if (d != null) {
+            p.writeDouble(d);
+        }
+    }
+
+    public static Double readDoublefromParcel(Parcel p) {
+        boolean isPresent = p.readByte() == 1;
+        return isPresent ? p.readDouble() : null;
+    }
 }

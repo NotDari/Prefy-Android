@@ -3,6 +3,8 @@ package com.daribear.prefy.customClasses.Posts;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daribear.prefy.Utils.ParcelableHelper;
+
 import java.util.Objects;
 
 import lombok.AllArgsConstructor;

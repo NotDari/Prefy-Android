@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.ItemAlterer;
 import com.daribear.prefy.customClasses.Containers.PostListContainer;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
@@ -101,8 +102,8 @@ public class NewProfilePostsAdaptor extends RecyclerView.Adapter<RecyclerView.Vi
     public void addData(PostListContainer postListContainer){
         Integer size = postListContainer.getPostList().size();
         Integer extra = postListContainer.getPostList().size();
-        for (StandardPost post :postListContainer.getPostList()){
-            postListContainer.getPostList().add(post);
+        for (StandardPost post : postListContainer.getPostList()){
+            this.postListContainer.getPostList().add(post);
         }
         this.postListContainer.setPageNumber(postListContainer.getPageNumber());
         notifyItemRangeChanged(size, extra);

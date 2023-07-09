@@ -569,7 +569,9 @@ public class UploadEndpoint {
         if (cursor.getCount() > 0){
             db.execSQL("UPDATE " + "UploadTasks" +
                     " SET " + "Count" + " = " + "Count" + " - 1" +
-                    " WHERE " + "Type" + " = ?", new String[] {"Vote"});
+                    " WHERE " + "Type" + " = ?" +
+                    "AND Count > 0"
+                    , new String[] {"Vote"});
             db.delete("UploadVotes","PostId=? and Vote=?",new String[]{PostId.toString(),Vote});
         }
         Cursor popCursor = db.rawQuery("Select * FROM PopularPostsPopularPosts WHERE postId = " + PostId, null);
@@ -582,7 +584,9 @@ public class UploadEndpoint {
     public void removeActivityFromDb(SQLiteDatabase db, String Type){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
-                " WHERE " + "Type" + " = ?", new String[] {"ActivityClear"});
+                " WHERE " + "Type" + " = ?" +
+                "AND Count > 0",
+                new String[] {"ActivityClear"});
         db.delete("UploadActivityClear","Type=?",new String[]{Type});
     }
 

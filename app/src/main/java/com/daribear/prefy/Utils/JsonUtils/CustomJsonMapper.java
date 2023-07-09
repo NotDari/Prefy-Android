@@ -21,12 +21,11 @@ import java.util.ArrayList;
 
 import okhttp3.Response;
 
-public class    CustomJsonMapper {
+public class CustomJsonMapper {
 
     public static User getUser(Response response){
         try {
             String responseString = response.body().string();
-
             JSONObject jsonObject = new JSONObject(responseString);
             Long id = jsonObject.getLong("id");
             String username = jsonObject.optString("username");
@@ -157,6 +156,7 @@ public class    CustomJsonMapper {
             for (int i =0; i < jsonArray.length(); i++){
                 JSONObject jsonObject = (jsonArray.getJSONObject(i));
                 FollowerActivity followerActivity = new FollowerActivity();
+                followerActivity.setFollowerId(jsonObject.getLong("followerId"));
                 followerActivity.setUserId(jsonObject.getLong("userId"));
                 followerActivity.setOccurrenceDate(jsonObject.getDouble("occurrenceDate"));
                 followerActivity.setFollowed(jsonObject.getBoolean("followed"));

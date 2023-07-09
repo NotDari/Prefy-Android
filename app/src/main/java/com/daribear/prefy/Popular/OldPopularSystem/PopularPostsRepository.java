@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
 import com.daribear.prefy.Popular.PopularActivity;
+import com.daribear.prefy.Utils.CurrentTime;
 import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
@@ -82,7 +83,7 @@ public class PopularPostsRepository implements CachePopularDataRetreiverInterfac
             popularModelPackage.setRetrievalType("NoCache");
             popularModelMutable.postValue(popularModelPackage);
         }
-        WebPopularDataExecutor webPopularDataExecutor = new WebPopularDataExecutor(this, (double) System.currentTimeMillis(), "Override");
+        WebPopularDataExecutor webPopularDataExecutor = new WebPopularDataExecutor(this, (double) CurrentTime.getCurrentTime(), "Override");
         webPopularDataExecutor.initExecutor();
         dataLoading = true;
     }
@@ -91,8 +92,8 @@ public class PopularPostsRepository implements CachePopularDataRetreiverInterfac
     //        }
 
     public void refreshData(){
-        WebPopularDataExecutor webPopularDataExecutor = new WebPopularDataExecutor(this,(double) System.currentTimeMillis(), "Refresh");
-        System.out.println("Sdad SystemTime:" + System.currentTimeMillis());
+        WebPopularDataExecutor webPopularDataExecutor = new WebPopularDataExecutor(this,(double) CurrentTime.getCurrentTime(), "Refresh");
+        System.out.println("Sdad SystemTime:" + CurrentTime.getCurrentTime());
         webPopularDataExecutor.initExecutor();
         dataLoading = true;
     }

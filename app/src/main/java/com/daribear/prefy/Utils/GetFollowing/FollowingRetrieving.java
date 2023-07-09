@@ -38,6 +38,7 @@ public class FollowingRetrieving {
 
 
     private void getFollowing(){
+        System.out.println("Sdad followingStarted");
         ArrayList<Long> smallerList = new ArrayList<>();
         for (int i = 0;i < userIdList.size(); i ++){
             if (!smallerList.contains(userIdList.get(i))){
@@ -56,8 +57,10 @@ public class FollowingRetrieving {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", authToken)
                 .build();
+
         try {
             Response response = client.newCall(request).execute();
+            System.out.println("Sdad followingtried" + response.isSuccessful());
             if (response.isSuccessful()){
                 try {
                     HashMap followsList = new ObjectMapper().readValue(response.body().string(), HashMap.class);
@@ -88,6 +91,7 @@ public class FollowingRetrieving {
                     }
                     getDatabase();
                 } catch (NullPointerException e){
+                    System.out.println("Sdad following exception:" + e);
                     delegate.completed(false, null, type);
                 }
 
@@ -96,6 +100,7 @@ public class FollowingRetrieving {
 
 
             }else {
+
                 ErrorChecker.checkForStandardError(response);
 
                 delegate.completed(false, null, type);
@@ -116,7 +121,7 @@ public class FollowingRetrieving {
                 Cursor retrieveCursor = database.rawQuery("SELECT * FROM " + "UploadFollowTable" +
                         " WHERE " + "FollowingUserId" + " = ?", new String[] {key.toString()});
                 if (retrieveCursor.moveToFirst()){
-                    Boolean databaseValue = (retrieveCursor.getInt(retrieveCursor.getColumnIndexOrThrow("Follow"))) == 0;
+                    Boolean databaseValue = (retrieveCursor.getInt(retrieveCursor.getColumnIndexOrThrow("Follow"))) == 1;
                     if (databaseValue != value){
                         followMap.put(key, databaseValue);
                     }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -323,7 +324,9 @@ public class PopularPageHostFragment2 extends Fragment implements PopularPostVot
         viewPager.setAdapter(null);
         progressBar = null;
         super.onDestroyView();
-
+        noInternetText = null;
+        viewPager = null;
+        noMorePosts = null;
     }
 
 
@@ -344,14 +347,26 @@ public class PopularPageHostFragment2 extends Fragment implements PopularPostVot
                                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
                                 }
                             }
-                        }, 300);
+                        }, 400);
                     } else {
                         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
                     }
                 }
 
             } else {
-                alterInternet();
+                if (cooldown){
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!destroyed) {
+                                alterInternet();
+                            }
+                        }
+                    }, 400);
+                } else {
+                    alterInternet();
+                }
             }
             AdTracker.getInstance().popViewed();
         }

@@ -1,5 +1,6 @@
 package com.daribear.prefy.Profile.ProfilePostsRec;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 public class NewProfilePostsGateway implements ProfileHandlerInt {
     private ArrayList<StandardPost> postList;
+    private Activity activity;
     private View view;
     private Context context;
     private RecyclerView recView;
@@ -29,7 +31,8 @@ public class NewProfilePostsGateway implements ProfileHandlerInt {
     private Integer imageHeight = 0;
     private GridLayoutManager gridLayoutManager;
 
-    public NewProfilePostsGateway(RecyclerView recView, View view, User user, Boolean fromHomeProfile) {
+    public NewProfilePostsGateway(Activity activity, RecyclerView recView, View view, User user, Boolean fromHomeProfile) {
+        this.activity = activity;
         this.recView = recView;
         this.view = view;
         this.context = view.getContext();
@@ -117,7 +120,7 @@ public class NewProfilePostsGateway implements ProfileHandlerInt {
         Integer postLimit = Integer.parseInt(view.getContext().getString(R.string.Search_Load_Count)) ;
         if (!scrollUpdateLoading && ((adaptor.getItemCount()-1) % postLimit == 0)) {
             Integer limit = Integer.parseInt(view.getContext().getString(R.string.Search_Load_Count));
-            ProfileExecutor profileExecutor = new ProfileExecutor(userId, this, true, limit, pageNumber, true);
+            ProfileExecutor profileExecutor = new ProfileExecutor(userId, this, limit, pageNumber, true);
             profileExecutor.initExecutor();
         }
     }
@@ -136,8 +139,12 @@ public class NewProfilePostsGateway implements ProfileHandlerInt {
     @Override
     public void taskDone(Boolean successful, WholeProfile wholeProfile) {
         if (successful){
-            adaptor.addData(wholeProfile.getPostListContainer());
-
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adaptor.addData(wholeProfile.getPostListContainer());
+                }
+            });
         } else {
         }
         scrollUpdateLoading = false;

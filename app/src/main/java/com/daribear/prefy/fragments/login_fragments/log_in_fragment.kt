@@ -1,5 +1,4 @@
 package com.daribear.prefy.fragments.login_fragments
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
@@ -13,20 +12,27 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.daribear.prefy.Activities.MainActivity
 import com.daribear.prefy.Profile.User
 import com.daribear.prefy.R
+import com.daribear.prefy.Utils.CurrentTime
 import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper
+import com.daribear.prefy.Utils.PlayIntegrity.IntegrityDelegate
+import com.daribear.prefy.Utils.PlayIntegrity.IntegrityResponse
+import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity
 import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs
 import com.daribear.prefy.databinding.FragmentLogInBinding
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import okhttp3.*
+import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.Executors
+import kotlin.math.sign
 
 
-class log_in_fragment : Fragment() {
+class log_in_fragment : androidx.fragment.app.Fragment(){
     private var _binding: FragmentLogInBinding? = null
 
     private val binding get() = _binding!!
@@ -98,9 +104,12 @@ class log_in_fragment : Fragment() {
                     login = emailEditText.text.toString().trimEnd().lowercase()
                 }
                 val password: String = passwordEditText.text.toString()
-                signIn(login, password)
+                println("Sdad timer:" + CurrentTime.getCurrentTime())
+                getToken(login, password)
+                //signIn(login, password)
             }
         }
+
 
         val forgottenDetailsText = binding.LoginForgotDetailsText;
         forgottenDetailsText.setOnClickListener{
@@ -123,16 +132,48 @@ class log_in_fragment : Fragment() {
         }
     }
 
-    private fun signIn(email:String, password:String){
+    private fun getToken(email:String, password:String){
+        val playIntegrity : PlayIntegrity = PlayIntegrity.getInstance()
+        if (playIntegrity.token == null){
+            println("Sdad hello!")
+            playIntegrity.setIntegrityDelegate(IntegrityDelegate {
+                if (it.success){
+                    signIn(email, password, it.token)
+                } else {
+                    playIntegrity.setIntegrityDelegate(null)
+                    activity?.runOnUiThread{
+                        loginFailed()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Couldn't connect to server",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+
+                }
+            })
+        } else {
+            signIn(email, password, playIntegrity.token)
+        }
+    }
+
+
+    private fun signIn(email:String, password:String, token:String){
+
         val executor = Executors.newSingleThreadExecutor();
+
         executor.execute{
             val client = OkHttpClient()
 
-            val json = "{ " + "\"username\" : " + "\"" + email + "\"" + ",\n"+ "\"password\" : \""  + password + "\"" +
-                    "}"
+
+            val json = JSONObject()
+            json.put("username", email)
+            json.put("password", password)
+            json.put("token", token)
 
             val body = RequestBody.create(
-                MediaType.parse("application/json"), json
+                MediaType.parse("application/json"), json.toString()
             )
             val request = Request.Builder()
                 .url(ServerAdminSingleton.getInstance().serverAddress +"/login")
@@ -176,6 +217,7 @@ class log_in_fragment : Fragment() {
                         }
 
                     } else {
+                        println("Sdad timer:" + CurrentTime.getCurrentTime())
                         addPrefs(user)
                     }
 
@@ -186,13 +228,22 @@ class log_in_fragment : Fragment() {
                         val jsonBodyResponse = CustomJsonMapper.getCustomError(response);
                         if (jsonBodyResponse != null) {
                             when (jsonBodyResponse.customCode) {
-                                1,2,3 -> {
+                                1,2 -> {
                                     loginFailed()
                                     Toast.makeText(
                                         requireActivity(),
                                         jsonBodyResponse.message,
                                         Toast.LENGTH_LONG
                                     ).show()
+                                }
+                                3 -> {
+                                    val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.signUpFragmentContainerView) as NavHostFragment
+                                    val navController = navHostFragment.navController
+                                    val bundle : Bundle = Bundle()
+                                    bundle.putString("email", email)
+                                    bundle.putString("password", password)
+                                    navController.navigate(R.id.action_log_in_fragment_to_emailConfirmationFragment, bundle)
+
                                 }
 
                                 else -> {

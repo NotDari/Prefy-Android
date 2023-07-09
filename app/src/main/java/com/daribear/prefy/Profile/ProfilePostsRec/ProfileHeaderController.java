@@ -126,7 +126,7 @@ public class ProfileHeaderController {
                     followButton.setBackgroundColor(ContextCompat.getColor(followButton.getContext(), R.color.unfollow_button));
                 }
                 user.setFollowing(!user.getFollowing());
-                ItemAlterer.follow(user.getId(), user.getFollowing(), view.getContext().getApplicationContext());
+                ItemAlterer.userChange(user, view.getContext().getApplicationContext());
                 UploadController.saveFollow(view.getContext().getApplicationContext(), user.getId(), user.getFollowing());
             }
         });
@@ -235,6 +235,7 @@ public class ProfileHeaderController {
     public void updateUserInfo(User user){
         this.user = user;
         setViews();
+        ItemAlterer.userChange(user, view.getContext().getApplicationContext());
         if (currentUser) {
             saveUpdatedUserInfo();
         }

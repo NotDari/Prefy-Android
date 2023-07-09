@@ -154,12 +154,16 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
                     try {
                         JSONArray jsonArray = new JSONArray(response.body().string());
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject tempObject = jsonArray.getJSONObject(i);
-                            if (tempObject == null) {
-                                removePostList.add(voteActivityList.get(i));
-                            } else {
-                                voteActivityList.get(i).setPost(CustomJsonMapper.getPostFromObject(tempObject));
+                            if (!jsonArray.isNull(i)) {
+                                JSONObject tempObject = jsonArray.getJSONObject(i);
+                                if (tempObject == null) {
+                                    removePostList.add(voteActivityList.get(i));
+                                } else {
+                                    voteActivityList.get(i).setPost(CustomJsonMapper.getPostFromObject(tempObject));
 
+                                }
+                            } else {
+                                removePostList.add(voteActivityList.get(i));
                             }
                         }
                         postRetrieved = true;

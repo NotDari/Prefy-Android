@@ -3,7 +3,9 @@ package com.daribear.prefy.Explore;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.List;
 
@@ -42,11 +44,14 @@ public class ExploreViewModel extends ViewModel {
         exploreRepo.refreshData();
     }
 
-    public void deleteItem(FullPost fullPost){
-        exploreRepo.deleteItem(fullPost);
+    public void deleteItem(StandardPost standardPost){
+        exploreRepo.deleteItem(standardPost);
     }
 
     public void itemVoted(Long postId, String vote){
         exploreRepo.itemVote(postId, vote);
+    }
+    public void userAltered(User user){
+        exploreRepo.userAltered(user);
     }
 }

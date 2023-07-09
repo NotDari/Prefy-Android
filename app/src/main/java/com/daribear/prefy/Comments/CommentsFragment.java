@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.CurrentTime;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
@@ -98,11 +99,12 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
                 Comment comment = new Comment();
                 String text = submitCommentEdit.getText().toString();
                 if (!text.isEmpty()){
-                    Double time= (double) System.currentTimeMillis();
+                    Double time= (double) CurrentTime.getCurrentTime();
                     Double date = time / 1000;
 
 
                     comment.setText(text);
+
                     comment.setReplyID(replyId);
                     comment.setReplyUsername(replyUsername);
                     comment.setSubReplyID(subParentId);

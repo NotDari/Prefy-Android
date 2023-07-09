@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.navigation.Navigation;
 
@@ -86,12 +87,14 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
             @Override
             public void onClick(View view) {
                 VoteHandler.voteSubmitted(fullFeaturedPost.getStandardPost(), postImage, leftCLick, rightClick, "rightClick", "ExploreDialog");
+                VoteHandler.saveVote(view.getContext().getApplicationContext(),fullFeaturedPost.getStandardPost().getPostId(), "right");
             }
         });
         leftCLick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 VoteHandler.voteSubmitted(fullFeaturedPost.getStandardPost(), postImage, leftCLick, rightClick, "leftClick", "ExploreDialog");
+                VoteHandler.saveVote(view.getContext().getApplicationContext(),fullFeaturedPost.getStandardPost().getPostId(), "left");
             }
         });
     }
@@ -166,6 +169,7 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
     }
 
     private void initOptions(){
+        PostDropDownDialog dialog = new PostDropDownDialog(optionsButton.getContext(), parentActivity,ExplorePostDialog.this, ExplorePostDialog.this);
         optionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +178,7 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
                 fullPost.setStandardPost(fullFeaturedPost.getStandardPost());
                 fullPost.setUser(fullFeaturedPost.getUser());
                 Boolean loggedUserPost = fullFeaturedPost.getUser().getId().equals(utils.loadLong(parentActivity.getString(R.string.save_user_id), 0));
-                PostDropDownDialog dialog = new PostDropDownDialog(v.getContext(), loggedUserPost, parentActivity,fullPost, ExplorePostDialog.this, ExplorePostDialog.this);
+                dialog.setDetails(loggedUserPost, fullPost);
                 Integer bottomNavHeight = parentActivity.findViewById(R.id.BottomNav).getHeight();
                 dialog.setCoordinates(0, bottomNavHeight);
                 dialog.setImageDrawable(postImage.getDrawable());
@@ -193,6 +197,6 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
     @Override
     public void itemDeleted() {
         FullPost fullPost = new FullPost(fullFeaturedPost.getStandardPost(), fullFeaturedPost.getUser());
-        ItemAlterer.deleteItem(fullPost, context.getApplicationContext());
+        ItemAlterer.deleteItem(fullPost.getStandardPost(), context.getApplicationContext());
     }
 }

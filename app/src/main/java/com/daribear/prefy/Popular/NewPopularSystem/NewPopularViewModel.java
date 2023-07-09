@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.daribear.prefy.Popular.PopularActivity;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
+import com.daribear.prefy.Profile.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,6 +66,10 @@ public class NewPopularViewModel extends ViewModel {
 
     public void itemVote(Long postId, String vote){
         popRepo.itemVote(postId, vote);
+    }
+
+    public void userAltered(User user){
+        popRepo.userAltered(user);
     }
 
 

@@ -5,12 +5,16 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
 import com.daribear.prefy.Database.DatabaseHelper;
+import com.daribear.prefy.Explore.ExplorePostSet;
 import com.daribear.prefy.Popular.PopularActivity;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Popular.PopularViewModel.PopularActivityRetreiver;
 import com.daribear.prefy.Popular.PopularViewModel.PopularActivityRetrieverInterface;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
 import com.daribear.prefy.Popular.PopularViewModel.RetreivePopularDataInterface;
+import com.daribear.prefy.Profile.User;
+import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.PopularPost;
 
 import java.util.ArrayList;
 
@@ -82,7 +86,50 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
     }
 
     public void itemVote(Long postId, String vote){
+        if (popularModelMutable.getValue() != null) {
+            Boolean changed = false;
+            PopularModelPackage popularModelPackage = popularModelMutable.getValue();
+            if (popularModelPackage != null) {
+                ArrayList<PopularPost> fullPostList =  popularModelPackage.getPopularPostSet().getPostList();
+                for (int i = 0; i < fullPostList.size(); i++) {
+                    if (fullPostList.get(i).getPostId().equals(postId)) {
+                        if (vote.equals("right")){
+                            changed = true;
+                            fullPostList.get(i).setRightVotes(fullPostList.get(i).getRightVotes() + 1);
+                        } else if (vote.equals("left")) {
+                            changed = true;
+                            fullPostList.get(i).setLeftVotes(fullPostList.get(i).getLeftVotes() + 1);
+                        } else {
+                             changed = false;
+                        }
+                        fullPostList.get(i).setCurrentVote(vote);
 
+                    }
+                }
+                if (changed) {
+                    popularModelMutable.setValue(popularModelPackage);
+                }
+            }
+        }
+    }
+
+    public void userAltered(User user){
+        if (popularModelMutable.getValue() != null) {
+            Boolean changed = false;
+            PopularModelPackage popularModelPackage = popularModelMutable.getValue();
+            if (popularModelPackage != null) {
+                ArrayList<User> userList =  popularModelPackage.getPopularPostSet().getUserList();
+                for (int i = 0; i < userList.size(); i++) {
+                    if (userList.get(i).getId().equals(user.getId())) {
+                        userList.set(i, user);
+                        changed = true;
+                    }
+                }
+                if (changed) {
+                    popularModelMutable.setValue(popularModelPackage);
+                }
+            }
+        }
     }
 
     public void getMoreData(){

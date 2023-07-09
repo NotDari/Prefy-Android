@@ -3,7 +3,9 @@ package com.daribear.prefy.Explore;
 import androidx.lifecycle.MutableLiveData;
 
 import com.daribear.prefy.Ads.AdTracker;
+import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.customClasses.Posts.FullPost;
+import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +45,11 @@ public class ExploreRepository implements ExploreWholeInterface{
         return explorePostSetMutable;
     }
 
-    public void deleteItem(FullPost fullPost){
+    public void deleteItem(StandardPost standardPost){
         ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
         ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
         for (int i = 0; i < fullPostList.size(); i ++){
-            if (fullPostList.get(i).getStandardPost().getPostId().equals(fullPost.getStandardPost().getPostId())){
+            if (fullPostList.get(i).getStandardPost().getPostId().equals(standardPost.getPostId())){
                 fullPostList.remove(fullPostList.get(i));
             }
         }
@@ -56,15 +58,46 @@ public class ExploreRepository implements ExploreWholeInterface{
 
     public void itemVote(Long postId, String vote){
         if (explorePostSetMutable.getValue() != null) {
+            Boolean changed = false;
             ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
             if (explorePostSet != null) {
                 ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
                 for (int i = 0; i < fullPostList.size(); i++) {
                     if (fullPostList.get(i).getStandardPost().getPostId().equals(postId)) {
+                        if (vote.equals("right")){
+                            changed = true;
+                            fullPostList.get(i).getStandardPost().setRightVotes(fullPostList.get(i).getStandardPost().getRightVotes() + 1);
+                        } else if (vote.equals("left")) {
+                            changed = true;
+                            fullPostList.get(i).getStandardPost().setLeftVotes(fullPostList.get(i).getStandardPost().getLeftVotes() + 1);
+                        } else {
+                            changed = false;
+                        }
                         fullPostList.get(i).getStandardPost().setCurrentVote(vote);
                     }
                 }
-                explorePostSetMutable.setValue(explorePostSet);
+                if (changed) {
+                    explorePostSetMutable.setValue(explorePostSet);
+                }
+            }
+        }
+    }
+
+    public void userAltered(User user){
+        if (explorePostSetMutable.getValue() != null) {
+            Boolean changed = false;
+            ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
+            if (explorePostSet != null) {
+                ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
+                for (int i = 0; i < fullPostList.size(); i++) {
+                    if (fullPostList.get(i).getUser().getId().equals(user.getId())) {
+                        fullPostList.get(i).setUser(user);
+                        changed = true;
+                    }
+                }
+                if (changed) {
+                    explorePostSetMutable.setValue(explorePostSet);
+                }
             }
         }
     }

@@ -96,7 +96,7 @@ public class FollowerActivityRetreiver implements GetFollowingDelegate {
         if (followerActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
             for (FollowerActivity followerActivity : followerActivityList) {
-                userList.add(followerActivity.getUserId());
+                userList.add(followerActivity.getFollowerId());
             }
             if (userList.size() > 0) {
                 OkHttpClient client = new OkHttpClient();

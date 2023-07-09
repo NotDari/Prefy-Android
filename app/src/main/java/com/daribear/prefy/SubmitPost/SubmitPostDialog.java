@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.daribear.prefy.Activities.MainActivity;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.CurrentTime;
 import com.daribear.prefy.Utils.NoInternetDropDown;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
@@ -353,7 +354,7 @@ public class SubmitPostDialog implements PermissionReceived {
             String question = questionEdit.getText().toString();
             if (question != null && !question.isEmpty()){
                 database = FirebaseDatabase.getInstance();
-                fStorageReference = FirebaseStorage.getInstance().getReference("test-posts");
+                fStorageReference = FirebaseStorage.getInstance().getReference("Posts/" + ServerAdminSingleton.getInstance().getLoggedInId() + "/PostImages");
                 Bitmap postBitmap = combineBitmaps(PostDialogLeftClickerView, PostDialogRightClickerView);
                 initSendPost(question, postBitmap);
             } else {
@@ -379,9 +380,9 @@ public class SubmitPostDialog implements PermissionReceived {
 
         String uniqueID = UUID.randomUUID().toString();
         StorageReference fileReference = fStorageReference.child(uniqueID);
-        Long longTime = System.currentTimeMillis();
+        Long longTime = CurrentTime.getCurrentTime();
         System.out.println("Sdad uploadId originaltime: " + longTime);
-        Double time= (double) System.currentTimeMillis();
+        Double time= (double) CurrentTime.getCurrentTime();
         System.out.println("Sdad uploadId time: " + time);
         Double date = time / 1000;
         Long finalTime = date.longValue();
