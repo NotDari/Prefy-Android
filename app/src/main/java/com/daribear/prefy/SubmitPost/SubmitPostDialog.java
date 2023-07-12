@@ -94,7 +94,7 @@ public class SubmitPostDialog implements PermissionReceived {
     private ArrayList<String> categoriesList;
     private Integer categoryHeight = 0;
     private MaterialButton moreCategories;
-    private Boolean allCategories;
+    private Boolean allCategories, postSubmitting;
 
 
 
@@ -117,12 +117,14 @@ public class SubmitPostDialog implements PermissionReceived {
         bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
         bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         bottomSheetDialog.setContentView(R.layout.post_bottom_dialog);
+        postSubmitting = false;
         getViews(bottomSheetDialog);
         //handleCategorySelector(bottomSheetDialog);
         handleClose(bottomSheetDialog);
         handleButtonsPressed(bottomSheetDialog);
         initImageRemoveButtons();
         initFlex(bottomSheetDialog);
+
         bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetDialog.show();
         bottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -180,83 +182,14 @@ public class SubmitPostDialog implements PermissionReceived {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bottomSheetDialog.dismiss();
+                if (!postSubmitting) {
+                    bottomSheetDialog.dismiss();
+                } else {
+                    Toast.makeText(context, "Wait until post uploaded", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
-    /**
-    private void handleCategorySelector(BottomSheetDialog bottomSheetDialog){
-        category = "Normal";
-        RelativeLayout normalLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryNormalLayout);
-        RelativeLayout duelLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryDuelLayout);
-        RelativeLayout beforeAfterLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryBeforeAfterLayout);
-        RelativeLayout crazyLayout = bottomSheetDialog.findViewById(R.id.PostDialogCategoryCrazyLayout);
-        normalSelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryNormalSelector);
-        duelSelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryDuelSelector);
-        beforeAfterSelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryBeforeAfterSelector);
-        crazySelector = bottomSheetDialog.findViewById(R.id.PostDialogCategoryCrazySelector);
-        normalLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!category.equals("Normal")){
-                    category = "Normal";
-                    alterSelectorVisibility(category);
-                }
-            }
-        });
-        duelLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!category.equals("Duel")){
-                    category = "Duel";
-                    alterSelectorVisibility(category);
-                }
-            }
-        });
-        beforeAfterLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!category.equals("BeforeAfter")){
-                    category = "BeforeAfter";
-                    alterSelectorVisibility(category);
-                }
-            }
-        });
-        crazyLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!category.equals("Crazy")){
-                    category = "Crazy";
-                    alterSelectorVisibility(category);
-                }
-            }
-        });
-
-    }
-
-    private void alterSelectorVisibility(String category){
-        if (!category.equals("Normal")){
-            normalSelector.setVisibility(View.GONE);
-        } else {
-            normalSelector.setVisibility(View.VISIBLE);
-        }
-        if (!category.equals("Duel")){
-            duelSelector.setVisibility(View.GONE);
-        }else {
-            duelSelector.setVisibility(View.VISIBLE);
-        }
-        if (!category.equals("BeforeAfter")){
-            beforeAfterSelector.setVisibility(View.GONE);
-        }else {
-            beforeAfterSelector.setVisibility(View.VISIBLE);
-        }
-        if (!category.equals("Crazy")){
-            crazySelector.setVisibility(View.GONE);
-        }else {
-            crazySelector.setVisibility(View.VISIBLE);
-        }
-    }
-     */
 
     private void attemptToGetPost(){
         ((MainActivity)activity).requestPermission(this::granted, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -353,10 +286,13 @@ public class SubmitPostDialog implements PermissionReceived {
         if (PostDialogLeftClickerView.getDrawable() != null && PostDialogRightClickerView.getDrawable() != null ){
             String question = questionEdit.getText().toString();
             if (question != null && !question.isEmpty()){
-                database = FirebaseDatabase.getInstance();
-                fStorageReference = FirebaseStorage.getInstance().getReference("Posts/" + ServerAdminSingleton.getInstance().getLoggedInId() + "/PostImages");
-                Bitmap postBitmap = combineBitmaps(PostDialogLeftClickerView, PostDialogRightClickerView);
-                initSendPost(question, postBitmap);
+                if (!postSubmitting) {
+                    postSubmitting = true;
+                    database = FirebaseDatabase.getInstance();
+                    fStorageReference = FirebaseStorage.getInstance().getReference("Posts/" + ServerAdminSingleton.getInstance().getLoggedInId() + "/PostImages");
+                    Bitmap postBitmap = combineBitmaps(PostDialogLeftClickerView, PostDialogRightClickerView);
+                    initSendPost(question, postBitmap);
+                }
             } else {
                 Toast.makeText(activity, "Please provide a question", Toast.LENGTH_SHORT).show();
             }
@@ -439,6 +375,7 @@ public class SubmitPostDialog implements PermissionReceived {
                                                 }
                                             });
                                         } else {
+                                            postSubmitting = false;
                                             fileReference.delete();
                                             activity.runOnUiThread(new Runnable() {
                                                 @Override
@@ -449,6 +386,7 @@ public class SubmitPostDialog implements PermissionReceived {
                                         }
 
                                     } catch (IOException e) {
+                                        postSubmitting = false;
                                         fileReference.delete();
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
@@ -459,6 +397,7 @@ public class SubmitPostDialog implements PermissionReceived {
 
                                     }
                                 } catch (JSONException e){
+                                    postSubmitting = false;
                                     fileReference.delete();
                                     activity.runOnUiThread(new Runnable() {
                                         @Override
@@ -475,6 +414,7 @@ public class SubmitPostDialog implements PermissionReceived {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        postSubmitting = false;
                         fileReference.delete();
                         System.out.println("Sdad e:" + e);
                         Toast.makeText(context, "Failed to upload Image", Toast.LENGTH_SHORT).show();
@@ -485,6 +425,7 @@ public class SubmitPostDialog implements PermissionReceived {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                postSubmitting = false;
                 NoInternetDropDown dropDown = NoInternetDropDown.getInstance(activity);
                 dropDown.showDropDown();
                 System.out.println("Sdad e:" + e);

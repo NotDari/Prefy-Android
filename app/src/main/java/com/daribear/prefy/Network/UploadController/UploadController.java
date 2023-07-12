@@ -33,6 +33,7 @@ public class UploadController {
             ContentValues contentValues = new ContentValues();
             contentValues.put("PostId", (Long) Vote.get("PostId"));
             contentValues.put("Vote", Vote.get("Vote").toString());
+            contentValues.put("failedCount", 0);
             db.insert(VotesTableName, null, contentValues);
             db.execSQL("UPDATE " + UploadTableName +
                     " SET " + Count + " = " + Count + " + 1" +
@@ -45,7 +46,7 @@ public class UploadController {
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("Type", type);
-
+        contentValues.put("failedCount", 0);
         Cursor checkCursor = db.rawQuery("SELECT * FROM " + ActivityClearTableName +
                 " WHERE " + "Type" + " = ?", new String[] {type});
         if (checkCursor.getCount() > 0){
@@ -71,6 +72,7 @@ public class UploadController {
         contentValues.put("UserID", comment.getUserId());
         contentValues.put("CreationDate", comment.getCreationDate());
         contentValues.put("subReplyID", comment.getSubReplyID());
+        contentValues.put("failedCount", 0);
         db.insert(CommentTableName, null, contentValues);
         attemptUpload(appContext);
         //contentValues.put("", comment.get);
@@ -88,6 +90,7 @@ public class UploadController {
         contentValues.put("repCategory", report.getRepCategory());
         contentValues.put("creationDate", report.getCreationDate());
         contentValues.put("Type", report.getType());
+        contentValues.put("failedCount", 0);
         db.insert(ReportTableName, null, contentValues);
         attemptUpload(appContext);
     }
@@ -101,6 +104,7 @@ public class UploadController {
         contentValues.put("ItemId", itemId);
         contentValues.put("Type", type);
         contentValues.put("UserId", ServerAdminSingleton.getInstance().getLoggedInId());
+        contentValues.put("failedCount", 0);
         db.insert(DeleteTableName, null, contentValues);
         attemptUpload(appContext);
     }

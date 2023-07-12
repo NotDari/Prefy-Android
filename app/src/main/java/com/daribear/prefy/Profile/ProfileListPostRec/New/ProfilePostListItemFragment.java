@@ -51,7 +51,7 @@ public class ProfilePostListItemFragment extends Fragment implements DeleteDeleg
             @Override
             public void onClick(View view) {
                 VoteHandler.voteSubmitted(post, postImage, leftClick, rightClick, "rightClick", "ProfilePostItem");
-                VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right");
+                VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right", "CurrentUser");
                 String text = totalVoteCount.getText().toString().split(" ")[0];
                 Integer oldNumber = Integer.parseInt(text);
                 VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVoteCount);
@@ -61,7 +61,7 @@ public class ProfilePostListItemFragment extends Fragment implements DeleteDeleg
             @Override
             public void onClick(View view) {
                 VoteHandler.voteSubmitted(post, postImage, leftClick, rightClick, "leftClick", "ProfilePostItem");
-                VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left");
+                VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left", "CurrentUser");
                 String text = totalVoteCount.getText().toString().split(" ")[0];
                 Integer oldNumber = Integer.parseInt(text);
                 VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVoteCount);

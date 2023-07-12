@@ -15,8 +15,14 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.R;
+import com.daribear.prefy.Utils.AdConsentForm.AdConsentForm;
+import com.daribear.prefy.Utils.LogOutUtil;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.UserMessagingPlatform;
 
 
 public class PreferencesFragment extends Fragment {
@@ -33,6 +39,7 @@ public class PreferencesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_preferences, container, false);
         getViews(view);
         initSwitches(view);
+        initGDPRConsentReset(view);
         return view;
     }
 
@@ -88,4 +95,15 @@ public class PreferencesFragment extends Fragment {
         });
     }
 
+    private void initGDPRConsentReset(View view){
+        TextView gdprConsentTextView = view.findViewById(R.id.ResetAdConsentText);
+        MaterialButton resetConsentButton = view.findViewById(R.id.settingsResetAdConsent);
+        resetConsentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LogOutUtil.resetConsentForm(getActivity());
+            }
+        });
+
+    }
 }

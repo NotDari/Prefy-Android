@@ -16,6 +16,9 @@ import com.daribear.prefy.Activities.MainActivity;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.JsonUtils.CustomJsonMapper;
 import com.daribear.prefy.Utils.LogOutUtil;
+import com.daribear.prefy.Utils.PlayIntegrity.IntegrityDelegate;
+import com.daribear.prefy.Utils.PlayIntegrity.IntegrityResponse;
+import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs;
 import com.daribear.prefy.customClasses.CustomError;
@@ -121,70 +124,100 @@ public class EmailConfirmationFragment extends Fragment {
             public void onClick(View view) {
                 if (!emailConfirmedButtonActive){
                     emailConfirmedButtonActive = true;
-                    Executors.newSingleThreadExecutor().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            OkHttpClient client = new OkHttpClient();
-                            JsonObject jsonObject = new JsonObject();
-                            jsonObject.addProperty("username", email);
-                            jsonObject.addProperty("password", password);
-                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                            Request request = new Request.Builder()
-                                    .url(ServerAdminSingleton.getInstance().getServerAddress() + "/login")
-                                    .method("POST", body)
-                                    .addHeader("Content-Type", "application/json")
-                                    .build();
-                            try {
-                                Response response = client.newCall(request).execute();
-                                if (response.isSuccessful()) {
-                                    emailConfirmedButtonActive = false;
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            String token = response.header("Authorization");
-                                            SharedPrefs sharedPrefs = new SharedPrefs(getContext());
-                                            sharedPrefs.putStringSharedPref(getString(R.string.save_auth_token_pref), token);
-                                            try {
-                                                String responseString = response.body().string();
-                                                JSONObject jsonObject = new JSONObject(responseString);
-                                                sharedPrefs.putLongSharedPref(getString(R.string.save_user_id), jsonObject.getLong("id"));
-                                                ServerAdminSingleton.getInstance().alterLoggedInUser(getContext());
-                                            } catch (JSONException | IOException e){
-                                            }
-                                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-
-                                        }
-                                    });
-                                } else {
-                                    CustomError customError = CustomJsonMapper.getCustomError(response);
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            switch (customError.getCustomCode()){
-                                                case (3):
-                                                    Toast.makeText(getContext(), "Email not verified", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                                default:
-                                                    System.out.println("Sdad customError:" + customError.getCustomCode() + customError.getMessage());
-                                                    Toast.makeText(getContext(), "Unknown error", Toast.LENGTH_SHORT).show();
-                                                    break;
-                                            }
-                                        }
-                                    });
-
-
-                                    emailConfirmedButtonActive = false;
-                                }
-                            } catch (IOException e) {
-                                emailConfirmedButtonActive = false;
-                            }
-                        }
-                    });
+                    getToken();
                 }
             }
         });
+    }
+
+    private void signIn(String token){
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("username", email);
+                jsonObject.addProperty("password", password);
+                jsonObject.addProperty("token", token);
+                RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                Request request = new Request.Builder()
+                        .url(ServerAdminSingleton.getInstance().getServerAddress() + "/login")
+                        .method("POST", body)
+                        .addHeader("Content-Type", "application/json")
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {
+                        emailConfirmedButtonActive = false;
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String token = response.header("Authorization");
+                                SharedPrefs sharedPrefs = new SharedPrefs(getContext());
+                                sharedPrefs.putStringSharedPref(getString(R.string.save_auth_token_pref), token);
+                                try {
+                                    String responseString = response.body().string();
+                                    JSONObject jsonObject = new JSONObject(responseString);
+                                    sharedPrefs.putLongSharedPref(getString(R.string.save_user_id), jsonObject.getLong("id"));
+                                    ServerAdminSingleton.getInstance().alterLoggedInUser(getContext());
+                                } catch (JSONException | IOException e){
+                                }
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+
+                            }
+                        });
+                    } else {
+                        CustomError customError = CustomJsonMapper.getCustomError(response);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                switch (customError.getCustomCode()){
+                                    case (3):
+                                        Toast.makeText(getContext(), "Email not verified", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    default:
+                                        System.out.println("Sdad customError:" + customError.getCustomCode() + customError.getMessage());
+                                        Toast.makeText(getContext(), "Unknown error", Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        });
+
+
+                        emailConfirmedButtonActive = false;
+                    }
+                } catch (IOException e) {
+                    emailConfirmedButtonActive = false;
+                }
+            }
+        });
+    }
+
+    private void getToken(){
+        PlayIntegrity playIntegrity = PlayIntegrity.getInstance();
+        if (playIntegrity.getToken() == null){
+            playIntegrity.setIntegrityDelegate(new IntegrityDelegate() {
+                @Override
+                public void complete(IntegrityResponse integrityResponse) {
+                    if (integrityResponse.getSuccess()){
+                        signIn(integrityResponse.getToken());
+                    } else {
+                        playIntegrity.setIntegrityDelegate(null);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(requireActivity(), "Couldn't connect to server", Toast.LENGTH_LONG).show();
+                                    emailConfirmedButtonActive = false;
+                                }
+                            });
+                        }
+                    }
+            });
+        } else {
+            signIn(playIntegrity.getToken());
+        }
     }
 
 

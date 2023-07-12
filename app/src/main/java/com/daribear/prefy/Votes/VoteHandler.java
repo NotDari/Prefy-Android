@@ -413,11 +413,11 @@ public class VoteHandler {
     }
 
 
-    public static void saveVote(Context context, Long id, String vote){
+    public static void saveVote(Context context, Long id, String vote, String type){
         HashMap<String, Object> insertMap = new HashMap<>();
         insertMap.put("PostId", id);
         insertMap.put("Vote", vote);
         UploadController.saveVote(context, insertMap);
-        ItemAlterer.itemVote(id, vote, context.getApplicationContext());
+        ItemAlterer.itemVote(id, vote, context.getApplicationContext(), type);
     }
 }

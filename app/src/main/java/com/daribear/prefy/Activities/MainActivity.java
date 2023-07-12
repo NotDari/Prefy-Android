@@ -28,6 +28,7 @@ import com.daribear.prefy.Report.ReportFragment;
 import com.daribear.prefy.Settings.SettingsFragment;
 import com.daribear.prefy.SubmitPost.PostStartActivity;
 import com.daribear.prefy.SubmitPost.SubmitPostDialog;
+import com.daribear.prefy.Utils.AdConsentForm.AdConsentForm;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAds(){
+        AdConsentForm adConsentForm = new AdConsentForm();
+        adConsentForm.checkState(this);
         MobileAds.initialize(this);
         Interstitial interstitial = new Interstitial();
         interstitial.loadAd(this);
@@ -210,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(FirebaseRemoteConfigException error) {
+                System.out.println("Sdad error:" + error.getCode() + error.getMessage());
                 Log.w("TAG", "Config update error with code: " + error.getCode(), error);
             }
         });

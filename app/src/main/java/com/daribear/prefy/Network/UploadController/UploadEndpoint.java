@@ -87,6 +87,7 @@ public class UploadEndpoint {
                         Cursor voteCursor = db.rawQuery("Select * FROM " + uploadVotesTable, null);
                         if (voteCursor.moveToFirst()){
                             for (int i = 0; i < voteCursor.getCount(); i ++){
+                                Integer failedCount = DatabaseUtils.getIntegerWithNull(voteCursor, "failedCount");
                                 Long PostId = voteCursor.getLong(voteCursor.getColumnIndexOrThrow("PostId"));
                                 String Vote = voteCursor.getString(voteCursor.getColumnIndexOrThrow("Vote"));
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -103,27 +104,34 @@ public class UploadEndpoint {
                                             CompletedCount += 1;
                                             checkCompleted();
                                         }
-                                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                        Request request = new Request.Builder()
-                                                .url(httpBuilder.build())
-                                                .method("POST", body)
-                                                .addHeader("Content-Type", "application/json")
-                                                .addHeader("Authorization", authToken)
-                                                .build();
-                                        try {
-                                            Response response = client.newCall(request).execute();
+                                        if (failedCount <= 4) {
+                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                            Request request = new Request.Builder()
+                                                    .url(httpBuilder.build())
+                                                    .method("POST", body)
+                                                    .addHeader("Content-Type", "application/json")
+                                                    .addHeader("Authorization", authToken)
+                                                    .build();
+                                            try {
+                                                Response response = client.newCall(request).execute();
 
-                                            if (response.isSuccessful()){
-                                                CompletedCount += 1;
-                                                SuccessfulCount += 1;
-                                                removeVoteFromDb(db, PostId, Vote);
-                                                checkCompleted();
-                                            }else {
+                                                if (response.isSuccessful()) {
+                                                    CompletedCount += 1;
+                                                    SuccessfulCount += 1;
+                                                    removeVoteFromDb(db, PostId, Vote);
+                                                    checkCompleted();
+                                                } else {
+                                                    CompletedCount += 1;
+                                                    checkCompleted();
+                                                }
+                                            } catch (IOException e) {
                                                 CompletedCount += 1;
                                                 checkCompleted();
                                             }
-                                        } catch (IOException e) {
+                                        } else {
                                             CompletedCount += 1;
+                                            SuccessfulCount += 1;
+                                            removeVoteFromDb(db, PostId, Vote);
                                             checkCompleted();
                                         }
                                     }
@@ -197,6 +205,9 @@ public class UploadEndpoint {
                         if (activityClearCursor.moveToFirst()){
                             for (int i =0; i < activityClearCursor.getCount(); i ++){
                                 String type = activityClearCursor.getString(activityClearCursor.getColumnIndexOrThrow("Type"));
+                                Integer failedCount = DatabaseUtils.getIntegerWithNull(activityClearCursor, "failedCount");
+
+
                                 if (type != null ){
                                     String currentActivityName = null;
                                     if (type.equals("Comments")){
@@ -224,26 +235,33 @@ public class UploadEndpoint {
                                             bodyComplete = false;
                                         }
                                         if (bodyComplete) {
-                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                            Request request = new Request.Builder()
-                                                    .url(httpBuilder.build())
-                                                    .method("POST", body)
-                                                    .addHeader("Content-Type", "application/json")
-                                                    .addHeader("Authorization", authToken)
-                                                    .build();
-                                            try {
-                                                Response response = client.newCall(request).execute();
-                                                if (response.isSuccessful()) {
-                                                    CompletedCount += 1;
-                                                    SuccessfulCount += 1;
-                                                    removeActivityFromDb(db, type);
-                                                    checkCompleted();
-                                                } else {
+                                            if (failedCount <= 4) {
+                                                RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                                Request request = new Request.Builder()
+                                                        .url(httpBuilder.build())
+                                                        .method("POST", body)
+                                                        .addHeader("Content-Type", "application/json")
+                                                        .addHeader("Authorization", authToken)
+                                                        .build();
+                                                try {
+                                                    Response response = client.newCall(request).execute();
+                                                    if (response.isSuccessful()) {
+                                                        CompletedCount += 1;
+                                                        SuccessfulCount += 1;
+                                                        removeActivityFromDb(db, type);
+                                                        checkCompleted();
+                                                    } else {
+                                                        CompletedCount += 1;
+                                                        checkCompleted();
+                                                    }
+                                                } catch (IOException e) {
                                                     CompletedCount += 1;
                                                     checkCompleted();
                                                 }
-                                            } catch (IOException e) {
+                                            } else {
                                                 CompletedCount += 1;
+                                                SuccessfulCount += 1;
+                                                removeActivityFromDb(db, type);
                                                 checkCompleted();
                                             }
                                         }
@@ -311,6 +329,7 @@ public class UploadEndpoint {
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Integer failedCount = DatabaseUtils.getIntegerWithNull(commentCursor, "failedCount");
 
                                         Comment comment = new Comment();
                                         comment.setPostId(DatabaseUtils.getLongWithNull(commentCursor, "PostId"));
@@ -336,27 +355,34 @@ public class UploadEndpoint {
                                             CompletedCount += 1;
                                             checkCompleted();
                                         }
-                                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                        Request request = new Request.Builder()
-                                                .url(httpBuilder.build())
-                                                .method("POST", body)
-                                                .addHeader("Content-Type", "application/json")
-                                                .addHeader("Authorization", authToken)
-                                                .build();
+                                        if (failedCount <= 4) {
+                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                            Request request = new Request.Builder()
+                                                    .url(httpBuilder.build())
+                                                    .method("POST", body)
+                                                    .addHeader("Content-Type", "application/json")
+                                                    .addHeader("Authorization", authToken)
+                                                    .build();
 
-                                        try {
-                                            Response response = client.newCall(request).execute();
-                                            if (response.isSuccessful()) {
-                                                CompletedCount += 1;
-                                                SuccessfulCount += 1;
-                                                removeCommentFromDb(db, comment);
-                                                checkCompleted();
-                                            } else {
+                                            try {
+                                                Response response = client.newCall(request).execute();
+                                                if (response.isSuccessful()) {
+                                                    CompletedCount += 1;
+                                                    SuccessfulCount += 1;
+                                                    removeCommentFromDb(db, comment);
+                                                    checkCompleted();
+                                                } else {
+                                                    CompletedCount += 1;
+                                                    checkCompleted();
+                                                }
+                                            } catch (IOException e) {
                                                 CompletedCount += 1;
                                                 checkCompleted();
                                             }
-                                        } catch (IOException e) {
+                                        } else {
                                             CompletedCount += 1;
+                                            SuccessfulCount += 1;
+                                            removeCommentFromDb(db, comment);
                                             checkCompleted();
                                         }
 
@@ -370,6 +396,7 @@ public class UploadEndpoint {
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Integer failedCount = DatabaseUtils.getIntegerWithNull(reportCursor, "failedCount");
                                         Report report = new Report();
                                         report.setPostId(DatabaseUtils.getLongWithNull(reportCursor, "postId"));
                                         report.setUserId(DatabaseUtils.getLongWithNull(reportCursor, "userId"));
@@ -391,28 +418,34 @@ public class UploadEndpoint {
                                             CompletedCount += 1;
                                             checkCompleted();
                                         }
+                                        if (failedCount <= 4) {
+                                            RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                            Request request = new Request.Builder()
+                                                    .url(httpBuilder.build())
+                                                    .method("POST", body)
+                                                    .addHeader("Content-Type", "application/json")
+                                                    .addHeader("Authorization", authToken)
+                                                    .build();
 
-                                        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                        Request request = new Request.Builder()
-                                                .url(httpBuilder.build())
-                                                .method("POST", body)
-                                                .addHeader("Content-Type", "application/json")
-                                                .addHeader("Authorization", authToken)
-                                                .build();
-
-                                        try {
-                                            Response response = client.newCall(request).execute();
-                                            if (response.isSuccessful()) {
-                                                CompletedCount += 1;
-                                                SuccessfulCount += 1;
-                                                removeReportFromDb(db, report);
-                                                checkCompleted();
-                                            } else {
+                                            try {
+                                                Response response = client.newCall(request).execute();
+                                                if (response.isSuccessful()) {
+                                                    CompletedCount += 1;
+                                                    SuccessfulCount += 1;
+                                                    removeReportFromDb(db, report);
+                                                    checkCompleted();
+                                                } else {
+                                                    CompletedCount += 1;
+                                                    checkCompleted();
+                                                }
+                                            } catch (IOException e) {
                                                 CompletedCount += 1;
                                                 checkCompleted();
                                             }
-                                        } catch (IOException e) {
+                                        } else {
                                             CompletedCount += 1;
+                                            SuccessfulCount += 1;
+                                            removeReportFromDb(db, report);
                                             checkCompleted();
                                         }
 
@@ -426,6 +459,7 @@ public class UploadEndpoint {
                                 Executors.newSingleThreadExecutor().execute(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Integer failedCount = DatabaseUtils.getIntegerWithNull(deleteCursor, "failedCount");
                                         String type = DatabaseUtils.getStringWithNull(deleteCursor, "Type");
                                         Long itemId = DatabaseUtils.getLongWithNull(deleteCursor, "ItemId");
                                         Long userID = DatabaseUtils.getLongWithNull(deleteCursor, "UserId");
@@ -458,26 +492,33 @@ public class UploadEndpoint {
                                                 removeDeleteFromDb(db, type, itemId, userID);
                                                 checkCompleted();
                                             } else {
-                                                RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                                                Request request = new Request.Builder()
-                                                        .url(httpBuilder.build())
-                                                        .method("PUT", body)
-                                                        .addHeader("Content-Type", "application/json")
-                                                        .addHeader("Authorization", authToken)
-                                                        .build();
-                                                try {
-                                                    Response response = client.newCall(request).execute();
-                                                    if (response.isSuccessful()) {
-                                                        CompletedCount += 1;
-                                                        SuccessfulCount += 1;
-                                                        removeDeleteFromDb(db, type, itemId, userID);
-                                                        checkCompleted();
-                                                    } else {
+                                                if (failedCount <= 4) {
+                                                    RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                                                    Request request = new Request.Builder()
+                                                            .url(httpBuilder.build())
+                                                            .method("PUT", body)
+                                                            .addHeader("Content-Type", "application/json")
+                                                            .addHeader("Authorization", authToken)
+                                                            .build();
+                                                    try {
+                                                        Response response = client.newCall(request).execute();
+                                                        if (response.isSuccessful()) {
+                                                            CompletedCount += 1;
+                                                            SuccessfulCount += 1;
+                                                            removeDeleteFromDb(db, type, itemId, userID);
+                                                            checkCompleted();
+                                                        } else {
+                                                            CompletedCount += 1;
+                                                            checkCompleted();
+                                                        }
+                                                    } catch (IOException e) {
                                                         CompletedCount += 1;
                                                         checkCompleted();
                                                     }
-                                                } catch (IOException e) {
+                                                } else {
                                                     CompletedCount += 1;
+                                                    SuccessfulCount += 1;
+                                                    removeDeleteFromDb(db, type, itemId, userID);
                                                     checkCompleted();
                                                 }
                                             }
@@ -504,8 +545,6 @@ public class UploadEndpoint {
                                         Long followingUserId = DatabaseUtils.getLongWithNull(followCursor, "FollowingUserId");
                                         Long userID = DatabaseUtils.getLongWithNull(followCursor, "UserId");
                                         if (failedCount <= 4){
-
-
                                             HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Follows/Follow").newBuilder();
                                             JSONObject jsonObject = new JSONObject();
                                             try {

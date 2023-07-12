@@ -162,7 +162,7 @@ public class PopularPageFragment extends Fragment{
                 if (post.getCurrentVote().equals("none")  || post.getCurrentVote().equals("skip")) {
                     VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "rightClick", "Popular");
                     autoScrollQuestion("right");
-                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right");
+                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right", "Popular");
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
@@ -175,7 +175,7 @@ public class PopularPageFragment extends Fragment{
                 if (post.getCurrentVote().equals("none")  || post.getCurrentVote().equals("skip")) {
                     VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "leftClick", "Popular");
                     autoScrollQuestion("left");
-                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left");
+                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left", "Popular");
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);

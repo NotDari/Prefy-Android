@@ -118,15 +118,17 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
             Boolean changed = false;
             PopularModelPackage popularModelPackage = popularModelMutable.getValue();
             if (popularModelPackage != null) {
-                ArrayList<User> userList =  popularModelPackage.getPopularPostSet().getUserList();
-                for (int i = 0; i < userList.size(); i++) {
-                    if (userList.get(i).getId().equals(user.getId())) {
-                        userList.set(i, user);
-                        changed = true;
+                if (popularModelPackage.getPopularPostSet() != null) {
+                    ArrayList<User> userList = popularModelPackage.getPopularPostSet().getUserList();
+                    for (int i = 0; i < userList.size(); i++) {
+                        if (userList.get(i).getId().equals(user.getId())) {
+                            userList.set(i, user);
+                            changed = true;
+                        }
                     }
-                }
-                if (changed) {
-                    popularModelMutable.setValue(popularModelPackage);
+                    if (changed) {
+                        popularModelMutable.setValue(popularModelPackage);
+                    }
                 }
             }
         }

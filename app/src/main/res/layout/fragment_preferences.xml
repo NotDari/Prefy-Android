@@ -111,40 +111,91 @@
         android:layout_marginTop="30dp"
         android:layout_below="@id/SettingDarkLayout">
 
+    <ImageButton
+        android:id="@+id/AutoScrollImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="30dp"
+        android:background="@color/fragment_background"
+        android:clickable="false"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_baseline_arrow_downward_24"
+        app:tint="@color/text_color" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/AutoScrollImage"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Auto Scroll"
+        android:textColor="@color/text_color"
+        android:textSize="16sp" />
+
+    <Switch
+        android:id="@+id/settingsAutoScroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:checked="false"
+        android:thumbTint="@color/text_color"
+        android:trackTint="@color/grey" />
+</RelativeLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/SettingResetAdConsentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/SettingAutoScrollLayout">
+
         <ImageButton
-            android:id="@+id/AutoScrollImage"
+            android:id="@+id/ResetAdConsentImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_centerInParent="true"
             android:layout_marginStart="30dp"
             android:background="@color/fragment_background"
             android:clickable="false"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_baseline_arrow_downward_24"
-            app:tint="@color/text_color" />
+            android:src="@drawable/ic_form_icon"
+            />
 
         <TextView
+            android:id="@+id/ResetAdConsentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/AutoScrollImage"
+            app:layout_constraintStart_toEndOf="@id/ResetAdConsentImage"
             android:fontFamily="@font/poppins_medium"
-            android:text="Auto Scroll"
+            android:text="Reset GDPR Consent"
             android:textColor="@color/text_color"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
-        <Switch
-            android:id="@+id/settingsAutoScroll"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settingsResetAdConsent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
-            android:checked="false"
-            android:thumbTint="@color/text_color"
-            android:trackTint="@color/grey" />
-    </RelativeLayout>
+            android:backgroundTint="@color/text_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/fragment_background"
+            android:text="Reset"
+            app:cornerRadius="10dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

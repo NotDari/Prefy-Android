@@ -132,7 +132,7 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
             public void onClick(View view) {
                 if (post.getStandardPost().getCurrentVote().equals("none") || post.getStandardPost().getCurrentVote().equals("skip")){
                     VoteHandler.voteSubmitted(post.getStandardPost(), holder.imageView, holder.leftVote, holder.rightVote, "leftClick", "Categories");
-                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getStandardPost().getPostId(), "left");
+                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getStandardPost().getPostId(), "left", "Categories");
                     String text = holder.totalVotes.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getStandardPost().getAllVotes() ,holder.totalVotes);
@@ -145,7 +145,7 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
             public void onClick(View view) {
                 if (post.getStandardPost().getCurrentVote().equals("none") || post.getStandardPost().getCurrentVote().equals("skip")){
                     VoteHandler.voteSubmitted(post.getStandardPost(), holder.imageView, holder.leftVote, holder.rightVote, "rightClick", "Categories");
-                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getStandardPost().getPostId(), "right");
+                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getStandardPost().getPostId(), "right", "Categories");
                     String text = holder.totalVotes.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getStandardPost().getAllVotes() ,holder.totalVotes);

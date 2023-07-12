@@ -162,7 +162,7 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
                 if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
                     VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "rightClick", "Popular");
                     voted(autoScroll, true, true);
-                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right");
+                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right", "Popular");
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
@@ -177,7 +177,7 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
                 if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
                     VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "leftClick", "Popular");
                     voted(autoScroll, true, true);
-                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left");
+                    VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left", "Popular");
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
@@ -229,7 +229,7 @@ public class PopularPageFragment2 extends Fragment implements PopularSkipDelegat
         if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
             VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "skip", "Popular");
             voted(autoScroll, true, false);
-            VoteHandler.saveVote(PopularPageFragment2.this.getContext().getApplicationContext(),post.getPostId(), "skip");
+            VoteHandler.saveVote(PopularPageFragment2.this.getContext().getApplicationContext(),post.getPostId(), "skip", "Popular");
 
         } else {
             voted(true, false, false);

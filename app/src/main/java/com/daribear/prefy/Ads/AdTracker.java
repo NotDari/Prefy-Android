@@ -2,12 +2,17 @@ package com.daribear.prefy.Ads;
 
 import android.app.Activity;
 
+import com.google.android.ump.ConsentInformation;
+
 import lombok.Setter;
 
 public class AdTracker {
     private static AdTracker instance;
     private Integer popularTotal, popularCounter;
     private Integer otherTotal, otherCounter;
+    @Setter
+
+    private ConsentInformation consentInformation;
     @Setter
     private Activity activity;
 
@@ -55,6 +60,7 @@ public class AdTracker {
     }
 
     public void otherViewed(){
+        System.out.println("Sdad otherViewed:" + otherCounter + " / " + otherTotal);
         if (otherTotal != null){
             if (otherTotal != 0){
                 otherCounter += 1;
@@ -71,5 +77,9 @@ public class AdTracker {
     public void resetCounts(){
         this.popularCounter = 0;
         this.otherCounter = 0;
+    }
+
+    public void consentChanged(){
+        instance = null;
     }
 }

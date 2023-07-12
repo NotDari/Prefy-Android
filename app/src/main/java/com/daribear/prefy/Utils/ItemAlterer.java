@@ -23,18 +23,23 @@ public class ItemAlterer {
         currentUserViewModel.deleteItem(standardPost);
     }
 
-    public static void itemVote(Long postId, String vote, Context appContext){
-        NewPopularViewModel newPopularViewModel = new NewPopularViewModel();
-        newPopularViewModel.init(appContext);
-        newPopularViewModel.itemVote(postId, vote);
+    public static void itemVote(Long postId, String vote, Context appContext, String type){
+        if (!type.equals("Popular")) {
+            NewPopularViewModel newPopularViewModel = new NewPopularViewModel();
+            newPopularViewModel.init(appContext);
+            newPopularViewModel.itemVote(postId, vote);
+        }
+        if (!type.equals("Explore")) {
+            ExploreViewModel exploreViewModel = new ExploreViewModel();
+            exploreViewModel.init();
+            exploreViewModel.itemVoted(postId, vote);
+        }
 
-        ExploreViewModel exploreViewModel = new ExploreViewModel();
-        exploreViewModel.init();
-        exploreViewModel.itemVoted(postId, vote);
-
-        CurrentUserViewModel currentUserViewModel = new CurrentUserViewModel();
-        currentUserViewModel.init();
-        currentUserViewModel.itemVote(postId, vote);
+        if (!type.equals("CurrentUser")) {
+            CurrentUserViewModel currentUserViewModel = new CurrentUserViewModel();
+            currentUserViewModel.init();
+            currentUserViewModel.itemVote(postId, vote);
+        }
 
 
     }

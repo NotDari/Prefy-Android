@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.daribear.prefy.Ads.AdTracker
+import com.daribear.prefy.Database.DatabaseBlankChecker
 import com.daribear.prefy.R
 import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity
 import com.daribear.prefy.Utils.ServerAdminSingleton
@@ -72,7 +73,9 @@ class login_activity : AppCompatActivity() {
             startActivity(intent)
         } else {
             setContentView(R.layout.activity_login)
+            PlayIntegrity.getInstance()
             PlayIntegrity.getInstance().getResponse(applicationContext)
+            clearDatabases()
         }
     }
 
@@ -138,6 +141,10 @@ class login_activity : AppCompatActivity() {
     override fun onDestroy() {
         this.configUpdateListener.remove()
         super.onDestroy()
+    }
+
+    private fun clearDatabases(){
+        DatabaseBlankChecker.checkDatabases(applicationContext)
     }
 
 

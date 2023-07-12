@@ -90,6 +90,7 @@ public class ResetPasswordFragment extends Fragment {
                                             @Override
                                             public void run() {
                                                 Toast.makeText(ResetPasswordFragment.this.getContext(), "Email Sent", Toast.LENGTH_SHORT).show();
+                                                Navigation.findNavController(backButton).navigateUp();
                                             }
                                         });
                                     }

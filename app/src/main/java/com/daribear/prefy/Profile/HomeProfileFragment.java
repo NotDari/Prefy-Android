@@ -123,6 +123,8 @@ public class HomeProfileFragment extends Fragment{
                     if (wholeProfile.getPostListContainer().getPostList() != null) {
                         if (wholeProfile.getPostListContainer().getPostList().size() == 0){
                             noPostsLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            noPostsLayout.setVisibility(View.GONE);
                         }
                         gateway.setInitPosts(wholeProfile.getPostListContainer().getPostList());
                     }

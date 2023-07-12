@@ -32,7 +32,6 @@ public class PlayIntegrity {
     private IntegrityManager integrityManager;
 
     public PlayIntegrity() {
-
         nonce = generateNonce();
     }
 

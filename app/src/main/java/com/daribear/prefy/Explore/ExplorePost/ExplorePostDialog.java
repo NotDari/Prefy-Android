@@ -87,14 +87,14 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
             @Override
             public void onClick(View view) {
                 VoteHandler.voteSubmitted(fullFeaturedPost.getStandardPost(), postImage, leftCLick, rightClick, "rightClick", "ExploreDialog");
-                VoteHandler.saveVote(view.getContext().getApplicationContext(),fullFeaturedPost.getStandardPost().getPostId(), "right");
+                VoteHandler.saveVote(view.getContext().getApplicationContext(),fullFeaturedPost.getStandardPost().getPostId(), "right", "Explore");
             }
         });
         leftCLick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 VoteHandler.voteSubmitted(fullFeaturedPost.getStandardPost(), postImage, leftCLick, rightClick, "leftClick", "ExploreDialog");
-                VoteHandler.saveVote(view.getContext().getApplicationContext(),fullFeaturedPost.getStandardPost().getPostId(), "left");
+                VoteHandler.saveVote(view.getContext().getApplicationContext(),fullFeaturedPost.getStandardPost().getPostId(), "left", "Explore");
             }
         });
     }

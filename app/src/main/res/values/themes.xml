@@ -40,4 +40,5 @@
     <style name="Theme.Prefy.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Prefy.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

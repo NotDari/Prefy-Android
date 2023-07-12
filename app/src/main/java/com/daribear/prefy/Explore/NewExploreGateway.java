@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.List;
@@ -126,9 +127,9 @@ public class NewExploreGateway implements ExploreRecentUpdateInterface{
                     adaptor.updateData(additionalPosts);
                 }
             });
+            AdTracker.getInstance().otherViewed();
 
         } else {
-            System.out.println("Sdad hello!");
         }
     }
 }

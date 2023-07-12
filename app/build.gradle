@@ -92,7 +92,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     //Google admob
-    implementation 'com.google.android.gms:play-services-ads:22.1.0'
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
+
+
+    // Splash Screen
+    implementation "androidx.core:core-splashscreen:1.0.1"
+
 
     // Crashlytics and remote config
     implementation 'com.google.firebase:firebase-config'
@@ -103,7 +108,8 @@ dependencies {
     //Play Integrity
 
     implementation 'com.google.android.play:integrity:1.1.0'
-    
+
+
     // Forcing the user to download an update
     implementation("com.google.android.play:app-update:2.1.0")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
