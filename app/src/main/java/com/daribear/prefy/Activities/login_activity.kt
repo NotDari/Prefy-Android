@@ -96,7 +96,6 @@ class login_activity : AppCompatActivity() {
     }
 
     private fun getDefaultSettings(){
-        println("Sdad hello!?")
         FirebaseApp.initializeApp(this)
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {

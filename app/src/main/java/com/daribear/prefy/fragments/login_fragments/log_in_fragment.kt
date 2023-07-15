@@ -104,7 +104,6 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
                     login = emailEditText.text.toString().trimEnd().lowercase()
                 }
                 val password: String = passwordEditText.text.toString()
-                println("Sdad timer:" + CurrentTime.getCurrentTime())
                 getToken(login, password)
                 //signIn(login, password)
             }
@@ -135,7 +134,6 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
     private fun getToken(email:String, password:String){
         val playIntegrity : PlayIntegrity = PlayIntegrity.getInstance()
         if (playIntegrity.token == null){
-            println("Sdad hello!")
             playIntegrity.setIntegrityDelegate(IntegrityDelegate {
                 if (it.success){
                     signIn(email, password, it.token)
@@ -201,7 +199,6 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
                                 emailDone = true
 
 
-                                println("Sdad email:" + email)
                                 addPrefs(user)
                             } else {
                                 activity?.runOnUiThread {
@@ -217,11 +214,9 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
                         }
 
                     } else {
-                        println("Sdad timer:" + CurrentTime.getCurrentTime())
                         addPrefs(user)
                     }
 
-                    println("Sdad user:" + user)
 
                 } else {
                     activity?.runOnUiThread {
@@ -268,7 +263,6 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
                 }
             } catch (i: IOException) {
                 activity?.runOnUiThread {
-                    println("Sdad Error:" + i.cause + " " + i.message)
                     loginFailed()
                     Toast.makeText(requireActivity(), ("Failed to connect to server"), Toast.LENGTH_LONG).show()
                 }
@@ -307,6 +301,7 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
 
     fun checkIfDone(){
         if (usernameDone && emailDone && profilePDone && fullnameDone) {
+            PlayIntegrity.getInstance().nullInstance()
             val intent = Intent(activity, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)

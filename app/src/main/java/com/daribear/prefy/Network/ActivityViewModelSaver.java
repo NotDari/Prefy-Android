@@ -77,7 +77,6 @@ public class ActivityViewModelSaver {
 
 
                                     ContentValues userContent = CacheContentTools.getUserContent(fullPost.getUser());
-                                    System.out.println("Sdad user:" + userContent);
                                     db.insert(popularuserTableName, null, userContent);
                                     db.setTransactionSuccessful();
                                     db.endTransaction();

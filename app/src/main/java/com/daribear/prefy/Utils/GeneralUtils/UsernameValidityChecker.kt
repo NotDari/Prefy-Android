@@ -15,7 +15,6 @@ class usernameValidityChecker {
         if (input.length >= 2 && input.length <= 20){
             sizeChecker = true
         }
-        Log.d("SdadTag", characterChecker.toString())
         return sizeChecker && characterChecker
     }
 }

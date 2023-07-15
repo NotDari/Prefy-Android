@@ -186,7 +186,6 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
                 } else {
-                    System.out.println("Sdad scrolling left");
                     voted(false, true);
                 }
             }

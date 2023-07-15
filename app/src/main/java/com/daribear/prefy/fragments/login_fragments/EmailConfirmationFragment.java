@@ -162,6 +162,7 @@ public class EmailConfirmationFragment extends Fragment {
                                     ServerAdminSingleton.getInstance().alterLoggedInUser(getContext());
                                 } catch (JSONException | IOException e){
                                 }
+                                PlayIntegrity.getInstance().nullInstance();
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);

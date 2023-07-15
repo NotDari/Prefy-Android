@@ -133,7 +133,6 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
                 if (swipeRefreshLayout.isRefreshing()){
                     swipeRefreshLayout.setRefreshing(false);
                 }
-                printData(popularPostSet);
             }
         });
 
@@ -169,18 +168,6 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
                 RefreshInternet.RefreshInternet(getContext());
             }
         });
-    }
-    private void printData(PopularPostSet popularPostSet){
-        if (popularPostSet != null) {
-            if (popularPostSet.getPostList() != null) {
-                System.out.println("\nSdad Starting: \n ------------------ \n ");
-                System.out.println("Sdad postCount: " + popularPostSet.getPostList().size());
-                System.out.println("Sdad userCount: " + popularPostSet.getUserList().size());
-                for (int i = 0; i < popularPostSet.getPostList().size(); i++) {
-                    System.out.println("Sdad post:" + popularPostSet.getPostList().get(i));
-                }
-            }
-        }
     }
 
     private void initViewPager(ArrayList<FullPost> fullPostList){
@@ -259,7 +246,6 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         destroyed = true;
         progressBar = null;
         popularPager.viewDestroyed();
-        System.out.println("Sdad viewDestroyed");
         super.onDestroyView();
         noInternetText = null;
         noMorePosts = null;

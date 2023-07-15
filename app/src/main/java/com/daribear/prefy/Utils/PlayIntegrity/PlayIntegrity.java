@@ -100,4 +100,8 @@ public class PlayIntegrity {
         SystemClock.sleep(250);
         sendRequest();
     }
+
+    public void nullInstance(){
+        instance = null;
+    }
 }

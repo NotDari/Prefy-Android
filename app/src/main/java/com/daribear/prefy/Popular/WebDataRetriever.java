@@ -63,7 +63,7 @@ public class WebDataRetriever implements GetFollowingDelegate {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/NewPopularPosts").newBuilder();
+                HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/PopularPosts").newBuilder();
                 if (avoidList.size() == 0){
                     avoidList.add(-1L);
                 }
@@ -151,9 +151,7 @@ public class WebDataRetriever implements GetFollowingDelegate {
                                 user = DefaultCreator.createBlankUser();
                             }
                             for (int f = 0; f < fullPostList.size(); f++){
-                                System.out.println("Sdad aa");
                                 if (fullPostList.get(f).getStandardPost().getUserId().equals(user.getId())){
-                                    System.out.println("Sdad addingUser");
                                     fullPostList.get(i).setUser(user);
                                 }
                             }

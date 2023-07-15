@@ -118,7 +118,6 @@ public class PopularPager extends FrameLayout{
         }
     }
     private void removePost(){
-        System.out.println("Sdad size:" + postList.size());
         postList.remove(0);
         popViewModel.removeItem();
         if (postList.size() <= 5){
@@ -153,7 +152,6 @@ public class PopularPager extends FrameLayout{
     }
 
     public void voted(Boolean cooldown, Boolean removeVote){
-        System.out.println("Sdad voted!@!");
         if (!scrollActive) {
             if (removeVote) {
                 scrollActive = true;

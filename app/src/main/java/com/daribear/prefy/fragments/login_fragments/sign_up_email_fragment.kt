@@ -108,7 +108,6 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
     private fun getToken(json: JSONObject){
         val playIntegrity : PlayIntegrity = PlayIntegrity.getInstance()
         if (playIntegrity.token == null){
-            println("Sdad hello!")
             playIntegrity.setIntegrityDelegate(IntegrityDelegate {
                 if (it.success){
                     json.put("token", it.token)
