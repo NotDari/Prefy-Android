@@ -203,7 +203,6 @@ public class VoteHandler {
 
     public static void voteSubmitted(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String sideClicked, String viewType){
         String currentVote = post.getCurrentVote();
-        System.out.println("Sdad currentVote:" + post.getCurrentVote());
         if (currentVote != null){
             if (currentVote.equals("none") || currentVote.equals("skip")){
                 startVoteDetails(post, imageView, leftImageView, rightImageView, sideClicked, viewType);
@@ -353,7 +352,6 @@ public class VoteHandler {
 
             rightVoteLp.height = heightChanger.intValue();
             rightVoteLp.width = widthChanger.intValue();
-            System.out.println("Sdad heightChanger:" + leftCircularProgress.getWidth());
 
             rightVoteMark.setLayoutParams(rightVoteLp);
             leftVoteMark.setLayoutParams(leftVoteLp);
@@ -384,7 +382,6 @@ public class VoteHandler {
         rightCircularProgress.setColours(rightButtonEdgeColour, rightButtonMainColour );
 
         if (currentVote.equals("right")){
-            System.out.println("Sdad right");
             rightVoteMark.setVisibility(View.VISIBLE);
             leftVoteMark.setVisibility(View.GONE);
         }else if (currentVote.equals("left")){

@@ -107,7 +107,6 @@ public class SearchGateway implements SearchRecViewTopTargetReached, SearchRecSe
             searchViewModel.init();
             searchViewModel.viewScrolled();
             // viewScrolledSearch(lastUsername);
-            System.out.println("Sdad string Reached");
         }
     }
 

@@ -136,7 +136,6 @@ public class ActivityRepository implements commentRetreiverInterface, voteActivi
             internetAvailable = new MutableLiveData<>();
             internetAvailable.postValue(successful);
         } else {
-            System.out.println("Sdad internetAvailable:" + internetAvailable.getValue());
             if (internetAvailable.getValue() != successful) {
                 internetAvailable.postValue(successful);
             }

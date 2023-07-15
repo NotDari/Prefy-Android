@@ -1,4 +1,4 @@
-package com.daribear.prefy.Popular.NewPopularSystem;
+package com.daribear.prefy.Popular;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +12,7 @@ public class checkVoteNotSubmitted {
         if (cursor.getCount() > 0){
             return true;
         }
+        cursor.close();
         return false;
 
 

@@ -1,4 +1,4 @@
-package com.daribear.prefy.Popular.NewPopularSystem;
+package com.daribear.prefy.Popular;
 
 import android.content.Context;
 
@@ -6,12 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.daribear.prefy.Popular.PopularActivity;
 import com.daribear.prefy.Popular.PopularViewModel.PopularModelPackage;
 import com.daribear.prefy.Profile.User;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class NewPopularViewModel extends ViewModel {
     private MutableLiveData<PopularModelPackage> popPostSetData;
@@ -30,7 +28,6 @@ public class NewPopularViewModel extends ViewModel {
     public void init(Context applicationContext){
         this.ApplicationContext = applicationContext;
         popRepo = NewPopularRepository.getInstance(applicationContext);
-        System.out.println("Sdad popRepo original:" + popRepo);
         this.popPostSetData = popRepo.getPopularModelMutable();
         this.popularActivityMutable = popRepo.getPopularActivityMutable();
     }
@@ -39,12 +36,6 @@ public class NewPopularViewModel extends ViewModel {
         return popPostSetData.getValue();
     }
 
-    public void printData(){
-        PopularModelPackage popularModelPackage = singleDataCheck();
-        for (int i = 0; i< popularModelPackage.getPopularPostSet().getPostList().size(); i++){
-            System.out.println("SdadT :" + popularModelPackage.getPopularPostSet().getPostList().get(i).getQuestion());
-        }
-    }
 
     public void getMoreData(){
         popRepo.getMoreData();
@@ -53,6 +44,7 @@ public class NewPopularViewModel extends ViewModel {
     public LiveData<PopularModelPackage> getPostData(){
         return popPostSetData;
     }
+
 
     public void removeItem(){
         popRepo.removeItem();

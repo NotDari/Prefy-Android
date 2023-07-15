@@ -178,7 +178,6 @@ public class EmailConfirmationFragment extends Fragment {
                                         Toast.makeText(getContext(), "Email not verified", Toast.LENGTH_SHORT).show();
                                         break;
                                     default:
-                                        System.out.println("Sdad customError:" + customError.getCustomCode() + customError.getMessage());
                                         Toast.makeText(getContext(), "Unknown error", Toast.LENGTH_SHORT).show();
                                         break;
                                 }

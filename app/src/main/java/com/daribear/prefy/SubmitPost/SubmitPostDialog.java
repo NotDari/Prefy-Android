@@ -317,9 +317,7 @@ public class SubmitPostDialog implements PermissionReceived {
         String uniqueID = UUID.randomUUID().toString();
         StorageReference fileReference = fStorageReference.child(uniqueID);
         Long longTime = CurrentTime.getCurrentTime();
-        System.out.println("Sdad uploadId originaltime: " + longTime);
         Double time= (double) CurrentTime.getCurrentTime();
-        System.out.println("Sdad uploadId time: " + time);
         Double date = time / 1000;
         Long finalTime = date.longValue();
         ArrayList<String> categories = new ArrayList<>();
@@ -416,7 +414,6 @@ public class SubmitPostDialog implements PermissionReceived {
                     public void onFailure(@NonNull Exception e) {
                         postSubmitting = false;
                         fileReference.delete();
-                        System.out.println("Sdad e:" + e);
                         Toast.makeText(context, "Failed to upload Image", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -428,7 +425,7 @@ public class SubmitPostDialog implements PermissionReceived {
                 postSubmitting = false;
                 NoInternetDropDown dropDown = NoInternetDropDown.getInstance(activity);
                 dropDown.showDropDown();
-                System.out.println("Sdad e:" + e);
+
                 Toast.makeText(activity, "Image Upload Failed " + e, Toast.LENGTH_SHORT).show();
             }
         });

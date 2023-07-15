@@ -28,7 +28,7 @@ import com.daribear.prefy.DeleteDialog.DeleteDelegate;
 import com.daribear.prefy.DeleteDialog.DeleteDialog;
 import com.daribear.prefy.DeleteDialog.DeleteDialogDelegate;
 import com.daribear.prefy.Network.UploadController.UploadController;
-import com.daribear.prefy.Popular.NewPopularSystem.PopularSkipDelegate;
+import com.daribear.prefy.Popular.PopularSkipDelegate;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Utils.CurrentTime;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
@@ -90,25 +90,6 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
     }
 
     public void initDialog(){
-        /**
-        postDialog = new Dialog(context, android.R.style.Theme_DeviceDefault_NoActionBar);
-        postDialog.setContentView(R.layout.post_pop_up_dialog);
-        postDialog.setCancelable(true);
-        postDialog.setCanceledOnTouchOutside(true);
-        setUpViews(postDialog);
-        Window dialogWindow = postDialog.getWindow();
-
-        // Setting the width of a dialog as a percentage of the screen
-        int screenwidth = (int) (ownerActivity.getResources().getDisplayMetrics().widthPixels * 0.43);
-        int screenheight = (int) (ownerActivity.getResources().getDisplayMetrics().heightPixels);
-        postDialog.getWindow().setLayout(screenwidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        initLocation(screenheight,dialogWindow, postDialog);
-        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-        postDialog.show();
-         */
 
         if (!bottomSheetDialog.isShowing()) {
             this.postDialog = bottomSheetDialog;
@@ -136,7 +117,6 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
 
                     Integer PostDiaFullLayHeight = PostDiaFullLay.getMeasuredHeight();
                     wlp.x = changeCoordinatesX;
-                    System.out.println("Sdad changeCoordinatesY" + changeCoordinatesY + " " + PostDiaFullLayHeight);
                     wlp.y =  screenheight - changeCoordinatesY - (PostDiaFullLayHeight / 2);
                     dialogWindow.setAttributes(wlp);
                     return true;

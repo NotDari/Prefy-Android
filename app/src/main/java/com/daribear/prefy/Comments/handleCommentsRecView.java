@@ -134,7 +134,6 @@ public class handleCommentsRecView implements CommentRetreiverInterface, Comment
 
     @Override
     public void viewClicked() {
-        System.out.println("Sdad wholeList: " + wholeList.size() + " currentList:" + currentList.size() + gettingExtraData);
         if (wholeList.size() > currentList.size()){
             Integer limit;
             if (currentList.size() + 5 <= wholeList.size()){

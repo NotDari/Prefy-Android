@@ -8,20 +8,6 @@ import java.util.ArrayList;
 
 public class  CustomJsonCreator {
 
-    public static JSONObject createObjFromComment(Comment comment){
-        JSONObject jsonObject = new JSONObject();
-        /**
-        try {
-            //jsonObject.put("a",comment.);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-         */
-        return null;
-    }
 
     public static String createArrayStringFromLong(ArrayList<Long> list){
         if (list.size() == 0) {

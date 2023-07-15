@@ -57,9 +57,9 @@ public class CustomJsonMapper {
             user.setInstagram(instagram);
             user.setTwitter(twitter);
             user.setVerified(verified);
+            response.body().close();
             return user;
         }catch (JSONException | IOException e) {
-            System.out.println("Sdad exception:" + e + "\n " + response.body().toString());
             e.printStackTrace();
         }
         return null;
@@ -100,6 +100,7 @@ public class CustomJsonMapper {
             user.setInstagram(instagram);
             user.setTwitter(twitter);
             user.setVerified(verified);
+
             return user;
         }catch (JSONException e) {
             e.printStackTrace();
@@ -139,10 +140,9 @@ public class CustomJsonMapper {
                 commentActivityList.add(commentActivity);
             }
 
-
+            response.body().close();
             return commentActivityList;
         }catch (JSONException | IOException e) {
-            System.out.println("Sdad exception:" + e + "\n " + response.body().toString());
             e.printStackTrace();
         }
         return null;
@@ -163,10 +163,9 @@ public class CustomJsonMapper {
                 followerActivityList.add(followerActivity);
             }
 
-
+            response.body().close();
             return followerActivityList;
         }catch (JSONException | IOException e) {
-            System.out.println("Sdad exception:" + e + "\n " + response.body().toString());
             e.printStackTrace();
         }
         return null;
@@ -187,10 +186,9 @@ public class CustomJsonMapper {
                 voteActivityList.add(voteActivity);
             }
 
-
+            response.body().close();
             return voteActivityList;
         }catch (JSONException | IOException e) {
-            System.out.println("Sdad exception:" + e + "\n " + response.body().toString());
             e.printStackTrace();
         }
         return voteActivityList;
@@ -250,7 +248,6 @@ public class CustomJsonMapper {
             //comment.setReplyCount(jsonObject.getString("replyCount")); Currently doesn't retreive replyCount
             return comment;
         } catch (JSONException e){
-            System.out.println("Sdad commentError:" + e);
             e.printStackTrace();
         }
         return null;
@@ -278,6 +275,7 @@ public class CustomJsonMapper {
     public static CustomError getCustomError(Response response){
         try {
             JSONObject jsonObject = new JSONObject(response.body().string());
+            response.body().close();
             return new CustomError(jsonObject.getInt("customCode"), jsonObject.getString("message"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -295,6 +293,7 @@ public class CustomJsonMapper {
             for (int i =0; i < jsonArray.length(); i++){
                 postList.add(getPostFromObject((jsonArray.getJSONObject(i))));
             }
+            response.body().close();
             return postList;
         }catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -309,6 +308,7 @@ public class CustomJsonMapper {
             popularActivity.setTotalActivities((int) totalObject.getLong("newActivitiesCount"));
             popularActivity.setCommentsCount((int) totalObject.getLong("newCommentsCount"));
             popularActivity.setVotesCount((int) totalObject.getLong("newVotesCount"));
+            response.body().close();
             return popularActivity;
         } catch (JSONException e){
             e.printStackTrace();

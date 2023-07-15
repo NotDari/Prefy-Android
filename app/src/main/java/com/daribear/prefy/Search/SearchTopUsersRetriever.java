@@ -44,7 +44,6 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Sdad following starte:");
                 searchUserArrayList = new ArrayList<>();
                 OkHttpClient client = new OkHttpClient();
                 HttpUrl.Builder httpBuilder = HttpUrl.parse(ServerAdminSingleton.getInstance().getServerAddress() + "/prefy/v1/Users/TopUsers").newBuilder();
@@ -77,7 +76,6 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
                             for (User user : searchUserArrayList){
                                 idList.add(user.getId());
                             }
-                            System.out.println("Sdad followingReady");
                             FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, SearchTopUsersRetriever.this::completed, null);
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();

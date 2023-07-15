@@ -12,8 +12,7 @@ import com.daribear.prefy.Ads.AdTracker;
 import com.daribear.prefy.Database.DatabaseHelper;
 import com.daribear.prefy.Database.InitDatabaseTasks;
 import com.daribear.prefy.Explore.ExploreRepository;
-import com.daribear.prefy.Popular.NewPopularSystem.NewPopularRepository;
-import com.daribear.prefy.Popular.OldPopularSystem.PopularPostsRepository;
+import com.daribear.prefy.Popular.NewPopularRepository;
 import com.daribear.prefy.Profile.CurrentUserRepository;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Search.SearchRepository;
@@ -78,6 +77,7 @@ public class LogOutUtil {
         if (!NewPopularRepository.isInstanceNull()){
             NewPopularRepository.getInstance(context).reset();
         }
+
 
     }
 

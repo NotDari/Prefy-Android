@@ -2,24 +2,24 @@ package com.daribear.prefy.Popular;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.daribear.prefy.Popular.OldPopularSystem.PopViewModel;
 import com.daribear.prefy.PostDropDownDialog;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
+import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 import com.daribear.prefy.Votes.VoteHandler;
@@ -27,7 +27,7 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 
-public class PopularPageFragment extends Fragment{
+public class PopularPageFragment extends Fragment implements PopularSkipDelegate{
     private User user;
     private StandardPost post;
     private Boolean autoScroll;
@@ -36,6 +36,7 @@ public class PopularPageFragment extends Fragment{
     private RelativeLayout rightClick;
     private ImageView mainImage, verifiedImage;
     private TextView totalVotesTextView;
+    private NewPopularViewModel popViewModel;
 
 
     @Override
@@ -53,9 +54,12 @@ public class PopularPageFragment extends Fragment{
         Bundle args = getArguments();
         user = args.getParcelable("user");
         post = args.getParcelable("post");
+        popViewModel = new ViewModelProvider(getActivity()).get(NewPopularViewModel.class);
+        popViewModel.init(getActivity().getApplicationContext());
     }
 
     public void initViews(View view){
+
         ((TextView) view.findViewById(R.id.PopularItemQuestionText))
                 .setText((post.getQuestion()));
         ((TextView) view.findViewById(R.id.PopularItemUsername))
@@ -138,6 +142,8 @@ public class PopularPageFragment extends Fragment{
 
                 dialog.setCoordinates(0, bottomNavHeight);
 
+                dialog.setPopular(PopularPageFragment.this::skipClicked);
+
                 //Rect rectf = new Rect();
                 //optionsButton.getGlobalVisibleRect(rectf);
                 //dialog.setCoordinates(rectf.right, rectf.top);
@@ -146,44 +152,46 @@ public class PopularPageFragment extends Fragment{
         });
         rightClick = view.findViewById(R.id.PopularItemImageRightClicker);
         leftCLick = view.findViewById(R.id.PopularItemImageLeftClicker);
-
+        if (getParentFragment() != null && getParentFragment() instanceof PopularPostVote) {
+            delegate = (PopularPostVote) getParentFragment();
+        }
     }
 
 
     private void initVotingSystem(){
         VoteHandler.changeImage(post, mainImage, leftCLick, rightClick, "Popular");
-
-        PopViewModel popViewModel = new PopViewModel();
-        popViewModel.init(getContext().getApplicationContext());
-
         rightClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (post.getCurrentVote().equals("none")  || post.getCurrentVote().equals("skip")) {
+                if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
                     VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "rightClick", "Popular");
-                    autoScrollQuestion("right");
+                    voted(true, getAutoScroll());
                     VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "right", "Popular");
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
+                } else {
+                    voted(false, true);
                 }
             }
         });
         leftCLick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (post.getCurrentVote().equals("none")  || post.getCurrentVote().equals("skip")) {
+                if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
                     VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "leftClick", "Popular");
-                    autoScrollQuestion("left");
+                    voted(true, getAutoScroll());
                     VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getPostId(), "left", "Popular");
                     String text = totalVotesTextView.getText().toString().split(" ")[0];
                     Integer oldNumber = Integer.parseInt(text);
                     VoteHandler.numberAnimator(oldNumber, post.getAllVotes() ,totalVotesTextView);
+                } else {
+                    System.out.println("Sdad scrolling left");
+                    voted(false, true);
                 }
             }
         });
     }
-
 
 
 
@@ -197,7 +205,7 @@ public class PopularPageFragment extends Fragment{
     private void initAutoScroll(View view){
         Context context = view.getContext();
         Utils utils = new Utils(context);
-        if (utils.loadBoolean(context.getString(R.string.auto_scroll_pref), false)){
+        if (utils.loadBoolean(context.getString(R.string.auto_scroll_pref), true)){
             autoScroll = true;
         } else {
             autoScroll = false;
@@ -205,20 +213,37 @@ public class PopularPageFragment extends Fragment{
     }
 
 
+    private void voted(Boolean cooldown, Boolean removeVote){
+        delegate.voted(cooldown, removeVote);
 
-    private void autoScrollQuestion(String vote){
-        if (getParentFragment() != null && getParentFragment() instanceof PopularPostVote) {
-            delegate = (PopularPostVote) getParentFragment();
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    delegate.voted(true, true, true);
-                }
-            }, 300);
+        //popViewModel.itemVote(post.getPostId());
+        //delegate.voted(cooldown);
+    }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        leftCLick = null;
+        rightClick = null;
+
+    }
+
+    @Override
+    public void skipClicked() {
+        if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
+            VoteHandler.voteSubmitted(post, mainImage, leftCLick, rightClick, "skip", "Popular");
+            voted(true, getAutoScroll());
+            VoteHandler.saveVote(PopularPageFragment.this.getContext().getApplicationContext(),post.getPostId(), "skip", "Popular");
+
+        } else {
+            voted(false, true);
         }
     }
 
 
+    private Boolean getAutoScroll(){
+        Utils utils = new Utils(PopularPageFragment.this.getContext());
+        return utils.loadBoolean(getString(R.string.auto_scroll_pref), true);
+    }
 }

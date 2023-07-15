@@ -201,7 +201,6 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
     }
 
     private void completeSuccess(){
-        System.out.println("Sdad completeSuccess:" + postRetrieved + userRetrieved);
         if (postRetrieved && userRetrieved && userFollowingRetrieved){
             if (removePostList != null){
                 for (VoteActivity voteActivity : removePostList ){

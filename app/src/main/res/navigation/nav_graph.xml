@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/popularPageHostFragment2">
+    app:startDestination="@id/popularPageHostFragment">
     <fragment
         android:id="@+id/Profile_fragment"
         android:name="com.daribear.prefy.Profile.HomeProfileFragment"
@@ -187,6 +187,6 @@
     </fragment>
     <fragment
         android:id="@+id/popularPageHostFragment2"
-        android:name="com.daribear.prefy.Popular.NewPopularSystem.PopularPageHostFragment2"
+        android:name="com.daribear.prefy.Popular.PopularPageHostFragment"
         android:label="PopularPageHostFragment2" />
 </navigation>

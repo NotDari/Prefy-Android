@@ -22,8 +22,6 @@ import com.daribear.prefy.Utils.PlayIntegrity.IntegrityDelegate
 import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity
 import com.daribear.prefy.Utils.ServerAdminSingleton
 import com.daribear.prefy.Utils.SharedPreferences.SharedPrefs
-import com.daribear.prefy.custom_classes.UsersInfo
-import com.daribear.prefy.databinding.FragmentLogInBinding
 import com.daribear.prefy.databinding.FragmentSignUpEmailBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -103,19 +101,6 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
                 json.put("DOB", dateOfBirth)
                 getToken(json)
 
-                /**
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(requireActivity()) { task ->
-                        if (task.isSuccessful) {
-                            Log.d("Auth", "createUserWithEmail:success")
-                            addUser(email)
-                        } else {
-                            Log.w("Auth", "createUserWithEmail:failure", task.exception)
-                            Toast.makeText(activity, "Authentication failed.",
-                                Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                */
             }
         }
     }

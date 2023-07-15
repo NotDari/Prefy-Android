@@ -368,25 +368,6 @@ public class DetailsEditFragment extends Fragment {
                                         }
                                     });
 
-                                    /**
-                                    HashMap<String, Object> updateImage = new HashMap<>();
-                                    updateImage.put("profileImageURL", photoLink);
-
-                                    DocumentReference ref = ff.collection("Users").document(FirebaseAuth.getInstance().getUid());
-                                    ref.update(updateImage).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            utils.saveString(getString(R.string.save_profileP_pref), photoLink);
-                                            Toast.makeText(getContext(), "Profile Image Changed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            fileReference.delete();
-                                            Toast.makeText(getActivity(), "Failed to upload Image", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                     */
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

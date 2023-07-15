@@ -100,7 +100,6 @@ class login_activity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 20
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         ServerAdminSingleton.getInstance().serverAddress = remoteConfig.getString("Api_link")

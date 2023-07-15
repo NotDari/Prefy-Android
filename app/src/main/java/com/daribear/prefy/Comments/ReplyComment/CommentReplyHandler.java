@@ -143,7 +143,6 @@ public class CommentReplyHandler implements ReplyDelegate, CommentReplyDeletedDe
     @Override
     public void complete(Boolean successful, ArrayList<Comment> commentList) {
         replyUpdateLoading = false;
-        System.out.println("Sdad taskSuccess:" + successful);
         if (successful){
             for (int i =0; i < commentList.size(); i ++){
                 fullRecComment.getFullComment().getCommentReplyList().add(commentList.get(i));

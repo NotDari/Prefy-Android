@@ -121,7 +121,6 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         if (userList != null) {
             for (int i = 0; i < userList.size(); i++) {
                 if (Objects.equals(userList.get(i).getId(), userId)) {
-                    System.out.println("SdadAPP altered, userId:" + userId + " , following:" + following);
                     changed = true;
                     userList.get(i).setFollowing(following);
                 }
@@ -151,7 +150,6 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
                         currentArrayList.add(searchUserArrayList.get(i));
                     }
                     searchlistMutable.postValue(currentArrayList);
-                    System.out.println("Sdad list size:" + searchlistMutable.getValue().size());
                 }
             }
             AdTracker.getInstance().otherViewed();

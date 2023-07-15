@@ -118,7 +118,6 @@ public class ExploreRepository implements ExploreWholeInterface{
         if (lastCreationDate == null){
             lastCreationDate = 999999999999999999999999999999D;
         }
-        System.out.println("Sdad update Requested");
         ExplorePageExecutor executor = new ExplorePageExecutor("All", this, 18, 0, true);
         executor.initExecutor();
     }

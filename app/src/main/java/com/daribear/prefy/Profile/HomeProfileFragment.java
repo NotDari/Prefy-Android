@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daribear.prefy.Network.RefreshInternet;
-import com.daribear.prefy.Profile.ProfilePostsRec.NewProfilePostsGateway;
+import com.daribear.prefy.Profile.ProfilePostsRec.ProfilePostsGateway;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
@@ -28,7 +28,7 @@ public class HomeProfileFragment extends Fragment{
     private SwipeRefreshLayout refreshLayout;
     private Boolean DataAlreadySet;
     private TextView accountNameText, ProfileUsername;
-    private NewProfilePostsGateway gateway;
+    private ProfilePostsGateway gateway;
     private CurrentUserViewModel viewModel;
     private Long prefCount, voteCount, postCount, idPref, followerCount, followingCount;
     private RecyclerView recView;
@@ -102,7 +102,7 @@ public class HomeProfileFragment extends Fragment{
     }
 
     private void initGateway(View view, User user){
-        gateway = new NewProfilePostsGateway(getActivity(),recView, view, user, true);
+        gateway = new ProfilePostsGateway(getActivity(),recView, view, user, true);
         gateway.displayView();
     }
 
@@ -168,103 +168,6 @@ public class HomeProfileFragment extends Fragment{
             }
         });
     }
-
-
-    /**
-
-    private void checkPreviousData(WholeProfile wholeProfile){
-        View view = HomeProfileFragment.this.getView();
-        Context context = view.getContext();
-        Utils utils = new Utils(context);
-        if (postCount != null && prefCount != null && voteCount != null){
-            Long tempPostsNumber = wholeProfile.getUserInfo().getPostsNumber();
-            if (tempPostsNumber != postCount){
-                postCount = tempPostsNumber;
-                postCounter.setText(postCount.toString());
-                utils.saveLong(getString(R.string.save_postCount_pref), postCount);
-            }
-            Long tempVotesNumber = wholeProfile.getUserInfo().getVotesNumber();
-            if (tempVotesNumber != voteCount){
-                voteCount = tempVotesNumber;
-                voteCounter.setText(voteCount.toString());
-                utils.saveLong(getString(R.string.save_voteCount_pref), voteCount);
-            }
-            Long tempPrefsNumber = wholeProfile.getUserInfo().getPrefsNumber();
-            if (tempPrefsNumber != prefCount){
-                prefCount = tempPrefsNumber;
-                prefCounter.setText(prefCount.toString());
-                utils.saveLong(getString(R.string.save_prefCount_pref), prefCount);
-            }
-        } else {
-            postCount = wholeProfile.getUserInfo().getPostsNumber();
-            voteCount = wholeProfile.getUserInfo().getVotesNumber();
-            prefCount = wholeProfile.getUserInfo().getPrefsNumber();
-            postCounter.setText(postCounter.toString());
-            voteCounter.setText(voteCounter.toString());
-            prefCounter.setText(prefCount.toString());
-        }
-        if (wholeProfile.getUserInfo().getBio() != null){
-            if (!wholeProfile.getUserInfo().getBio().isEmpty()){
-                profileBio.setVisibility(View.VISIBLE);
-                profileBio.setText(wholeProfile.getUserInfo().getBio());
-                utils.saveString(getString(R.string.save_bio_pref),wholeProfile.getUserInfo().getBio());
-            }else{
-                profileBio.setVisibility(View.GONE);
-                utils.saveString(getString(R.string.save_bio_pref), "");
-            }
-        } else {
-            profileBio.setVisibility(View.GONE);
-            utils.saveString(getString(R.string.save_bio_pref), "");
-        }
-        if (wholeProfile.getUserInfo().getInstagram() != null){
-            if (!wholeProfile.getUserInfo().getInstagram().isEmpty()){
-                instagramButton.setImageTintList(null);
-            }else {
-                instagramButton.setImageTintList(context.getColorStateList(R.color.grey));
-            }
-        }else {
-            instagramButton.setImageTintList(context.getColorStateList(R.color.grey));
-        }
-        if (wholeProfile.getUserInfo().getTwitter() != null){
-            if (!wholeProfile.getUserInfo().getTwitter().isEmpty()){
-                twitterButton.setImageTintList(null);
-            }else {
-                twitterButton.setImageTintList(context.getColorStateList(R.color.grey));
-            }
-        }else {
-            twitterButton.setImageTintList(context.getColorStateList(R.color.grey));
-        }
-        if (wholeProfile.getUserInfo().getVk() != null){
-            if (!wholeProfile.getUserInfo().getVk().isEmpty()){
-                vkButton.setImageTintList(null);
-            }else {
-                vkButton.setImageTintList(context.getColorStateList(R.color.grey));
-            }
-        }else {
-            vkButton.setImageTintList(context.getColorStateList(R.color.grey));
-        }
-        if (wholeProfile.getUser().getUsername() != null){
-            //if (!wholeProfile.getUser().getUsername().equals())
-        }
-        if (wholeProfile.getUserInfo().getVerified() != null){
-            if (wholeProfile.getUserInfo().getVerified()){
-                verifiedImage.setVisibility(View.VISIBLE);
-            } else {
-                verifiedImage.setVisibility(View.GONE);
-            }
-            utils.saveBoolean(getString(R.string.save_verified_pref), wholeProfile.getUserInfo().getVerified());
-        }
-        if (progressBar.getVisibility() == View.VISIBLE){
-            progressBar.setVisibility(View.GONE);
-        }
-        setPosts(wholeProfile);
-    }
-
-     */
-
-
-
-
 
 
     @Override

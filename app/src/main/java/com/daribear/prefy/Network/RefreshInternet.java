@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.daribear.prefy.Activity.ActivityRepository;
 import com.daribear.prefy.Explore.ExploreRepository;
-import com.daribear.prefy.Popular.NewPopularSystem.NewPopularRepository;
+import com.daribear.prefy.Popular.NewPopularRepository;
 import com.daribear.prefy.Profile.CurrentUserRepository;
 
 public class RefreshInternet {

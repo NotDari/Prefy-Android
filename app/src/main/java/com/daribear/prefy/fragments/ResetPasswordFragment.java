@@ -96,7 +96,6 @@ public class ResetPasswordFragment extends Fragment {
                                     }
                                 } else {
                                     if (!isDetached()){
-                                        System.out.println("Sdad failed:" + response.body().string());
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {

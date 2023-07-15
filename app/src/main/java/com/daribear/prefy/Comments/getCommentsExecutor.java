@@ -46,7 +46,6 @@ public class getCommentsExecutor implements GetFollowingDelegate {
 
 
     public void initExecutor(){
-        System.out.println("Sdad successHI!");
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -74,7 +73,6 @@ public class getCommentsExecutor implements GetFollowingDelegate {
                                 JSONObject jsonObjectTemp = jsonArray.getJSONObject(i);
                                 FullRecComment fullRecComment = new FullRecComment();
                                 fullRecComment.setFullComment(CustomJsonMapper.getFullCommentFromObject(jsonObjectTemp));
-                                System.out.println("Sdad commentText:" + fullRecComment.getFullComment().getComment().getText() + " " + fullRecComment.getFullComment().getComment().getCommentId());
                                 fullRecComment.setRepliesShown(0);
                                 fullRecComment.setMinimised(false);
                                 fullCommentList.add(fullRecComment);

@@ -38,7 +38,6 @@ public class FollowingRetrieving {
 
 
     private void getFollowing(){
-        System.out.println("Sdad followingStarted");
         ArrayList<Long> smallerList = new ArrayList<>();
         for (int i = 0;i < userIdList.size(); i ++){
             if (!smallerList.contains(userIdList.get(i))){
@@ -60,7 +59,6 @@ public class FollowingRetrieving {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("Sdad followingtried" + response.isSuccessful());
             if (response.isSuccessful()){
                 try {
                     HashMap followsList = new ObjectMapper().readValue(response.body().string(), HashMap.class);
@@ -84,14 +82,12 @@ public class FollowingRetrieving {
                         try {
                             followMap.put(key, value);
                         } catch (NullPointerException e){
-                            System.out.println("Sdad NULL:" + e);
                         }
 
 
                     }
                     getDatabase();
                 } catch (NullPointerException e){
-                    System.out.println("Sdad following exception:" + e);
                     delegate.completed(false, null, type);
                 }
 
@@ -126,6 +122,7 @@ public class FollowingRetrieving {
                         followMap.put(key, databaseValue);
                     }
                 }
+                retrieveCursor.close();
 
 
 
@@ -139,7 +136,6 @@ public class FollowingRetrieving {
 
 
     private void complete(){
-        System.out.println("Sdad followMap:" + followMap);
         delegate.completed(true, followMap, type);
     }
 }

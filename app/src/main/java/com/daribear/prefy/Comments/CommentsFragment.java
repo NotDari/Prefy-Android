@@ -125,49 +125,7 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
                     Toast.makeText(view.getContext(), "Comment can't be empty", Toast.LENGTH_SHORT).show();
                 }
 
-                //TODO FIX COMMENTS
-                /**
-                 *
-                 *
-                String text = submitCommentEdit.getText().toString();
 
-                String serveraddress = utils.loadString(getString(R.string.Server_base_address), "");
-                if (!text.isEmpty()){
-                    FirebaseFirestore ff = FirebaseFirestore.getInstance();
-                    Double time= (double) System.currentTimeMillis();
-                    Double date = time / 1000;
-                    Long finalTime = date.longValue();
-                    WriteBatch writeBatch = ff.batch();
-                    HashMap<String, Object> newComment = new HashMap<>();
-                    newComment.put("creationDate", finalTime);
-                    newComment.put("postUID", post.getPostId());
-                    newComment.put("replyUserUid", replyUid);
-                    newComment.put("replyUsername", replyUsername);
-                    newComment.put("text", text);
-                    newComment.put("uid", FirebaseAuth.getInstance().getUid());
-                    DocumentReference commentRef = ff.collection("Comments").document();
-                    writeBatch.set(commentRef, newComment);
-                    DocumentReference postRef = ff.collection("Posts").document(post.getKey());
-                    writeBatch.update(postRef, "commentsNumber", FieldValue.increment(1));
-                    writeBatch.commit();
-
-                    Comment comment = new Comment();
-                    comment.setText(text);
-                    comment.setUserId(FirebaseAuth.getInstance().getUid());
-                    comment.setCreationDate(finalTime.doubleValue());
-                    comment.setReplyUsername(replyUsername);
-                    comment.setReplyUID(replyUid);
-                    comment.setKey(commentRef.getId());
-                    comment.setPostId(post.getKey());
-
-                    commentsRecView.commentSubmitted(comment);
-
-                    removeReplyLay();
-                    submitCommentEdit.getText().clear();
-                } else {
-                    Toast.makeText(view.getContext(), "Comment can't be empty", Toast.LENGTH_SHORT).show();
-                }
-                 */
             }
         });
     }

@@ -77,7 +77,6 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
             }
         }
         targetSize = this.searchUserArrayList.size();
-        System.out.println("Sdad sc changed:" + targetSize + this.searchUserArrayList.size());
     }
 
 
@@ -158,13 +157,11 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
     }
 
     private void initTargetReached(Integer adaptorPosition){
-        System.out.println("Sdad scrolled" + adaptorPosition + " " + (targetSize - 1));
         if (adaptorPosition == targetSize - 1) {
             if (type != null){
                 if (type.equals("Top")) {
                     topDelegate.topReached();
                 }else if (type.equals("String")){
-                    System.out.println("Sdad stringgg");
                     stringDelegate.topReached(searchUserArrayList.get(searchUserArrayList.size()- 1).getUsername());
                 }
                 targetSize += 15;

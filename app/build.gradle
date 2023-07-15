@@ -46,7 +46,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-storage:20.2.0'
+    implementation 'com.google.firebase:firebase-storage:20.2.1'
     implementation 'com.google.firebase:firebase-firestore:24.6.1'
 
 
@@ -55,7 +55,7 @@ dependencies {
     compileOnly('org.projectlombok:lombok:1.18.26')
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-    def nav_version = "2.5.3"
+    def nav_version = "2.6.0"
 
     // Java navigation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
@@ -72,7 +72,7 @@ dependencies {
 
 
     //Gson
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.9.1'
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.firebase:firebase-database-ktx:20.2.2'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
     implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-database'
@@ -115,9 +115,10 @@ dependencies {
     implementation("com.google.android.play:app-update-ktx:2.1.0")
 
     //Jackson
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    def jackson_version = "2.13.4"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jackson_version"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
 
     //SplashScreen
     implementation "androidx.core:core-splashscreen:1.0.1"

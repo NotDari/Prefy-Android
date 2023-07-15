@@ -53,43 +53,5 @@ public class PopularActivityRetreiver {
             }
         });
     }
-    /**
-    public void init(){
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                dbRef = FirebaseDatabase.getInstance().getReference("activity").child(FirebaseAuth.getInstance().getUid());
-                dbRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()){
-                            PopularActivity popularActivity = new PopularActivity();
-                            Integer totalCount = task.getResult().child("newActivitiesCount").getValue(Integer.class);
-                            if (totalCount == null){
-                                totalCount = 0;
-                            }
-                            Integer commentCount = task.getResult().child("newCommentsCount").getValue(Integer.class);
-                            if (commentCount == null){
-                                commentCount = 0;
-                            }
-                            Integer voteCount = task.getResult().child("newVotesCount").getValue(Integer.class);
-                            if (voteCount == null){
-                                voteCount = 0;
-                            }
-                            popularActivity.setTotalActivities(totalCount);
-                            popularActivity.setCommentsCount(commentCount);
-                            popularActivity.setVotesCount(voteCount);
-                            delegate.taskCompleted(true, popularActivity);
-                        } else {
-                            delegate.taskCompleted(false, null);
-                        }
 
-
-
-                    }
-                });
-            }
-        });
-    }
-     */
 }

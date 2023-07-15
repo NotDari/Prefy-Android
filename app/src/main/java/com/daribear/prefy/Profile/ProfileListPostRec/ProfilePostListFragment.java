@@ -35,16 +35,7 @@ public class ProfilePostListFragment extends Fragment {
     }
 
     private void getData(){
-        /**
-        postList = new ArrayList<>();
-        this.username = ProfilePostListFragmentArgs.fromBundle(getArguments()).getUsername();
-        this.profileImageLink = ProfilePostListFragmentArgs.fromBundle(getArguments()).getProfileImageLink();
-        StandardPost[] postArray = ProfilePostListFragmentArgs.fromBundle(getArguments()).getPostList();
-        for (int i = 0; i < postArray.length; i ++){
-            postList.add(postArray[i]);
-        }
-        this.positionCLicked = ProfilePostListFragmentArgs.fromBundle(getArguments()).getPositionClicked();
-         */
+
     }
 
     private void initRecView(View view){

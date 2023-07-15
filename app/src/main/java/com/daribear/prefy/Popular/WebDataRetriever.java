@@ -1,5 +1,6 @@
-package com.daribear.prefy.Popular.NewPopularSystem;
+package com.daribear.prefy.Popular;
 
+import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.PopularPost;
 import com.daribear.prefy.Popular.PopularPostSet;
 import com.daribear.prefy.Popular.PopularViewModel.RetreivePopularDataInterface;
@@ -33,7 +34,7 @@ import okhttp3.Response;
 public class WebDataRetriever implements GetFollowingDelegate {
     Integer count = 10;
 
-    private PopularPostSet popularPostSet;
+    private ArrayList<FullPost> fullPostList;
 
     private RetreivePopularDataInterface delegate;
 
@@ -41,7 +42,7 @@ public class WebDataRetriever implements GetFollowingDelegate {
     private OkHttpClient client;
 
     private ArrayList<Long> avoidList;
-    private Boolean userDetailsDone = false, userVotesDone = false, userFollowing = false;
+    private Boolean userDetailsDone = false, userFollowing = false;
     private String retrievalType;
     private HashMap<Long, Boolean> followList;
 
@@ -86,23 +87,23 @@ public class WebDataRetriever implements GetFollowingDelegate {
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Authorization", authToken)
                         .build();
-                System.out.println("Sdad server Req:" + httpBuilder.build().url());
                 try {
                     Response response = client.newCall(request).execute();
                     if (response.isSuccessful()){
                         try {
                             JSONArray jsonArray = new JSONArray(response.body().string());
-                            ArrayList<PopularPost> postList = new ArrayList<>();
+                            fullPostList = new ArrayList<>();
                             for (int i = 0; i < jsonArray.length(); i ++){
                                 JSONObject tempObject = jsonArray.getJSONObject(i);
+                                FullPost fullPost = new FullPost();
                                 PopularPost popularPost = CustomJsonMapper.getPopularPostFromObject(tempObject);
-                                postList.add(popularPost);
+                                popularPost.setCurrentVote("none");
+                                fullPost.setStandardPost(popularPost);
+                                fullPostList.add(fullPost);
                             }
-                            popularPostSet = new PopularPostSet();
-                            popularPostSet.setPostList(postList);
+
 
                             getUserDetails();
-                            getCurrentUserPostVotes();
                             getUserFollowing();
                         } catch (JSONException | IOException e) {
                             e.printStackTrace();
@@ -110,11 +111,9 @@ public class WebDataRetriever implements GetFollowingDelegate {
 
                     }else {
                         ErrorChecker.checkForStandardError(response);
-                        System.out.println("Sdad ooh " + 2);
                         delegate.taskComplete(false, null, null);
                     }
                 } catch (IOException | JSONException e) {
-                    System.out.println("Sdad ooh " + e);
                     delegate.taskComplete(false, null, null);
                 }
             }
@@ -122,13 +121,13 @@ public class WebDataRetriever implements GetFollowingDelegate {
     }
 
     private void getUserDetails(){
-        if (popularPostSet.getPostList().size() == 0){
+        if (fullPostList.size() == 0){
             userDetailsDone = true;
             operationCompleted();
         } else {
             ArrayList<Long> idList = new ArrayList<>();
-            for (int i = 0; i < popularPostSet.getPostList().size(); i ++){
-                idList.add(popularPostSet.getPostList().get(i).getUserId());
+            for (int i = 0; i < fullPostList.size(); i ++){
+                idList.add(fullPostList.get(i).getStandardPost().getUserId());
             }
             HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Users/GetUserByIdList").newBuilder();
             httpBuilder.addEncodedQueryParameter("idList", CustomJsonCreator.createArrayStringFromLong(idList));
@@ -139,7 +138,6 @@ public class WebDataRetriever implements GetFollowingDelegate {
                     .addHeader("Authorization", authToken)
                     .build();
             try {
-                ArrayList<User> userList = new ArrayList<>();
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()){
                     try {
@@ -152,12 +150,16 @@ public class WebDataRetriever implements GetFollowingDelegate {
                             } else {
                                 user = DefaultCreator.createBlankUser();
                             }
-                            userList.add(user);
+                            for (int f = 0; f < fullPostList.size(); f++){
+                                System.out.println("Sdad aa");
+                                if (fullPostList.get(f).getStandardPost().getUserId().equals(user.getId())){
+                                    System.out.println("Sdad addingUser");
+                                    fullPostList.get(i).setUser(user);
+                                }
+                            }
 
 
                         }
-
-                        popularPostSet.setUserList(userList);
                         userDetailsDone = true;
                         operationCompleted();
                     } catch (JSONException | IOException e) {
@@ -165,11 +167,9 @@ public class WebDataRetriever implements GetFollowingDelegate {
                     }
 
                 }else {
-                    System.out.println("Sdad ooh " + 4);
                     delegate.taskComplete(false, null, null);
                 }
             } catch (IOException e) {
-                System.out.println("Sdad ooh " + 5);
                 delegate.taskComplete(false, null, null);
             }
 
@@ -177,82 +177,33 @@ public class WebDataRetriever implements GetFollowingDelegate {
     }
 
 
-
-    private void getCurrentUserPostVotes(){
-        JSONObject jsonObject = new JSONObject();
-        ArrayList<Long> postIdList = new ArrayList<>();
-        for (int i = 0; i < popularPostSet.getPostList().size(); i ++){
-            postIdList.add(popularPostSet.getPostList().get(i).getPostId());
-        }
-        HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Votes/VoteList").newBuilder();
-        httpBuilder.addEncodedQueryParameter("postIdList", CustomJsonCreator.createArrayStringFromLong(postIdList));
-        httpBuilder.addEncodedQueryParameter("userId", ServerAdminSingleton.getInstance().getLoggedInId().toString());
-        Request request = new Request.Builder()
-                .url(httpBuilder.build())
-                .method("GET", null)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", authToken)
-                .build();
-        try {
-            Response response = client.newCall(request).execute();
-
-            if (response.isSuccessful()){
-                try {
-                    JSONArray jsonArray = new JSONArray(response.body().string());
-                    for (int i = 0; i < jsonArray.length(); i ++){
-                        String currentVote;
-                        if (jsonArray.isNull(i)){
-                            currentVote = "none";
-                        } else {
-                            JSONObject tempObject = jsonArray.getJSONObject(i);
-                            currentVote = tempObject.getString("currentVote");
-                        }
-                        popularPostSet.getPostList().get(i).setCurrentVote(currentVote);
-
-                    }
-
-                    userVotesDone = true;
-                    operationCompleted();
-                } catch (JSONException | IOException e) {
-                    e.printStackTrace();
-                }
-
-            }else {
-                System.out.println("Sdad ooh " + 6);
-                delegate.taskComplete(false, null, null);
-            }
-        } catch (IOException e) {
-            System.out.println("Sdad ooh " + 7);
-            delegate.taskComplete(false, null, null);
-        }
-    }
 
     private void getUserFollowing(){
-        if (popularPostSet.getPostList().size() == 0){
+        if (fullPostList.size() == 0){
             userFollowing = true;
             operationCompleted();
         } else {
             ArrayList<Long> idList = new ArrayList<>();
-            for (int i = 0; i < popularPostSet.getPostList().size(); i++) {
-                idList.add(popularPostSet.getPostList().get(i).getUserId());
+            for (int i = 0; i < fullPostList.size(); i++) {
+                idList.add(fullPostList.get(i).getUser().getId());
             }
             FollowingRetrieving followingRetrieving = new FollowingRetrieving(idList, this, null);
         }
     }
 
     private void operationCompleted(){
-        if (userDetailsDone  && userVotesDone && userFollowing){
+        if (userDetailsDone  && userFollowing){
             if (followList != null) {
                 for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
                     Long key = entry.getKey();
-                    for (int i = 0; i < popularPostSet.getUserList().size(); i++) {
-                        if (Objects.equals(popularPostSet.getUserList().get(i).getId(), key)) {
-                            popularPostSet.getUserList().get(i).setFollowing(followList.get(key));
+                    for (int i = 0; i < fullPostList.size(); i++) {
+                        if (Objects.equals(fullPostList.get(i).getUser().getId(), key)) {
+                            fullPostList.get(i).getUser().setFollowing(followList.get(key));
                         }
                     }
                 }
             }
-            delegate.taskComplete(true, popularPostSet, retrievalType);
+            delegate.taskComplete(true, fullPostList, retrievalType);
         }
     }
 

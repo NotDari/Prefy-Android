@@ -1,5 +1,5 @@
 package com.daribear.prefy.Popular;
 
 public interface PopularPostVote{
-    void voted(Boolean saveVote, Boolean scroll, Boolean cooldown);
+    void voted(Boolean cooldown, Boolean removeVote);
 }

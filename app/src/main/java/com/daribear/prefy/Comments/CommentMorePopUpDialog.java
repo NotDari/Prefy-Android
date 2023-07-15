@@ -91,7 +91,6 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
             @Override
             public void onClick(View view) {
                 postDialog.dismiss();
-                System.out.println("Sdad deleteInit:" + fullComment.getComment().getCommentId());
                 DeleteDialog.getInstance(ownerActivity, CommentMorePopUpDialog.this::deleteClicked, "Comment").show();
             }
         });

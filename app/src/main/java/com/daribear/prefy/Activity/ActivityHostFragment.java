@@ -57,12 +57,7 @@ public class ActivityHostFragment extends Fragment {
         new TabLayoutMediator(tablayout, viewpager,
                 (tab, position) -> tab.setText(TabNames.get(position))
         ).attach();
-        /**
-         new TabLayoutMediator(tablayout, viewpager,
-         new TabLayoutMediator.TabConfigurationStrategy() {
-        @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {}
-        }).attach();
-         */
+
 
 
     }

@@ -276,15 +276,6 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
             }
         }
 
-        /**
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity(), OnCompleteListener { task ->
-            if(task.isSuccessful) {
-                downloadprefs2()
-            }else {
-                Toast.makeText(requireActivity(), "Login Failed", Toast.LENGTH_LONG).show()
-            }
-        })
-        */
     }
 
     fun addPrefs(user : User){
@@ -315,7 +306,6 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
     }
 
     fun checkIfDone(){
-        Toast.makeText(requireActivity(), (emailDone.toString() + fullnameDone.toString() + profilePDone.toString() + usernameDone.toString()), Toast.LENGTH_LONG).show()
         if (usernameDone && emailDone && profilePDone && fullnameDone) {
             val intent = Intent(activity, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

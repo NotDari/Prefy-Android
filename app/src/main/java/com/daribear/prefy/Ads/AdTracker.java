@@ -34,6 +34,7 @@ public class AdTracker {
     }
 
     public void setOtherTotal(Integer otherTotal) {
+        System.out.println("Sdad otehrTotal: +" + otherTotal);
         this.otherTotal = otherTotal;
     }
 
@@ -60,7 +61,7 @@ public class AdTracker {
     }
 
     public void otherViewed(){
-        System.out.println("Sdad otherViewed:" + otherCounter + " / " + otherTotal);
+        System.out.println("sdad otherTotal:" + otherTotal);
         if (otherTotal != null){
             if (otherTotal != 0){
                 otherCounter += 1;

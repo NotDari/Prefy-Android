@@ -32,7 +32,6 @@ import com.daribear.prefy.Utils.AdConsentForm.AdConsentForm;
 import com.daribear.prefy.Utils.ErrorChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionChecker;
 import com.daribear.prefy.Utils.Permissions.PermissionReceived;
-import com.daribear.prefy.Utils.PlayIntegrity.PlayIntegrity;
 import com.daribear.prefy.Utils.ServerAdminSingleton;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.gms.ads.MobileAds;
@@ -41,15 +40,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.remoteconfig.ConfigUpdate;
 import com.google.firebase.remoteconfig.ConfigUpdateListener;
 import com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigException;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private NavHostFragment navHostFragment;
@@ -146,14 +141,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.popularPageHostFragment2:
-                        if (navHostFragment.getChildFragmentManager().getFragments().get(0) instanceof PopularPageHostFragment){
-                            ((PopularPageHostFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).setViewPager0();
-                        } else {
-                            //NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.popularPageHostFragment, true).setRestoreState(true).build();
-                            //navController.navigate(item.getItemId(), null, navOptions);
-                            item.setChecked(true);
-                            NavigationUI.onNavDestinationSelected(item, navController);
-                        }
+                        item.setChecked(true);
+                        NavigationUI.onNavDestinationSelected(item, navController);
                         break;
                     case R.id.submitPostDialog:
                         SubmitPostDialog postDialog = SubmitPostDialog.getInstance(MainActivity.this);
@@ -171,9 +160,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     default:
-                        //NavOptions navOptions = new NavOptions.Builder().setPopUpTo(item.getItemId(), true).setRestoreState(true).build();
-                        //navController.navigate(item.getItemId(), null, navOptions);
-                        //item.setChecked(true);
                         item.setChecked(true);
                         NavigationUI.onNavDestinationSelected(item, navController);
                         break;
@@ -213,7 +199,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(FirebaseRemoteConfigException error) {
-                System.out.println("Sdad error:" + error.getCode() + error.getMessage());
                 Log.w("TAG", "Config update error with code: " + error.getCode(), error);
             }
         });

@@ -54,7 +54,6 @@ public class PlayIntegrity {
     }
 
     private void sendRequest(){
-        System.out.println("Sdad sendingRequest" + GetInternet.isInternetAvailable());
         if (GetInternet.isInternetAvailable()) {
             Task<IntegrityTokenResponse> integrityTokenResponse = integrityManager.requestIntegrityToken(IntegrityTokenRequest.builder().setNonce(nonce).setCloudProjectNumber(453170257829L).build());
             integrityTokenResponse.addOnSuccessListener(new OnSuccessListener<IntegrityTokenResponse>() {
@@ -68,7 +67,6 @@ public class PlayIntegrity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    System.out.println("Sdad sendingRequestFailure:" + e);
                     if (integrityDelegate != null) {
                         integrityDelegate.complete(new IntegrityResponse(false, null));
                     } else {

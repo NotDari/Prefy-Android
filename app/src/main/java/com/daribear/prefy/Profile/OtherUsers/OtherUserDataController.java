@@ -10,8 +10,7 @@ import android.widget.TextView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.daribear.prefy.Profile.GetUserDetailsExecutor;
-import com.daribear.prefy.Profile.ProfilePostsRec.NewProfilePostsGateway;
-import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsRetreiver.ProfileExecutor;
+import com.daribear.prefy.Profile.ProfilePostsRec.ProfilePostsGateway;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.ProfilePostsRetreiver.ProfileHandlerInt;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.Profile.User;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 
 public class OtherUserDataController implements ProfileHandlerInt {
     private View view;
-    private NewProfilePostsGateway gateway;
+    private ProfilePostsGateway gateway;
     private Context context;
     private Boolean destroyed;
     private User user;
@@ -33,7 +32,7 @@ public class OtherUserDataController implements ProfileHandlerInt {
     private SwipeRefreshLayout swipeRefreshLayout;
     private Activity parentActivity;
 
-    public OtherUserDataController(View view, NewProfilePostsGateway gateway, Context context,User user, Activity parentActivity) {
+    public OtherUserDataController(View view, ProfilePostsGateway gateway, Context context, User user, Activity parentActivity) {
         this.view = view;
         this.gateway = gateway;
         this.context = context;

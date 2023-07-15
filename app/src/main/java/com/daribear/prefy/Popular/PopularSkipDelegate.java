@@ -1,4 +1,4 @@
-package com.daribear.prefy.Popular.NewPopularSystem;
+package com.daribear.prefy.Popular;
 
 public interface PopularSkipDelegate {
 

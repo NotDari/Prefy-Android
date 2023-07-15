@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.daribear.prefy.Profile.ProfilePostsRec.NewProfilePostsGateway;
+import com.daribear.prefy.Profile.ProfilePostsRec.ProfilePostsGateway;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 
@@ -47,8 +47,8 @@ public class UserProfileFragment extends Fragment {
     private void getData(View view){
         destroyed = false;
         RecyclerView recView = view.findViewById(R.id.ProfileRecView);
-        NewProfilePostsGateway gateway;
-        gateway = new NewProfilePostsGateway(getActivity(),recView, view, user, false);
+        ProfilePostsGateway gateway;
+        gateway = new ProfilePostsGateway(getActivity(),recView, view, user, false);
 
         gateway.displayView();
         controller = new OtherUserDataController(view,gateway, view.getContext(),user, getActivity());

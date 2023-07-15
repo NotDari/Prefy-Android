@@ -3,11 +3,10 @@ package com.daribear.prefy.Utils;
 import android.content.Context;
 
 import com.daribear.prefy.Explore.ExploreViewModel;
-import com.daribear.prefy.Popular.NewPopularSystem.NewPopularViewModel;
+import com.daribear.prefy.Popular.NewPopularViewModel;
 import com.daribear.prefy.Profile.CurrentUserViewModel;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Search.SearchViewModel;
-import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 public class ItemAlterer {

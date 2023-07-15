@@ -83,11 +83,9 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
                         .build();
                 try {
                     Response response = client.newCall(request).execute();
-                    System.out.println("Sdad oadsia" + response.isSuccessful());
                     if (response.isSuccessful()){
                         try {
                             JSONArray jsonArray = new JSONArray(response.body().string());
-                            System.out.println("Sdad uwu:" + jsonArray.length());
                             for (int i = 0; i < jsonArray.length(); i ++){
                                 JSONObject tempObject = jsonArray.getJSONObject(i);
                                 FullPost fullPost = new FullPost();

@@ -70,24 +70,6 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
                 }
 
 
-                /**
-                DatabaseReference fDatabase = FirebaseDatabase.getInstance().getReference();
-                fDatabase.child("activity").child(uid).child("comments").orderByChild("creationDate").limitToLast(10).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (DataSnapshot dataValues : task.getResult().getChildren()){
-                                CommentActivity commentActivity = dataValues.getValue(CommentActivity.class);
-                                commentActivityList.add(commentActivity);
-                            }
-                            Collections.reverse(commentActivityList);
-                            getUserDetails(commentActivityList);
-                        } else{
-                            delegate.completed(false, null);
-                        }
-                    }
-                });
-                 */
             }
         });
     }

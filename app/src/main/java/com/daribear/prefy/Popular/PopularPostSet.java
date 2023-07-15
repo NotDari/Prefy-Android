@@ -15,6 +15,4 @@ public class PopularPostSet {
     private ArrayList<PopularPost> postList;
     private ArrayList<User> userList;
 
-
-
 }

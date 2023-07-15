@@ -83,6 +83,7 @@ public class UploadEndpoint {
                             cursor.moveToNext();
                         }
                     }
+                    cursor.close();
                     if (IntegerCount > 0){
                         Cursor voteCursor = db.rawQuery("Select * FROM " + uploadVotesTable, null);
                         if (voteCursor.moveToFirst()){
@@ -136,71 +137,10 @@ public class UploadEndpoint {
                                         }
                                     }
                                 });
-                                /**
-                                fDbVotes.child(FirebaseAuth.getInstance().getUid()).child(PostId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if (task.isSuccessful()){
-                                            String currentVote = task.getResult().getValue(String.class);
-                                            Boolean writeableValue = false;
-                                            if (currentVote == null){
-                                                writeableValue = true;
-                                            } else {
-                                                if (currentVote.equals("skip")){
-                                                    writeableValue = true;
-                                                }
-                                            }
-                                            System.out.println("Sdad writeable value:" + writeableValue);
-                                            if (writeableValue){
-                                                fDbVotes.child(FirebaseAuth.getInstance().getUid()).updateChildren(voteMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        CompletedCount += 1;
-                                                    if (task.isSuccessful()){
-                                                            WriteBatch batch = FirebaseFirestore.getInstance().batch();
-                                                            DocumentReference docRef = FirebaseFirestore.getInstance().collection("Posts").document(PostId);
-                                                            String voteField;
-                                                            if (Vote.equals("Right")){
-                                                                voteField = "rightVotes";
-                                                            }else if (Vote.equals("Left")){
-                                                                voteField = "leftVotes";
-                                                            } else {
-                                                                voteField = null;
-                                                            }
-                                                            batch.update(docRef, voteField , FieldValue.increment(1));
-                                                            batch.update(docRef, "allVotes" , FieldValue.increment(1));
-                                                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    System.out.println("Sdad batchComitted:" +task.getResult());
-                                                                }
-                                                            });
-
-                                                            SuccessfulCount += 1;
-                                                            removeVoteFromDb(db, PostId, Vote);
-                                                        }
-                                                        checkCompleted();
-
-                                                    }
-                                                });
-                                            } else {
-                                                CompletedCount +=1;
-                                                SuccessfulCount += 1;
-                                                removeVoteFromDb(db, PostId, Vote);
-                                                checkCompleted();
-                                            }
-
-                                        } else {
-                                            System.out.println("Sdad task fail");
-                                            CompletedCount += 1;
-                                            checkCompleted();
-                                        }
-                                    }
-                                });
-                                */
                                 voteCursor.moveToNext();
                             }
                         }
+                        voteCursor.close();
                         Cursor activityClearCursor = db.rawQuery("Select * FROM " + uploadActivityClearTable, null);
                         if (activityClearCursor.moveToFirst()){
                             for (int i =0; i < activityClearCursor.getCount(); i ++){
@@ -265,56 +205,6 @@ public class UploadEndpoint {
                                                 checkCompleted();
                                             }
                                         }
-                                        /**
-                                        fDbActivity.child(FirebaseAuth.getInstance().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                if (task.isSuccessful()){
-                                                    Integer currentActivity = task.getResult().child(finalCurrentActivityName).getValue(Integer.class);
-                                                    Integer totalActivity = task.getResult().child("newActivitiesCount").getValue(Integer.class);
-                                                    if (currentActivity == null){
-                                                        currentActivity = 0;
-                                                    }
-                                                    if (currentActivity != 0){
-                                                        HashMap batchMap = new HashMap();
-                                                        batchMap.put(finalCurrentActivityName, 0);
-                                                        if (totalActivity != null){
-                                                            if (totalActivity - currentActivity >= 0){
-                                                                batchMap.put("newActivitiesCount", (totalActivity - currentActivity));
-                                                            } else {
-                                                                batchMap.put("newActivitiesCount", 0);
-                                                            }
-                                                        } else {
-                                                            batchMap.put("newActivitiesCount", 0);
-                                                        }
-                                                        System.out.println("Sdad uploadStarted!");
-                                                        fDbActivity.child(FirebaseAuth.getInstance().getUid()).updateChildren(batchMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()){
-                                                                    CompletedCount +=1;
-                                                                    SuccessfulCount += 1;
-                                                                    removeActivityFromDb(db, type);
-                                                                    checkCompleted();
-                                                                } else {
-                                                                    CompletedCount += 1;
-                                                                    checkCompleted();
-                                                                }
-                                                            }
-                                                        });
-                                                    } else {
-                                                        CompletedCount +=1;
-                                                        SuccessfulCount += 1;
-                                                        removeActivityFromDb(db, type);
-                                                        checkCompleted();
-                                                    }
-                                                } else {
-                                                    CompletedCount += 1;
-                                                    checkCompleted();
-                                                }
-                                            }
-                                        });
-                                         */
                                     }
                                 }else {
                                     CompletedCount += 1;
@@ -323,6 +213,7 @@ public class UploadEndpoint {
                                 activityClearCursor.moveToNext();
                             }
                         }
+                        activityClearCursor.close();
                         Cursor commentCursor = db.rawQuery("Select * FROM " + uploadCommentsTable, null);
                         if (commentCursor.moveToFirst()){
                             for (int i = 0; i < commentCursor.getCount(); i++){
@@ -562,11 +453,8 @@ public class UploadEndpoint {
                                                     .addHeader("Content-Type", "application/json")
                                                     .addHeader("Authorization", authToken)
                                                     .build();
-                                            System.out.println("Sdad followFailedTracker Before sending request");
-
                                             try {
                                                 Response response = client.newCall(request).execute();
-                                                System.out.println("Sdad followFailedTracker response: " + response);
                                                 if (response.isSuccessful()) {
                                                     CompletedCount += 1;
                                                     SuccessfulCount += 1;
@@ -613,11 +501,12 @@ public class UploadEndpoint {
                     , new String[] {"Vote"});
             db.delete("UploadVotes","PostId=? and Vote=?",new String[]{PostId.toString(),Vote});
         }
+        cursor.close();
         Cursor popCursor = db.rawQuery("Select * FROM PopularPostsPopularPosts WHERE postId = " + PostId, null);
         if (popCursor.getCount() > 0){
             db.execSQL("DELETE from PopularPostsPopularPosts  WHERE postID = " + PostId);
         }
-
+        popCursor.close();
     }
 
     public void removeActivityFromDb(SQLiteDatabase db, String Type){

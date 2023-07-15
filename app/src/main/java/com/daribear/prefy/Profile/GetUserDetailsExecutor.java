@@ -88,14 +88,12 @@ public class GetUserDetailsExecutor implements ProfileHandlerInt, GetFollowingDe
 
 
     private void operationCompleted(){
-        System.out.println("Sdad hi!!!" + profileDone + followingDone);
         if (profileDone && followingDone ) {
             if (!currentUser) {
                 if (followingList != null) {
                     wholeProfile.getUser().setFollowing(followingList.get(id));
                 }
             }
-            System.out.println("Sdad hi!!!@" + wholeProfile);
             delegate.taskDone(true, wholeProfile);
         }
     }

@@ -108,16 +108,7 @@ public class SettingsFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_settingsFragment_to_preferencesFragment);
             }
         });
-        /**
-        preferencesButton.setOnTouchListener((v, event) -> {
-            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                preferencesButton.setBackgroundTintList(view.getContext().getResources().getColorStateList(R.color.grey));
-            }else if (event.getAction() == MotionEvent.ACTION_UP) {
-                preferencesButton.setBackgroundTintList(view.getContext().getResources().getColorStateList(R.color.white));
-            }return  false;
 
-        });
-         */
 
     }
     private void initRatePrefy(View view){

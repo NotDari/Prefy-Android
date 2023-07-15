@@ -40,6 +40,7 @@ public class UploadController {
                     " WHERE " + "Type" + " = ?", new String[]{"Vote"});
             attemptUpload(appContext);
         }
+        checkCursor.close();
     }
 
     public static void saveActivityClear(Context appContext, String type){
@@ -56,6 +57,7 @@ public class UploadController {
                     " WHERE " + "Type" + " = ?", new String[] {"ActivityClear"});
             db.insert(ActivityClearTableName, null, contentValues);
         }
+        checkCursor.close();
         attemptUpload(appContext);
     }
 
@@ -111,7 +113,6 @@ public class UploadController {
 
 
     public static void saveFollow(Context appContext, Long FollowingUserId , Boolean Follow){
-        System.out.println("Sdad follow: " + Follow);
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
 
         Cursor checkCursor = db.rawQuery("SELECT * FROM " + FollowTableName +
@@ -147,6 +148,7 @@ public class UploadController {
             db.insert(FollowTableName, null, contentValues);
             attemptUpload(appContext);
         }
+        checkCursor.close();
     }
 
     public static void attemptUpload(Context appContext){

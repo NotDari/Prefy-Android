@@ -186,21 +186,6 @@ public class SearchFragment extends Fragment {
 
         };
         searchEditText.addTextChangedListener(textWatcher);
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                /**
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE ||
-                        event == null ||
-                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    //User finihsed typing
-                    searchViewModel.setCurrentSearch(searchEditText.getText().toString());
-                    return true;
-                }
-                 */
-                return false;
-            }
-        });
     }
 
     @Override

@@ -153,17 +153,7 @@ public class ReportFragment extends Fragment {
     private void initReportCompleted(String reason){
         categoryLayout.setVisibility(View.GONE);
         Context context = categoryLayout.getContext();
-        /**
-        TextView textView = new TextView(categoryLayout.getContext());
-        textView.setTextColor(context.getColor(R.color.text_color));
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-        Typeface poppins = getResources().getFont(R.font.poppins_medium);
-        textView.setTypeface(poppins);
-        textView.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setGravity(Gravity.CENTER);
-        textView.setText("Your report has been submitted. \n Thank you for making Prefy better!");
-        categoryLayout.addView(textView);
-         */
+
         reportSubmittedText.setVisibility(View.VISIBLE);
         titleIssue.setVisibility(View.GONE);
         doneButton.setVisibility(View.VISIBLE);
@@ -187,22 +177,7 @@ public class ReportFragment extends Fragment {
             report.setCreationDate((double) CurrentTime.getCurrentTime());
         }
         UploadController.saveReport(getActivity().getApplicationContext(),report);
-        /**
-        FirebaseFirestore ff = FirebaseFirestore.getInstance();
-        HashMap<String, Object> reportMap = new HashMap<>();
-        if (post != null) {
-            reportMap.put("postId", post.getKey());
-            reportMap.put("userUID", post.getUid());
-        } else {
-            reportMap.put("postId", null);
-            reportMap.put("userUID", null);
-        }
-        reportMap.put("repCategory", reason);
-        reportMap.put("active", true);
-        reportMap.put("Type", type);
-        Double currentDate = (double) System.currentTimeMillis();
-        ff.collection("Reports").document(currentDate.toString()).set(reportMap);
-         */
+
     }
 
     private void submitCommentReport(String reason){
@@ -217,24 +192,6 @@ public class ReportFragment extends Fragment {
             report.setCreationDate((double) CurrentTime.getCurrentTime());
         }
         UploadController.saveReport(getActivity().getApplicationContext(),report);
-        /**
-        FirebaseFirestore ff = FirebaseFirestore.getInstance();
-        HashMap<String, Object> reportMap = new HashMap<>();
-        if (comment != null) {
-            reportMap.put("postId", comment.getPostId());
-            reportMap.put("userUID", comment.getUid());
-            reportMap.put("commentKey", comment.getKey());
-        } else {
-            reportMap.put("postId", null);
-            reportMap.put("userUID", null);
-            reportMap.put("commentKey", null);
-        }
-        reportMap.put("repCategory", reason);
-        reportMap.put("active", true);
-        reportMap.put("Type", type);
-        Double currentDate = (double) System.currentTimeMillis();
-        ff.collection("Reports").document(currentDate.toString()).set(reportMap);
-         */
     }
 
 

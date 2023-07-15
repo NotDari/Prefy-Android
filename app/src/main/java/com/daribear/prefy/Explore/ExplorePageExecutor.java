@@ -131,7 +131,6 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
             for (int i = 0; i < fullFeaturedPostArrayList.size(); i ++){
                 idList.add(fullFeaturedPostArrayList.get(i).getStandardPost().getUserId());
             }
-            System.out.println("Sdad oolo:" + idList);
             HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Users/GetUserByIdList").newBuilder();
             httpBuilder.addEncodedQueryParameter("idList", CustomJsonCreator.createArrayStringFromLong(idList));
             Request request = new Request.Builder()
@@ -266,11 +265,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", authToken)
                 .build();
-        System.out.println("Sdad all req: " + CustomJsonCreator.createArrayStringFromLong(postIdList) + " ; " + ServerAdminSingleton.getInstance().getLoggedInId().toString());
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()){
-                System.out.println("Sdad all repSuc");
                 try {
                     JSONArray jsonArray = new JSONArray(response.body().string());
                     for (int i = 0; i < jsonArray.length(); i ++){
@@ -290,11 +287,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                 }
 
             }else {
-                System.out.println("Sdad all repFail: " + response.body().string());
                 delegate.completed(false, update, explorePostSet, fullFeaturedPostArrayList);
             }
         } catch (IOException e) {
-            System.out.println("Sdad allException:" + e);
             delegate.completed(false, update, explorePostSet, fullFeaturedPostArrayList);
         }
     }
@@ -307,7 +302,6 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         }
         OkHttpClient client = new OkHttpClient();
         HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Users/GetUserByIdList").newBuilder();
-        System.out.println("Sdad idList:" + CustomJsonCreator.createArrayStringFromLong(idList));
         httpBuilder.addEncodedQueryParameter("idList", CustomJsonCreator.createArrayStringFromLong(idList));
         Request request = new Request.Builder()
                 .url(httpBuilder.build())
@@ -368,7 +362,6 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
 
 
     private synchronized void operationCompleted(){
-        System.out.println("Sdad opComp" + featuredPostUsers + recentPostUsers + userVotesDone + recentUsersFollowing + featuredUsersFollowing);
         if (featuredPostUsers && recentPostUsers && userVotesDone && recentUsersFollowing && featuredUsersFollowing){
             if (featuredFollowing != null) {
                 for (Map.Entry<Long, Boolean> entry : featuredFollowing.entrySet()) {
@@ -390,7 +383,6 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
                     }
                 }
             }
-            System.out.println("Sdad opComp final!");
             delegate.completed(true, update, explorePostSet, fullFeaturedPostArrayList);
         }
     }

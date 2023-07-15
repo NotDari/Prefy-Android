@@ -26,9 +26,9 @@ public class DatabaseBlankChecker {
                     if (query.getCount() > 0){
                         data = true;
                     }
+                    query.close();
                 }
                 if (data){
-                    System.out.println("Sdad data");
                     LogOutUtil.clearDatabases(context);
                 }
             }

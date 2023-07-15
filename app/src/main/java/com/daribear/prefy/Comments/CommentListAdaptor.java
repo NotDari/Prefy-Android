@@ -187,11 +187,9 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void deleteClicked(Long commentId) {
-        System.out.println("Sdad oooa");
+
         for (int i = 0; i < commentList.size(); i++){
-            System.out.println("Sdad oooaTemp : " + commentId + " " + commentList.get(i).getFullComment().getComment().getCommentId());
             if (commentList.get(i).getFullComment().getComment().getCommentId() == commentId){
-                System.out.println("Sdad oooaInside!");
                 commentList.remove(i);
                 notifyDataSetChanged();
                 break;
@@ -270,7 +268,6 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                System.out.println("Sdad test:" + commentList.get(position).getFullComment().getComment().getUser().getId());
                 bundle.putLong("id", commentList.get(position).getFullComment().getComment().getUser().getId());
                 bundle.putParcelable("user", commentList.get(position).getFullComment().getComment().getUser());
                 Navigation.findNavController(view).navigate(R.id.action_global_userProfile, bundle);
@@ -308,7 +305,6 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Sdad moreClicked:" + commentList.get(position).getFullComment().getComment().getCommentId());
                 FullComment fullComment = null;
                 try {
                     fullComment = (FullComment) commentList.get(position).getFullComment().clone();
