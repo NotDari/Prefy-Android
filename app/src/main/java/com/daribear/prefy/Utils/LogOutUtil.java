@@ -82,15 +82,16 @@ public class LogOutUtil {
     }
 
     public static void clearDatabases(Context context){
+        SQLiteDatabase db = DatabaseHelper.getInstance(context.getApplicationContext()).getWritableDatabase();
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = DatabaseHelper.getInstance(context.getApplicationContext()).getWritableDatabase();
                 db.beginTransaction();
                 for (int i = 0; i < tableList.size(); i ++){
                     db.delete(tableList.get(i), null, null);
                 }
                 InitDatabaseTasks.init(db);
+                db.setTransactionSuccessful();
                 db.endTransaction();
 
             }
@@ -125,10 +126,16 @@ public class LogOutUtil {
     }
 
     public static void resetConsentForm(Activity activity){
-        ConsentInformation consentInformation = UserMessagingPlatform.getConsentInformation(activity);
-        consentInformation.reset();
-        AdTracker.getInstance().consentChanged();
-        AdConsentForm adConsentForm = new AdConsentForm();
-        adConsentForm.checkState(activity);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ConsentInformation consentInformation = UserMessagingPlatform.getConsentInformation(activity);
+                consentInformation.reset();
+                AdTracker.getInstance().consentChanged();
+                AdConsentForm adConsentForm = new AdConsentForm();
+                adConsentForm.checkState(activity);
+            }
+        });
+
     }
 }

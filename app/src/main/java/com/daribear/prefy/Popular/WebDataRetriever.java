@@ -63,57 +63,61 @@ public class WebDataRetriever implements GetFollowingDelegate {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/PopularPosts").newBuilder();
-                if (avoidList.size() == 0){
-                    avoidList.add(-1L);
-                }
-                JSONArray array = new JSONArray();
-                for (int i = 0; i < avoidList.size(); i++) {
-                    array.put(avoidList.get(i));
-                }
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("limit", count.toString());
-                    jsonObject.put("userId", ServerAdminSingleton.getInstance().getLoggedInId().toString());
-                    jsonObject.put("ignoreList", array);
-                } catch (JSONException e) {
-                    delegate.taskComplete(false, null, null);
-                }
-
-                RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-                Request request = new Request.Builder()
-                        .url(httpBuilder.build())
-                        .method("POST", body)
-                        .addHeader("Content-Type", "application/json")
-                        .addHeader("Authorization", authToken)
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-                    if (response.isSuccessful()){
-                        try {
-                            JSONArray jsonArray = new JSONArray(response.body().string());
-                            fullPostList = new ArrayList<>();
-                            for (int i = 0; i < jsonArray.length(); i ++){
-                                JSONObject tempObject = jsonArray.getJSONObject(i);
-                                FullPost fullPost = new FullPost();
-                                PopularPost popularPost = CustomJsonMapper.getPopularPostFromObject(tempObject);
-                                popularPost.setCurrentVote("none");
-                                fullPost.setStandardPost(popularPost);
-                                fullPostList.add(fullPost);
-                            }
-
-
-                            getUserDetails();
-                            getUserFollowing();
-                        } catch (JSONException | IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }else {
-                        ErrorChecker.checkForStandardError(response);
+                if (ServerAdminSingleton.getInstance().getLoggedInId() != null) {
+                    HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/PopularPosts").newBuilder();
+                    if (avoidList.size() == 0) {
+                        avoidList.add(-1L);
+                    }
+                    JSONArray array = new JSONArray();
+                    for (int i = 0; i < avoidList.size(); i++) {
+                        array.put(avoidList.get(i));
+                    }
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("limit", count.toString());
+                        jsonObject.put("userId", ServerAdminSingleton.getInstance().getLoggedInId().toString());
+                        jsonObject.put("ignoreList", array);
+                    } catch (JSONException e) {
                         delegate.taskComplete(false, null, null);
                     }
-                } catch (IOException | JSONException e) {
+
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+                    Request request = new Request.Builder()
+                            .url(httpBuilder.build())
+                            .method("POST", body)
+                            .addHeader("Content-Type", "application/json")
+                            .addHeader("Authorization", authToken)
+                            .build();
+                    try {
+                        Response response = client.newCall(request).execute();
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONArray jsonArray = new JSONArray(response.body().string());
+                                fullPostList = new ArrayList<>();
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject tempObject = jsonArray.getJSONObject(i);
+                                    FullPost fullPost = new FullPost();
+                                    PopularPost popularPost = CustomJsonMapper.getPopularPostFromObject(tempObject);
+                                    popularPost.setCurrentVote("none");
+                                    fullPost.setStandardPost(popularPost);
+                                    fullPostList.add(fullPost);
+                                }
+
+
+                                getUserDetails();
+                                getUserFollowing();
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            ErrorChecker.checkForStandardError(response);
+                            delegate.taskComplete(false, null, null);
+                        }
+                    } catch (IOException | JSONException e) {
+                        delegate.taskComplete(false, null, null);
+                    }
+                } else {
                     delegate.taskComplete(false, null, null);
                 }
             }
