@@ -25,6 +25,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * The class for retrieving the commentsActivities from the server.
+ * Also gets the associated user details of the users who commented on the post and whether the current user is following them.
+ */
 public class CommentActivityRetreiver implements GetFollowingDelegate {
     private commentRetreiverInterface delegate;
     private ArrayList<CommentActivity> commentActivityList;
@@ -37,6 +41,9 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         this.delegate = delegate;
     }
 
+    /**
+     * Creates the thread which retrieves a list of commentsActivity.
+     */
     public void initExecutor(){
         UsersComplete = false;
         UsersFollowingComplete = false;
@@ -73,6 +80,10 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
             }
         });
     }
+
+    /**
+     * Get the associated user details for each commentsActivity
+     */
     private void getUserDetails() {
         if (commentActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
@@ -124,6 +135,9 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Creates the following list for each comments Activity.
+     */
     private void getFollowing(){
         if (commentActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
@@ -134,6 +148,9 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Creates the final list and alerts the delegate that the process has been completed
+     */
     private void completed(){
         if (UsersFollowingComplete && UsersComplete){
             for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
@@ -148,10 +165,19 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Alerts the delegate that the process has been failed
+     */
     private void requestfailed(){
         delegate.completed(false, null);
     }
 
+    /**
+     * When the follow retrieval thread has completed, it alerts this class as to whether it was successful or not
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

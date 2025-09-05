@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * The fragment which displays the recent Comment Activity to the User.
+ */
 public class ActivityCommentsFragment extends Fragment {
     private ProgressBar progressBar;
     private RelativeLayout noActivity;
@@ -47,6 +50,10 @@ public class ActivityCommentsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Get the views of the fragment.
+     * @param view base view
+     */
     private void getViews(View view){
         destroyed = false;
         noActivity = view.findViewById(R.id.ActivityCommentsNoItems);
@@ -59,10 +66,19 @@ public class ActivityCommentsFragment extends Fragment {
         gateway.displayEmptyComment(new ArrayList<>());
     }
 
+    /**
+     * Clear and reset the activity as the user has seen it.
+     * @param appContext the appContext
+     */
     private void resetActivity(Context appContext){
         UploadController.saveActivityClear(appContext, "Comments");
     }
 
+    /**
+     * Retrieve the data from the viewModel.
+     * If the data is refreshing, indicate that in the ui
+     * @param view the base view
+     */
     private void getData(View view){
         resetActivity(view.getContext().getApplicationContext());
         commentActivityList = new ArrayList<>();
@@ -97,6 +113,9 @@ public class ActivityCommentsFragment extends Fragment {
         });
     }
 
+    /**
+     * Since the data is refreshing, show the progress bar to indicate that
+     */
     private void dataRefreshing(){
         dataRefreshing = true;
         if (!initDataSet){
@@ -107,6 +126,10 @@ public class ActivityCommentsFragment extends Fragment {
         }
 
     }
+
+    /**
+     * Since data is not refreshing, alter the boolean and check if teh internet is not available.
+     */
     private void dataNotRefreshing(){
         dataRefreshing = false;
         if (!internetAvailable){
@@ -114,14 +137,17 @@ public class ActivityCommentsFragment extends Fragment {
         }
     }
 
-
-    private void noInternet(){
+    /**
+     * Since theres no internet, hide every other view including progress bars, and show the no internet sign
+     */
+    private void noInternet()   {
         if (!destroyed) {
             if (!initDataSet){
                 progressBar.setVisibility(View.GONE);
                 noActivity.setVisibility(View.GONE);
                 recView.setVisibility(View.GONE);
                 noInternet.setVisibility(View.VISIBLE);
+                //Since no internet was clicked, attempt to refresh the internet.
                 noInternet.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -138,7 +164,9 @@ public class ActivityCommentsFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Set the data into the recycler view gateway, and hide no internet or progress bar if visible
+     */
     private void setData(){
         if (!destroyed){
             initDataSet = true;

@@ -23,6 +23,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Class which contains a separate thread to retrieve a user's vote activities,
+ * where people have voted on their posts.
+ */
 public class VoteActivityRetreiver implements GetFollowingDelegate {
     private voteActivityRetreiverInterface delegate;
     private ArrayList<VoteActivity> voteActivityList;
@@ -32,10 +36,18 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
     private String serverAddress, authToken;
     private HashMap<Long, Boolean> followList;
 
+    /**
+     * Constructor
+     * @param delegate the interface to return results once fetching is complete
+     */
     public VoteActivityRetreiver(voteActivityRetreiverInterface delegate) {
         this.delegate = delegate;
     }
 
+    /**
+     * Creates the executor which contacts the server and retrieves the vote activity.
+     * Returns an error if it fails
+     */
     public void initExecutor(){
         voteActivityList = new ArrayList<>();
         userRetrieved = false;
@@ -80,6 +92,10 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
         });
     }
 
+    /**
+     * Preloads the last user who voted on the active user's posts
+     * details, to get username and preload User in case the user attempts to view their profile
+     */
     private void getUserDetails(){
         if (voteActivityList != null){
             ArrayList<Long> userList = new ArrayList<>();
@@ -131,6 +147,10 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
 
         }
     }
+
+    /**
+     * Preloads the post details, to get image and preload post
+     */
     private void getPostDetails(){
         removePostList = new ArrayList<>();
         postCounter = 0;
@@ -186,6 +206,10 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
 
     }
 
+
+    /**
+     * Retrieves the following status of users in vote activities.
+     */
     private void getFollowing(){
         if (voteActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
@@ -196,10 +220,17 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Called when the request fails
+     */
     private void requestfailed(){
         delegate.votecompleted(false, null);
     }
 
+    /**
+     * If all components are correctly retrieved, confirms to the delegate its success.
+     * Cna
+     */
     private void completeSuccess(){
         if (postRetrieved && userRetrieved && userFollowingRetrieved){
             if (removePostList != null){
@@ -211,6 +242,12 @@ public class VoteActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Callback from retrieving the following list
+     * @param successful whether retrieval was successful
+     * @param followList map of user ids to get the status of
+     * @param type type of retrieval
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

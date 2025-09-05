@@ -10,10 +10,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 
+/**
+ * Helper class to ensure all database tables are empty. It checks each table and if they're not empty calls a function to empty them
+ */
 public class DatabaseBlankChecker {
 
+    //Tables to check
     private static final ArrayList<String> tableList = new ArrayList<>(Arrays.asList("PopularPostsUsers","PopularPostsPopularPosts", "UploadVotes", "UploadReports", "UploadActivityClear", "UploadComments", "UploadDeleteTable", "UploadFollowTable"));
 
+    /**
+     * On a new thread, checks if databases are empty.
+     * @param context context to use
+     */
     public static void checkDatabases(Context context){
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override

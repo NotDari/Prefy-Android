@@ -25,14 +25,20 @@ import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
-
+/**
+ * This is the activities which handles the login/registration of the user.
+ * It cycles between fragments to simulate the login process.
+ */
 class login_activity : AppCompatActivity() {
     private lateinit var configUpdateListener : ConfigUpdateListenerRegistration
 
+    /**
+     * Called when fragment creates.
+     * Checks if the app should be in dark or light mode and handles the initialisation of other settings.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         val sharedpreferences =
             Utils(applicationContext)
-        //Checking if nightmode
         //Checking if nightmode
         if (sharedpreferences.loadBoolean(applicationContext.getString(R.string.dark_mode_pref), false)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -48,6 +54,9 @@ class login_activity : AppCompatActivity() {
 
     }
 
+    /**
+     * Creates a snackbar with a custom message if a custom error code was received.
+     */
     private fun createSnackBar(){
         val customCode = this.intent.getIntExtra("customCode", -1);
         val parentLayout: View = findViewById(android.R.id.content)
@@ -64,6 +73,10 @@ class login_activity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This handles the auto-login of a user if a user ID is saved
+     * Otherwise, it creates a new login and runs the play integrity check
+     */
     private fun handleUsernameLogin(){
         val sharedPrefs =
             Utils(baseContext);
@@ -73,12 +86,17 @@ class login_activity : AppCompatActivity() {
             startActivity(intent)
         } else {
             setContentView(R.layout.activity_login)
+            //Play integrity check
             PlayIntegrity.getInstance()
             PlayIntegrity.getInstance().getResponse(applicationContext)
             clearDatabases()
         }
     }
 
+    /**
+     * Checks if there is a high priority update required on the playstore,
+     * which would require immediate prompting of the user
+     */
     private fun checkForUpdate(){
         val appUpdateManager = AppUpdateManagerFactory.create(this)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
@@ -95,26 +113,36 @@ class login_activity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialises firebase remote config and sets the default values in the app
+     * It also updates server addresses and ad frequencies dynamically.
+     */
     private fun getDefaultSettings(){
         FirebaseApp.initializeApp(this)
+        //Get firebase remote config
         val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
+        //Update api link and ad frequency
         ServerAdminSingleton.getInstance().serverAddress = remoteConfig.getString("Api_link")
         AdTracker.getInstance().setTotals(remoteConfig.getLong("interstitial_popular_frequency").toInt(), remoteConfig.getLong("interstitial_other_frequency").toInt())
+        //Create listener for dynamic add updating
         configUpdateListener = remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
             override fun onUpdate(configUpdate : ConfigUpdate) {
                 if (!isDestroyed) {
                     remoteConfig.activate().addOnCompleteListener {
+                        //Listen for api link
                         if (configUpdate.updatedKeys.contains("Api_link")) {
                             ServerAdminSingleton.getInstance().serverAddress = remoteConfig.getString("Api_link")
                         }
                         var adCounterChanged = 0
+                        //Listen for popular ad frequency
                         if (configUpdate.updatedKeys.contains("interstitial_popular_frequency")){
                             AdTracker.getInstance().setPopularTotal(remoteConfig.getLong("interstitial_popular_frequency").toInt())
                             adCounterChanged = 1
                         }
+                        //Listen for normal ad frequency
                         if (configUpdate.updatedKeys.contains("interstitial_other_frequency")){
                             AdTracker.getInstance().setOtherTotal(remoteConfig.getLong("interstitial_other_frequency").toInt())
                             adCounterChanged = 1
@@ -136,11 +164,17 @@ class login_activity : AppCompatActivity() {
 
     }
 
+    /**
+     * When the activity is destroyed
+     */
     override fun onDestroy() {
         this.configUpdateListener.remove()
         super.onDestroy()
     }
 
+    /**
+     * Clears app databases if necessary
+     */
     private fun clearDatabases(){
         DatabaseBlankChecker.checkDatabases(applicationContext)
     }

@@ -36,6 +36,10 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+/**
+ * The drop down dialog for an individual post.
+ * Acts as an options where the user can save the post, report etc.
+ */
 public class PostDropDownDialog implements DeleteDialogDelegate , PermissionReceived {
     private Dialog postDialog;
     private Context context;
@@ -99,124 +103,119 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
 
     }
 
-    private void initLocation(Integer screenheight, Window dialogWindow, Dialog postDialog){
-        if (changeCoordinates){
-            LinearLayout PostDiaFullLay = postDialog.findViewById(R.id.PostDiaFullLay);
-            WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
-            wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
 
-            PostDiaFullLay.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
-            {
-                @Override
-                public boolean onPreDraw()
-                {
-                    if (PostDiaFullLay.getViewTreeObserver().isAlive())
-                        PostDiaFullLay.getViewTreeObserver().removeOnPreDrawListener(this);
-
-
-
-                    Integer PostDiaFullLayHeight = PostDiaFullLay.getMeasuredHeight();
-                    wlp.x = changeCoordinatesX;
-                    wlp.y =  screenheight - changeCoordinatesY - (PostDiaFullLayHeight / 2);
-                    dialogWindow.setAttributes(wlp);
-                    return true;
-                }
-            });
-
-
-        }
-
-
-    }
-
-
-    private void setUpViews(){
+    /**
+     * Set up all the views for this dialog by calling the sub functions
+     */
+    private void setUpViews() {
         ConstraintLayout saveLayout = postDialog.findViewById(R.id.PostDialogSaveLayout);
         ConstraintLayout profileLayout = postDialog.findViewById(R.id.PostDialogProfileLayout);
         ConstraintLayout reportLayout = postDialog.findViewById(R.id.PostDialogReportLayout);
         ConstraintLayout deleteLayout = postDialog.findViewById(R.id.PostDialogDeleteLayout);
         ConstraintLayout skipLayout = postDialog.findViewById(R.id.PostDialogSkipLayout);
 
+        handleSkipLayout(skipLayout);
+        handleDeleteLayout(deleteLayout);
+        initSaveLayout(saveLayout);
+        initProfileLayout(profileLayout);
+        initReportLayout(reportLayout);
+    }
+
+    /**
+     * Handles visibility and click for the skip button if the post is popular
+     */
+    private void handleSkipLayout(ConstraintLayout skipLayout) {
         View skipView = postDialog.findViewById(R.id.PostDialogSkipView);
-        if (popular){
+        if (popular) {
             skipLayout.setVisibility(View.VISIBLE);
             skipView.setVisibility(View.VISIBLE);
+            skipLayout.setOnClickListener(view -> {
+                postDialog.dismiss();
+                if (popular && popSkipDelegate != null) popSkipDelegate.skipClicked();
+            });
         } else {
             skipLayout.setVisibility(View.GONE);
             skipView.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * Handles visibility and click for the delete button if it's the user's post
+     */
+    private void handleDeleteLayout(ConstraintLayout deleteLayout) {
         View deleteView = postDialog.findViewById(R.id.PostDialogDeleteView);
-        if (loggedUserPost){
+        if (loggedUserPost) {
             deleteLayout.setVisibility(View.VISIBLE);
             deleteView.setVisibility(View.VISIBLE);
+            deleteLayout.setOnClickListener(view -> {
+                postDialog.dismiss();
+                DeleteDialog deleteDialog = DeleteDialog.getInstance(context, this::deleteClicked, "Post");
+                deleteDialog.show();
+            });
         } else {
             deleteLayout.setVisibility(View.GONE);
             deleteView.setVisibility(View.GONE);
         }
-        saveLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (imageDrawable != null){
-                    imageBit = addWaterMark(imageDrawable);
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-                        saveImage();
-                    } else{
-                        ((MainActivity)ownerActivity).requestPermission(PostDropDownDialog.this::granted, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                    }
-                } else {
-                    Toast.makeText(saveLayout.getContext(), "Failed to save image", Toast.LENGTH_SHORT).show();
-                    postDialog.dismiss();
-                }
-            }
-        });
-        profileLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putLong("id", user.getId());
-                bundle.putParcelable("user", user);
-                Navigation.findNavController(ownerActivity, R.id.FragmentContainerView).navigate(R.id.action_global_userProfile, bundle);
-                postDialog.dismiss();
-                changeVisibility();
-            }
-        });
-        reportLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (post != null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("Type", "Post");
-                    bundle.putParcelable("post", post);
-                    Navigation.findNavController(ownerActivity, R.id.FragmentContainerView).navigate(R.id.action_global_reportFragment, bundle);
-                    postDialog.dismiss();
-                    changeVisibility();
-                } else {
-                    Toast.makeText(ownerActivity, "An error has occurred", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        deleteLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postDialog.dismiss();
-                DeleteDialog deleteDialog = DeleteDialog.getInstance(context, PostDropDownDialog.this::deleteClicked, "Post");
-                deleteDialog.show();
-            }
-        });
+    }
 
-        skipLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                postDialog.dismiss();
-                if (popular){
-                    popSkipDelegate.skipClicked();
+    /**
+     * Initializes the save button with its click listener for saving images
+     */
+    private void initSaveLayout(ConstraintLayout saveLayout) {
+        saveLayout.setOnClickListener(view -> {
+            if (imageDrawable != null) {
+                imageBit = addWaterMark(imageDrawable);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    saveImage();
+                } else {
+                    ((MainActivity) ownerActivity).requestPermission(PostDropDownDialog.this::granted,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
+            } else {
+                Toast.makeText(saveLayout.getContext(), "Failed to save image", Toast.LENGTH_SHORT).show();
+                postDialog.dismiss();
             }
         });
     }
 
+    /**
+     * Initializes the profile button to navigate to the user's profile
+     */
+    private void initProfileLayout(ConstraintLayout profileLayout) {
+        profileLayout.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", user.getId());
+            bundle.putParcelable("user", user);
+            Navigation.findNavController(ownerActivity, R.id.FragmentContainerView)
+                    .navigate(R.id.action_global_userProfile, bundle);
+            postDialog.dismiss();
+            changeVisibility();
+        });
+    }
 
+    /**
+     * Initializes the report button to open the report fragment for the post
+     */
+    private void initReportLayout(ConstraintLayout reportLayout) {
+        reportLayout.setOnClickListener(view -> {
+            if (post != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("Type", "Post");
+                bundle.putParcelable("post", post);
+                Navigation.findNavController(ownerActivity, R.id.FragmentContainerView)
+                        .navigate(R.id.action_global_reportFragment, bundle);
+                postDialog.dismiss();
+                changeVisibility();
+            } else {
+                Toast.makeText(ownerActivity, "An error has occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    /**
+     * Saves the image to the device.
+     * Calls addWaterMark to add the prefy watermark to the image.
+     */
     private void saveImage(){
         Double currentDate = (double) CurrentTime.getCurrentTime();
         MediaStore.Images.Media.insertImage(context.getContentResolver(), imageBit, ("Prefy-" + currentDate), "test");
@@ -231,6 +230,11 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
         }
     }
 
+    /**
+     * Add the prefy watermark to the saved image
+     * @param image image to add the watermark to
+     * @return BITMAP of the image with the watermark
+     */
     private Bitmap addWaterMark(Drawable image){
         Bitmap waterMark = BitmapFactory.decodeResource(context.getResources(), R.drawable.prefy_water_mark);
         Bitmap imageBit = ((BitmapDrawable)image).getBitmap();
@@ -248,6 +252,9 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
         return combinedBitmap;
     }
 
+    /**
+     * The delete post is clicked.
+     */
     @Override
     public void deleteClicked() {
         UploadController.saveDelete(context.getApplicationContext(), "Post" , post.getPostId());
@@ -257,6 +264,10 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
         changeVisibility();
     }
 
+    /**
+     * When the permission to access storage is granted
+     * @param Granted whether the permission is granted
+     */
     @Override
     public void granted(Boolean Granted) {
         if (Granted){

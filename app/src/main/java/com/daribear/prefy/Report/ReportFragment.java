@@ -26,10 +26,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
+/**
+ * The fragment in which the user writes and submits their report.
+ * The user selects a report category and sends.
+ */
 public class ReportFragment extends Fragment {
     private String type;
     private LinearLayout categoryLayout;
+
+    //Report categories
     private ArrayList<String> categoryList = new ArrayList<>(Arrays.asList("Spam","Abuse", "Sexually inappropriate", "Violent or prohibited content", "Scam or misleading", "Offensive"));
     private TextView titleIssue, reportSubmittedText;
     private Boolean reportSubmitted;
@@ -47,6 +52,10 @@ public class ReportFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Create the report fragment views
+     * @param view the base view of the fragment
+     */
     private void getViews(View view){
         this.type = getArguments().getString("Type");
         if (type.equals("Post")) {
@@ -77,7 +86,9 @@ public class ReportFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Initiates the list of categories that the user can select for the report.
+     */
     private void initCategories(){
         categoryLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
@@ -95,6 +106,12 @@ public class ReportFragment extends Fragment {
         });
     }
 
+    /**
+     * Creates the views of the list of categories that can be selected.
+     * Detects a user's category select
+     * @param layWidth layoutWidth
+     * @param layHeight layoutHeight
+     */
     private void createCategories(Integer layWidth,Integer layHeight){
         for (int i = 0; i < categoryList.size(); i++) {
             Context context = ReportFragment.this.getContext();
@@ -144,12 +161,22 @@ public class ReportFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Converts from dp (density pixels) to px based on the screens density
+     * @param density the value in dp
+     * @return the corresponding value in pixels (px)
+     */
     private Integer getPixels(Float density){
         final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (density * scale + 0.5f);
     }
 
+    /**
+     * Called once the report has been made, alters the views and creates the right report based on whether its a comment/post report
+     * and calls the function to send it to the upload center.
+     *
+     * @param reason reason for the report(category)
+     */
     private void initReportCompleted(String reason){
         categoryLayout.setVisibility(View.GONE);
         Context context = categoryLayout.getContext();
@@ -165,8 +192,13 @@ public class ReportFragment extends Fragment {
         }
     }
 
+    /**
+     * The submission of a report post, which sends it to the upload controller, which sends it to the backend.
+     * Creates the report object.
+     *
+     * @param reason the reason of the report(category)
+     */
     private void submitPostReport(String reason){
-        //TODO fix PostReport
         Report report = new Report();
         if (post != null) {
             report.setPostId(post.getPostId());
@@ -180,8 +212,13 @@ public class ReportFragment extends Fragment {
 
     }
 
+    /**
+     * The submission of a report comment, which sends it to the upload controller, which sends it to the backend.
+     * Creates the report object.
+     *
+     * @param reason the reason of the report(category)
+     */
     private void submitCommentReport(String reason){
-        //TODO fix Commentreport
         Report report = new Report();
         if (comment != null) {
             report.setPostId(comment.getPostId());
@@ -194,7 +231,10 @@ public class ReportFragment extends Fragment {
         UploadController.saveReport(getActivity().getApplicationContext(),report);
     }
 
-
+    /**
+     * Calls when the backButton is pressed to go back a page
+     * @param v the base view
+     */
     public void onBackPressed(View v){
         if (!reportSubmitted) {
             Navigation.findNavController(v).navigateUp();

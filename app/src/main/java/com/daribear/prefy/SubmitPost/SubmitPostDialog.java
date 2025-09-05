@@ -70,6 +70,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * The dialog for submitting a post.
+ * Allows the user to set the category, select images add questions etc.
+ * Everything needed for a post.
+ * Then uploads the post image to firebase and the post to the backend.
+ * Is a singleton to stop multiple dialogs being opened.
+ */
 public class SubmitPostDialog implements PermissionReceived {
     private Context context;
     private BottomSheetDialog bottomSheetDialog;
@@ -98,7 +105,7 @@ public class SubmitPostDialog implements PermissionReceived {
 
 
 
-
+    //Gets the instance of the dialog
     public static synchronized SubmitPostDialog getInstance(Activity activity) {
         if(instance == null)
             instance = new SubmitPostDialog(activity);
@@ -112,6 +119,12 @@ public class SubmitPostDialog implements PermissionReceived {
         this.activity = activity;
     }
 
+    /**
+     * Displays the dialog and creates all the actions for the buttons,
+     * including the dismiss button.
+     *
+     * @param context the context to launch the activity with
+     */
     public void displaySheet(Context context){
         this.context = context;
         bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialog);
@@ -135,6 +148,9 @@ public class SubmitPostDialog implements PermissionReceived {
         });
     }
 
+    /**
+     * Retrieves and stores references to all relevant views in the dialog.
+     */
     private void getViews(BottomSheetDialog bottomSheetDialog){
         imageSelected = 0;
         PostDialogLeftClickerView = bottomSheetDialog.findViewById(R.id.PostDialogLeftClickerView);
@@ -149,6 +165,9 @@ public class SubmitPostDialog implements PermissionReceived {
         moreCategories = bottomSheetDialog.findViewById(R.id.PostDialogMoreCategories);
     }
 
+    /**
+     * Handles the image selection and send button clicks.
+     */
     private void handleButtonsPressed(BottomSheetDialog bottomSheetDialog){
         leftButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,6 +196,10 @@ public class SubmitPostDialog implements PermissionReceived {
         });
     }
 
+    /**
+     * Handles the close button behavior.
+     * Prevents closing while post is being uploaded.
+     */
     private void handleClose(BottomSheetDialog bottomSheetDialog){
         ImageView closeButton = bottomSheetDialog.findViewById(R.id.PostDialogCloseButton);
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -191,12 +214,17 @@ public class SubmitPostDialog implements PermissionReceived {
         });
     }
 
+    /**
+     * Requests storage permission to select an image from device.
+     */
     private void attemptToGetPost(){
         ((MainActivity)activity).requestPermission(this::granted, Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
 
-
+    /**
+     * Handles the result of image selection from gallery.
+     */
     public void OnImageActivityResult(Activity activity, int resultCode, @Nullable Intent data){
         if (resultCode == RESULT_OK && data != null & data.getData() != null){
             Uri imageUri = data.getData();
@@ -204,6 +232,9 @@ public class SubmitPostDialog implements PermissionReceived {
         }
     }
 
+    /**
+     * Handles the result of UCrop activity after cropping an image.
+     */
     public void OnUcropActivityResult(Activity activity, int resultCode, @Nullable Intent data){
         if (resultCode == RESULT_OK) {
             final Uri resultUri = UCrop.getOutput(data);
@@ -214,6 +245,9 @@ public class SubmitPostDialog implements PermissionReceived {
         }
     }
 
+    /**
+     * Starts UCrop activity for cropping the selected image.
+     */
     private void initUCrop(Activity activity ,Uri sourceUri){
         String destinationName = UCROP_IMAGE_FILE_NAME + ".png";
         UCrop.Options UcropOptions = new UCrop.Options();
@@ -233,6 +267,9 @@ public class SubmitPostDialog implements PermissionReceived {
 
     }
 
+    /**
+     * Displays the cropped image in the appropriate image view (left/right).
+     */
     private void displayImage(Activity activity,Uri resultUri){
         if (imageSelected == 1){
             Glide.with(activity)
@@ -261,6 +298,9 @@ public class SubmitPostDialog implements PermissionReceived {
         }
     }
 
+    /**
+     * Initializes the remove buttons for left and right images.
+     */
     private void initImageRemoveButtons(){
         leftRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,6 +322,9 @@ public class SubmitPostDialog implements PermissionReceived {
         });
     }
 
+    /**
+     * Checks input validity and initiates sending the post.
+     */
     private void initSendButton(){
         if (PostDialogLeftClickerView.getDrawable() != null && PostDialogRightClickerView.getDrawable() != null ){
             String question = questionEdit.getText().toString();
@@ -304,6 +347,11 @@ public class SubmitPostDialog implements PermissionReceived {
 
     }
 
+    /**
+     * Sends the post image to the firebase database
+     * @param question the question for the post
+     * @param image the image of the post.
+     */
     private void initSendPost(String question, Bitmap image){
         imageCompresser imageCompresser = new imageCompresser();
 
@@ -434,6 +482,9 @@ public class SubmitPostDialog implements PermissionReceived {
     }
 
 
+    /**
+     * Combines left and right images into a single bitmap for uploading.
+     */
     private Bitmap combineBitmaps(ImageView leftImageView, ImageView rightImageView){
         Bitmap leftBitmap = ((BitmapDrawable)PostDialogLeftClickerView.getDrawable()).getBitmap();
         Bitmap rightBitmap = ((BitmapDrawable)PostDialogRightClickerView.getDrawable()).getBitmap();
@@ -458,7 +509,10 @@ public class SubmitPostDialog implements PermissionReceived {
         return combinedBitmap;
     }
 
-
+    /**
+     * Increases the user's posts count in the shared preferences and closes the dialog
+     * @param photoLink
+     */
     private void initPostActions(String photoLink){
         Glide.with(context)
                 .load(photoLink)
@@ -468,6 +522,13 @@ public class SubmitPostDialog implements PermissionReceived {
         bottomSheetDialog.dismiss();
     }
 
+    /**
+     * Initializes the category selection Flexbox layout.
+     * Dynamically adds TextViews for each category and sets up click listeners.
+     * Also configures the "More/Less" button to expand/collapse categories.
+     *
+     * @param bottomSheetDialog the dialog
+     */
     private void initFlex(BottomSheetDialog bottomSheetDialog){
         Context applicationContext = bottomSheetDialog.getContext().getApplicationContext();
         String[] categoriesArrayList = applicationContext.getResources().getStringArray(R.array.post_categories);
@@ -535,6 +596,11 @@ public class SubmitPostDialog implements PermissionReceived {
 
     }
 
+    /**
+     * Called when a category is clicked to enable the UX of showing the category is selected/unselected.
+     * @param textView textview of the category
+     * @param position position of the category in the lsit
+     */
     private void CategoryClicked(TextView textView,Integer position){
         Boolean selected = categoryActiveList.get(position);
         if (!selected){
@@ -547,7 +613,10 @@ public class SubmitPostDialog implements PermissionReceived {
         categoryActiveList.set(position, !selected);
     }
 
-
+    /**
+     * Interface callback when the storage permissions is granted or denied.
+     * @param Granted whether the permission was granted
+     */
     @Override
     public void granted(Boolean Granted) {
         if (Granted) {

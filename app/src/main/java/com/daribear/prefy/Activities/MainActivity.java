@@ -46,6 +46,12 @@ import com.google.firebase.remoteconfig.ConfigUpdateListenerRegistration;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigException;
 
+/**
+ * The main activity of the app(the one post login).
+ * Holds a bottom nav and fragment container.
+ * The bottom nav is used to navigate between fragments and the fragment container displays that change.
+ * This activity also handles the remote config and permission handling.
+ */
 public class MainActivity extends AppCompatActivity {
     private NavHostFragment navHostFragment;
     private BottomNavigationView bottomNav;
@@ -55,15 +61,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ConfigUpdateListenerRegistration remoteConfigListener;
 
+    /**
+     * Called when the activity is first created.
+     * Sets up default classes such as the popular view model, permissions handling ,ads etc...
+     *
+     * @param savedInstanceState bundle containing activities previous state(if there is one)
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        //Utils sharedpreferences = new Utils(getApplicationContext());
-        //Checking if nightmode
-        //if (!sharedpreferences.loadDarkMode()) {
-         //  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-       // } else if (sharedpreferences.loadDarkMode()) {
-        //    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        //}
+
         postStartActivity = new PostStartActivity();
         postStartActivity.registerForActivityResult(MainActivity.this);
         initPermissions();
@@ -81,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Initaites the ads. If a consent form has to be shown to the user, this does it.
+     * Pre-loads an interstitial ad to be shown
+     */
     private void loadAds(){
         AdConsentForm adConsentForm = new AdConsentForm();
         adConsentForm.checkState(this);
@@ -90,18 +100,27 @@ public class MainActivity extends AppCompatActivity {
         AdTracker.getInstance().setActivity(this);
     }
 
+    /**
+     * Saves the authToken to the Singleton to use when making requests
+     */
     private void initAuthSaving(){
         Utils utils = new Utils(this);
         ServerAdminSingleton.getInstance().setServerAuthToken(utils.loadString(this.getString(R.string.save_auth_token_pref), ""));
         ServerAdminSingleton.getInstance().alterLoggedInUser(this);
     }
 
-
+    /**
+     * Starts the viewModels, which starts loading in data to decrease loading in time.
+     */
     private void initDownload(){
         ViewModelDataController dataController = new ViewModelDataController(getApplicationContext());
         dataController.initViewModels();
     }
 
+    /**
+     * Function which detects when the navigation fragment is changed.
+     * Alters the visibility of the bottom Navigation depending on which fragment loads in.
+     */
     private void onNavigationItemChanged(){
         navHostFragment.getNavController().addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
@@ -130,6 +149,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Handles the bottom navigation performing different actions based on what was clicked.
+     * Navigates to the correct fragment if appropriate (e.g. popular page)
+     * Creates the post dialog if post required
+     */
     private void handleBottomNav(){
         bottomNav = findViewById(R.id.BottomNav);
         bottomNav.setItemIconTintList(null);
@@ -149,12 +173,11 @@ public class MainActivity extends AppCompatActivity {
                         postDialog.displaySheet(MainActivity.this);
                         break;
                     case R.id.exploreHostFragment:
+                        //Check if its already the exploreHostFragment, so that it scrolls to the top
                         if (navHostFragment.getChildFragmentManager().getFragments().get(0) instanceof ExploreHostFragment){
                             ((ExploreHostFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).initScrollToTop();
                         } else {
-                            //NavOptions navOptions = new NavOptions.Builder().setPopUpTo(R.id.exploreHostFragment, true).setRestoreState(true).build();
-                            //navController.navigate(item.getItemId(), null, navOptions);
-                            //item.setChecked(true);
+
                             item.setChecked(true);
                             NavigationUI.onNavDestinationSelected(item, navController);
                         }
@@ -170,22 +193,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Initialises firebase remote config and sets the default values in the app
+     * It also updates server addresses and ad frequencies dynamically.
+     */
     private void getRemoteConfig(){
         FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        //Active listening
         remoteConfigListener = mFirebaseRemoteConfig.addOnConfigUpdateListener(new ConfigUpdateListener() {
             @Override
             public void onUpdate(ConfigUpdate configUpdate) {
                 mFirebaseRemoteConfig.activate().addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
+                        //Listen for api link
                         if (configUpdate.getUpdatedKeys().contains("Api_link")) {
                             ServerAdminSingleton.getInstance().setServerAddress(mFirebaseRemoteConfig.getString("Api_link"));
                         }
                         Integer adCounterChanged = 0;
+                        //Listen for popular ad frequency
                         if (configUpdate.getUpdatedKeys().contains("interstitial_popular_frequency")){
                             AdTracker.getInstance().setPopularTotal((int) mFirebaseRemoteConfig.getLong("interstitial_popular_frequency"));
                             adCounterChanged = 1;
                         }
+                        //Listen for other ad frequency
                         if (configUpdate.getUpdatedKeys().contains("interstitial_other_frequency")){
                             AdTracker.getInstance().setOtherTotal((int) mFirebaseRemoteConfig.getLong("interstitial_other_frequency"));
                             adCounterChanged = 1;
@@ -204,6 +235,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Alters the bottom nav visibility.
+     * @param visible whether the bottom nav should be visible
+     */
     public void alterBottomNavVisibility(Boolean visible){
         if (visible){
             bottomNav.setVisibility(View.VISIBLE);
@@ -212,11 +247,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Launches and sets the permission checker which is used to get permissions for the user.
+     * (e.g. camera)
+     */
     private void initPermissions(){
         permissionChecker = new PermissionChecker(MainActivity.this);
         permissionChecker.initLauncher();
     }
 
+    /**
+     * Request a permission from the user via the permission checker
+     * @param delegate interface delegate which
+     * @param permission permission that is being requested
+     */
     public void requestPermission(PermissionReceived delegate,String permission){
         permissionChecker.checkPermission(delegate,permission, MainActivity.this);
     }
@@ -227,6 +271,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    /**
+     * When the activity is resumed, resets necessary classes.
+     */
     @Override
     protected void onResume() {
         ErrorChecker.setActivity(this);
@@ -236,6 +283,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    /**
+     * In order to stop errors, nulls the activity in classes when the app is paused.
+     */
     @Override
     protected void onPause() {
         ActivityViewModelSaver viewModelSaver = new ActivityViewModelSaver(getApplicationContext());
@@ -255,6 +305,9 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * Override the back button to make it go to the previous navigation fragment on the fragment stack
+     */
     @Override
     public void onBackPressed() {
         Fragment fragment = navHostFragment.getChildFragmentManager().getFragments().get(0);
@@ -271,10 +324,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * Launch post image retrieval flow
+     */
     public void getPostImage(Intent intent){
         postStartActivity.launchImageRetreiver(intent);
     }
 
+    /**
+     * Launch post image cropping flow
+     */
     public void getPostCrop(Intent intent){
         postStartActivity.launchUcropRetreiver(intent);
     }

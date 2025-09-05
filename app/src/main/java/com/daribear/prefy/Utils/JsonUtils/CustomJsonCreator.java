@@ -6,9 +6,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ * Converts a list of long into a json, for sending to the backend.
+ */
 public class  CustomJsonCreator {
 
-
+    /**
+     * Covnerts a list of longs into a json.
+     * @param list list to be converted from json
+     * @return json string
+     */
     public static String createArrayStringFromLong(ArrayList<Long> list){
         if (list.size() == 0) {
             return "";

@@ -8,6 +8,10 @@ import com.daribear.prefy.Profile.User;
 
 import java.util.ArrayList;
 
+/**
+ * ViewModel which handles the search related data and allowing the ui to access the data.
+ * Access the search repository which is a singleton containing all of the data
+ */
 public class SearchViewModel extends ViewModel {
     private SearchRepository searchRepo;
     private MutableLiveData<ArrayList<User>> searchlistMutable;

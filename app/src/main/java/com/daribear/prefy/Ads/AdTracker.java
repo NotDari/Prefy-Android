@@ -6,6 +6,9 @@ import com.google.android.ump.ConsentInformation;
 
 import lombok.Setter;
 
+/**
+ * Class which counts when a new ad should be shown and how many should be.
+ */
 public class AdTracker {
     private static AdTracker instance;
     private Integer popularTotal, popularCounter;
@@ -18,12 +21,14 @@ public class AdTracker {
 
     private Interstitial interstitial;
 
+    //Default constructor
     public AdTracker() {
         popularCounter = 0;
         otherCounter = 0;
         interstitial = new Interstitial();
     }
 
+    //Set the totals for ad tracking
     public void setTotals(Integer popularTotal, Integer otherTotal){
         this.popularTotal = popularTotal;
         this.otherTotal = otherTotal;
@@ -45,6 +50,10 @@ public class AdTracker {
         return instance;
     }
 
+    /**
+     * Called when a popular item is viewed, increments the counter.
+     * If the counter equals the total, reset the counter and show the ad.
+     */
     public void popViewed(){
         if (popularTotal != null){
             if (popularTotal != 0){
@@ -58,7 +67,10 @@ public class AdTracker {
             }
         }
     }
-
+    /**
+     * Called when a popular item is viewed, increments the counter.
+     * If the counter equals the total, reset the counter and show the ad.
+     */
     public void otherViewed(){
         if (otherTotal != null){
             if (otherTotal != 0){
@@ -73,11 +85,13 @@ public class AdTracker {
         }
     }
 
+    //Reset the counters
     public void resetCounts(){
         this.popularCounter = 0;
         this.otherCounter = 0;
     }
 
+    //User changed the consent choices so reset this class
     public void consentChanged(){
         instance = null;
     }

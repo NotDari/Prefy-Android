@@ -11,6 +11,10 @@ import androidx.core.content.ContextCompat;
 
 import com.daribear.prefy.Activities.MainActivity;
 
+/**
+ * This class is used to check if a permission has been granted by the user.
+ * If it hasn't, then it launches a request for the permission.
+ */
 public class PermissionChecker {
     private MainActivity activity;
 
@@ -22,6 +26,9 @@ public class PermissionChecker {
         this.activity = activity;
     }
 
+    /**
+     * Initiates the ActivityResultLauncher for getting permissions.
+     */
     public void initLauncher(){
        requestPermissionLauncher = activity.registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (delegate != null){
@@ -30,6 +37,12 @@ public class PermissionChecker {
         });
     }
 
+    /**
+     * Checks if a permission has been granted. If it hasn't launches the request to get the permission.
+     * @param tempDelegate delegate to notify the result of the check
+     * @param permission the permission to check/request
+     * @param context the context used
+     */
     public void checkPermission(PermissionReceived tempDelegate, String permission, Context context){
         this.delegate = tempDelegate;
         if (ContextCompat.checkSelfPermission(

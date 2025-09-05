@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
+/**
+ * A fullPost data entity contains a standardPost and the associated user for that post.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

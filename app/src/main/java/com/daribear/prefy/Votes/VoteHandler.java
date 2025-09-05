@@ -21,395 +21,339 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+/**
+ * Handles the animation and other UI updates when a user votes on a post.
+ * Animates the
+ */
 public class VoteHandler {
+    private static final float BAR_WIDTH_RATIO = .03125f;
+    private static final float PROGRESS_SIZE_RATIO = .14f;
+    private static final float VOTE_MARK_RATIO = .8f;
+    private static final float VOTE_MARK_ASPECT = 1.263157895F;
 
+    /**
+     * Helper class for simplifying vote views.
+     */
+    private static class VoteViews {
+        View leftBar, rightBar;
+        TextView leftText, rightText;
+        VoteCircleShape leftCircle, rightCircle;
+        ImageView leftMark, rightMark;
 
-
-    public static void changeImage(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String viewType){
-       View popularItemImageRightClickerBar, popularItemImageLeftClickerBar;
-       TextView leftBarText, rightBarText;
-       VoteCircleShape leftCircularProgress, rightCircularProgress;
-       ImageView leftVoteMark, rightVoteMark;
-
-       if (post != null){
-           if (post.getCurrentVote() != null){
-               WeakReference<Context> context = new WeakReference<>(imageView.getContext());
-               String currentVote = post.getCurrentVote();
-               //These are defining the necessary views
-               {
-                   if (viewType.equals("Popular")) {
-                       popularItemImageRightClickerBar = rightImageView.findViewById(R.id.PopularItemImageRightClickerBar);
-                       popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.PopularItemImageLeftClickerBar);
-                       leftBarText = leftImageView.findViewById(R.id.PopularItemImageLeftClickerText);
-                       rightBarText = rightImageView.findViewById(R.id.PopularItemImageRightClickerText);
-                       leftCircularProgress = leftImageView.findViewById(R.id.PopularItemImageLeftClickerProgressCircle);
-                       rightCircularProgress = rightImageView.findViewById(R.id.PopularItemImageRightClickerProgressCircle);
-                       leftVoteMark = leftImageView.findViewById(R.id.PopularItemImageLeftClickerVoteMark);
-                       rightVoteMark = rightImageView.findViewById(R.id.PopularItemImageRightClickerVoteMark);
-                   } else if (viewType.equals("ExploreDialog")) {
-                       popularItemImageRightClickerBar = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerBar);
-                       popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerBar);
-                       leftBarText = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerText);
-                       rightBarText = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerText);
-                       leftCircularProgress = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerProgressCircle);
-                       rightCircularProgress = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerProgressCircle);
-                       leftVoteMark = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerVoteMark);
-                       rightVoteMark = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerVoteMark);
-                   } else if (viewType.equals("Categories")){
-                       popularItemImageRightClickerBar = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerBar);
-                       popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerBar);
-                       leftBarText = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerText);
-                       rightBarText = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerText);
-                       leftCircularProgress = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerProgressCircle);
-                       rightCircularProgress = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerProgressCircle);
-                       leftVoteMark = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerVoteMark);
-                       rightVoteMark = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerVoteMark);
-                   } else if (viewType.equals("ProfilePostItem")){
-                       popularItemImageRightClickerBar = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerBar);
-                       popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerBar);
-                       leftBarText = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerText);
-                       rightBarText = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerText);
-                       leftCircularProgress = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerProgressCircle);
-                       rightCircularProgress = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerProgressCircle);
-                       leftVoteMark = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerVoteMark);
-                       rightVoteMark = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerVoteMark);
-                   } else {
-                       popularItemImageRightClickerBar = rightImageView.findViewById(R.id.PopularItemImageRightClickerBar);
-                       popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.PopularItemImageLeftClickerBar);
-                       leftBarText = leftImageView.findViewById(R.id.PopularItemImageLeftClickerText);
-                       rightBarText = rightImageView.findViewById(R.id.PopularItemImageRightClickerText);
-                       leftCircularProgress = leftImageView.findViewById(R.id.PopularItemImageLeftClickerProgressCircle);
-                       rightCircularProgress = rightImageView.findViewById(R.id.PopularItemImageRightClickerProgressCircle);
-                       leftVoteMark = leftImageView.findViewById(R.id.PopularItemImageLeftClickerVoteMark);
-                       rightVoteMark = rightImageView.findViewById(R.id.PopularItemImageRightClickerVoteMark);
-                   }
-               }
-               Integer leftVotes = post.getLeftVotes();
-               Integer rightVotes = post.getRightVotes();
-               Integer allVotes = post.getAllVotes();
-
-               if (!currentVote.equals("none") && !currentVote.equals("skip")){
-                   imageView.setColorFilter(context.get().getColor(R.color.black_lowOpacity));
-                   Integer leftPercentage = (int) (((double) leftVotes / (double) allVotes) * 100);
-                   Integer rightPercentage = (int) (((double) rightVotes / (double) allVotes) * 100);
-                   imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
-                   {
-                       @Override
-                       public boolean onPreDraw()
-                       {
-                           if (imageView.getViewTreeObserver().isAlive())
-                               imageView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                           //This just does the calculations, and gets the bar widths and heights
-                           Integer TotalHeightAvailable = (int) (imageView.getHeight() * 0.4);
-                           Integer barWidth = (int) (imageView.getWidth() * .03125);
-                           Integer progressIndicatorSize = (int) (imageView.getWidth() * .14);
-                           Integer leftBarHeight =  ((leftPercentage * TotalHeightAvailable) / 100);
-                           Integer rightBarHeight = ((rightPercentage * TotalHeightAvailable) / 100);
-                           ViewGroup.LayoutParams rightBarLp = popularItemImageRightClickerBar.getLayoutParams();
-                           rightBarLp.height = rightBarHeight;
-                           rightBarLp.width = barWidth;
-                           ViewGroup.LayoutParams leftBarLp = popularItemImageLeftClickerBar.getLayoutParams();
-                           leftBarLp.height = leftBarHeight;
-                           leftBarLp.width = barWidth;
-                           popularItemImageLeftClickerBar.setLayoutParams(leftBarLp);
-                           popularItemImageRightClickerBar.setLayoutParams(rightBarLp);
-                           popularItemImageRightClickerBar.setBackground(context.get().getDrawable(R.drawable.popdialog));
-                           popularItemImageLeftClickerBar.setBackground(context.get().getDrawable(R.drawable.popdialog));
-
-
-                           ViewGroup.LayoutParams leftCircleLp = leftCircularProgress.getLayoutParams();
-                           leftCircleLp.width = (int) (progressIndicatorSize * 2.2);
-                           leftCircleLp.height = (int) (progressIndicatorSize * 2.2);
-                           leftCircularProgress.setLayoutParams(leftCircleLp);
-                           ViewGroup.LayoutParams rightCircleLp = rightCircularProgress.getLayoutParams();
-                           rightCircleLp.width = (int) (progressIndicatorSize * 2.2);
-                           rightCircleLp.height = (int) (progressIndicatorSize * 2.2);
-                           rightCircularProgress.setLayoutParams(rightCircleLp);
-                           rightCircularProgress.setVoteCircleParameters(progressIndicatorSize, rightPercentage);
-                           leftCircularProgress.setVoteCircleParameters(progressIndicatorSize, leftPercentage);
-                           return true;
-                       }
-                   });
-                   popularItemImageRightClickerBar.setVisibility(View.VISIBLE);
-                   popularItemImageLeftClickerBar.setVisibility(View.VISIBLE);
-                   leftCircularProgress.setVisibility(View.VISIBLE);
-                   rightCircularProgress.setVisibility(View.VISIBLE);
-                   leftCircularProgress.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
-                   {
-                       @Override
-                       public boolean onPreDraw()
-                       {
-                           if (leftCircularProgress.getViewTreeObserver().isAlive())
-                               leftCircularProgress.getViewTreeObserver().removeOnPreDrawListener(this);
-                            //Set the width and the height will change automatically to fit the aspect ratio
-                           Float widthChanger = .8F * leftCircularProgress.getWidth();
-
-                           ViewGroup.LayoutParams leftVoteLp = leftVoteMark.getLayoutParams();
-                           ViewGroup.LayoutParams rightVoteLp = leftVoteMark.getLayoutParams();
-
-                           Float heightChanger = widthChanger * 1.263157895F;
-
-
-                           leftVoteLp.height = heightChanger.intValue();
-                           leftVoteLp.width = widthChanger.intValue();
-
-
-                           rightVoteLp.height = heightChanger.intValue();
-                           rightVoteLp.width = widthChanger.intValue();
-
-                           rightVoteMark.setLayoutParams(rightVoteLp);
-                           leftVoteMark.setLayoutParams(leftVoteLp);
-                           return true;
-                       }
-                   });
-                   //Individual changes depending on whether the vote is left or right
-                   Integer leftButtonMainColour;Integer rightButtonMainColour;Integer rightButtonEdgeColour;Integer leftButtonEdgeColour;
-                   if (rightVotes > leftVotes){
-                       popularItemImageRightClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.red));
-                       popularItemImageLeftClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.white));
-                       leftButtonMainColour = context.get().getColor(R.color.very_transparent_white);
-                       leftButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_white);
-                       rightButtonMainColour = context.get().getColor(R.color.very_transparent_red);
-                       rightButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_red);
-                    } else {
-                       popularItemImageLeftClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.red));
-                       popularItemImageRightClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.white));
-                       leftButtonMainColour = context.get().getColor(R.color.very_transparent_red);
-                       leftButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_red);
-                       rightButtonMainColour = context.get().getColor(R.color.very_transparent_white);
-                       rightButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_white);
-                       //leftCircularProgress.setBackgroundColor(context.get().getColor(R.color.teal_200));
-                    }
-                   leftCircularProgress.setColours(leftButtonEdgeColour, leftButtonMainColour);
-                   rightCircularProgress.setColours(rightButtonEdgeColour, rightButtonMainColour );
-                   if (currentVote.equals("right")){
-                       rightVoteMark.setVisibility(View.VISIBLE);
-                       leftVoteMark.setVisibility(View.GONE);
-                   }else if (currentVote.equals("left")){
-                       rightVoteMark.setVisibility(View.GONE);
-                       leftVoteMark.setVisibility(View.VISIBLE);
-                   }
-
-                   leftBarText.setVisibility(View.VISIBLE);
-                   rightBarText.setVisibility(View.VISIBLE);
-                   leftBarText.setText(leftPercentage.toString() + " %");
-                   rightBarText.setText(rightPercentage.toString() + " % ");
-
-               }
-           }
-       }
-   }
-
-    public static void voteSubmitted(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String sideClicked, String viewType){
-        String currentVote = post.getCurrentVote();
-        if (currentVote != null){
-            if (currentVote.equals("none") || currentVote.equals("skip")){
-                startVoteDetails(post, imageView, leftImageView, rightImageView, sideClicked, viewType);
-            }
-        } else {
-            startVoteDetails(post, imageView, leftImageView, rightImageView, sideClicked, viewType);
+        VoteViews(View leftBar, View rightBar, TextView leftText, TextView rightText,
+                  VoteCircleShape leftCircle, VoteCircleShape rightCircle,
+                  ImageView leftMark, ImageView rightMark) {
+            this.leftBar = leftBar;
+            this.rightBar = rightBar;
+            this.leftText = leftText;
+            this.rightText = rightText;
+            this.leftCircle = leftCircle;
+            this.rightCircle = rightCircle;
+            this.leftMark = leftMark;
+            this.rightMark = rightMark;
         }
-
     }
 
-    private static void startVoteDetails(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String sideClicked, String viewType){
-        WeakReference<Context> context = new WeakReference<>(imageView.getContext());
-        View popularItemImageRightClickerBar, popularItemImageLeftClickerBar;
-        TextView leftBarText, rightBarText;
-        VoteCircleShape leftCircularProgress, rightCircularProgress;
-        ImageView leftVoteMark, rightVoteMark;
-        {
-            if (viewType.equals("Popular")) {
-                popularItemImageRightClickerBar = rightImageView.findViewById(R.id.PopularItemImageRightClickerBar);
-                popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.PopularItemImageLeftClickerBar);
-                leftBarText = leftImageView.findViewById(R.id.PopularItemImageLeftClickerText);
-                rightBarText = rightImageView.findViewById(R.id.PopularItemImageRightClickerText);
-                leftCircularProgress = leftImageView.findViewById(R.id.PopularItemImageLeftClickerProgressCircle);
-                rightCircularProgress = rightImageView.findViewById(R.id.PopularItemImageRightClickerProgressCircle);
-                leftVoteMark = leftImageView.findViewById(R.id.PopularItemImageLeftClickerVoteMark);
-                rightVoteMark = rightImageView.findViewById(R.id.PopularItemImageRightClickerVoteMark);
-            } else if (viewType.equals("ExploreDialog")) {
-                popularItemImageRightClickerBar = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerBar);
-                popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerBar);
-                leftBarText = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerText);
-                rightBarText = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerText);
-                leftCircularProgress = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerProgressCircle);
-                rightCircularProgress = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerProgressCircle);
-                leftVoteMark = leftImageView.findViewById(R.id.ExploreDialogItemImageLeftClickerVoteMark);
-                rightVoteMark = rightImageView.findViewById(R.id.ExploreDialogItemImageRightClickerVoteMark);
-            } else if (viewType.equals("Categories")){
-                popularItemImageRightClickerBar = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerBar);
-                popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerBar);
-                leftBarText = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerText);
-                rightBarText = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerText);
-                leftCircularProgress = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerProgressCircle);
-                rightCircularProgress = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerProgressCircle);
-                leftVoteMark = leftImageView.findViewById(R.id.ProfilePostListListItemImageLeftClickerVoteMark);
-                rightVoteMark = rightImageView.findViewById(R.id.ProfilePostListListItemImageRightClickerVoteMark);
-            } else if (viewType.equals("ProfilePostItem")){
-                popularItemImageRightClickerBar = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerBar);
-                popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerBar);
-                leftBarText = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerText);
-                rightBarText = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerText);
-                leftCircularProgress = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerProgressCircle);
-                rightCircularProgress = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerProgressCircle);
-                leftVoteMark = leftImageView.findViewById(R.id.ProfilePostListItemImageLeftClickerVoteMark);
-                rightVoteMark = rightImageView.findViewById(R.id.ProfilePostListItemImageRightClickerVoteMark);
-            }else {
-                popularItemImageRightClickerBar = rightImageView.findViewById(R.id.PopularItemImageRightClickerBar);
-                popularItemImageLeftClickerBar = leftImageView.findViewById(R.id.PopularItemImageLeftClickerBar);
-                leftBarText = leftImageView.findViewById(R.id.PopularItemImageLeftClickerText);
-                rightBarText = rightImageView.findViewById(R.id.PopularItemImageRightClickerText);
-                leftCircularProgress = leftImageView.findViewById(R.id.PopularItemImageLeftClickerProgressCircle);
-                rightCircularProgress = rightImageView.findViewById(R.id.PopularItemImageRightClickerProgressCircle);
-                leftVoteMark = leftImageView.findViewById(R.id.PopularItemImageLeftClickerVoteMark);
-                rightVoteMark = rightImageView.findViewById(R.id.PopularItemImageRightClickerVoteMark);
-            }
+    /**
+     * Helper class to get the necessary vote views regardless of which viewType it is
+     * @param leftImageView The left side image view containing vote UI elements
+     * @param rightImageView The right side image view containing vote UI elements
+     * @param viewType      The type of view context such as  ExploreDialog or Categories
+     * @return The Voteviews containing the assigned views.
+     */
+    private static VoteViews getVoteViews(RelativeLayout leftImageView, RelativeLayout rightImageView, String viewType) {
+        int leftBarId, rightBarId, leftTextId, rightTextId, leftCircleId, rightCircleId, leftMarkId, rightMarkId;
+
+        switch (viewType) {
+            case "ExploreDialog":
+                leftBarId = R.id.ExploreDialogItemImageLeftClickerBar;
+                rightBarId = R.id.ExploreDialogItemImageRightClickerBar;
+                leftTextId = R.id.ExploreDialogItemImageLeftClickerText;
+                rightTextId = R.id.ExploreDialogItemImageRightClickerText;
+                leftCircleId = R.id.ExploreDialogItemImageLeftClickerProgressCircle;
+                rightCircleId = R.id.ExploreDialogItemImageRightClickerProgressCircle;
+                leftMarkId = R.id.ExploreDialogItemImageLeftClickerVoteMark;
+                rightMarkId = R.id.ExploreDialogItemImageRightClickerVoteMark;
+                break;
+            case "Categories":
+                leftBarId = R.id.ProfilePostListListItemImageLeftClickerBar;
+                rightBarId = R.id.ProfilePostListListItemImageRightClickerBar;
+                leftTextId = R.id.ProfilePostListListItemImageLeftClickerText;
+                rightTextId = R.id.ProfilePostListListItemImageRightClickerText;
+                leftCircleId = R.id.ProfilePostListListItemImageLeftClickerProgressCircle;
+                rightCircleId = R.id.ProfilePostListListItemImageRightClickerProgressCircle;
+                leftMarkId = R.id.ProfilePostListListItemImageLeftClickerVoteMark;
+                rightMarkId = R.id.ProfilePostListListItemImageRightClickerVoteMark;
+                break;
+            case "ProfilePostItem":
+                leftBarId = R.id.ProfilePostListItemImageLeftClickerBar;
+                rightBarId = R.id.ProfilePostListItemImageRightClickerBar;
+                leftTextId = R.id.ProfilePostListItemImageLeftClickerText;
+                rightTextId = R.id.ProfilePostListItemImageRightClickerText;
+                leftCircleId = R.id.ProfilePostListItemImageLeftClickerProgressCircle;
+                rightCircleId = R.id.ProfilePostListItemImageRightClickerProgressCircle;
+                leftMarkId = R.id.ProfilePostListItemImageLeftClickerVoteMark;
+                rightMarkId = R.id.ProfilePostListItemImageRightClickerVoteMark;
+                break;
+            default:
+                leftBarId = R.id.PopularItemImageLeftClickerBar;
+                rightBarId = R.id.PopularItemImageRightClickerBar;
+                leftTextId = R.id.PopularItemImageLeftClickerText;
+                rightTextId = R.id.PopularItemImageRightClickerText;
+                leftCircleId = R.id.PopularItemImageLeftClickerProgressCircle;
+                rightCircleId = R.id.PopularItemImageRightClickerProgressCircle;
+                leftMarkId = R.id.PopularItemImageLeftClickerVoteMark;
+                rightMarkId = R.id.PopularItemImageRightClickerVoteMark;
+                break;
         }
+        return new VoteViews(
+                leftImageView.findViewById(leftBarId),
+                rightImageView.findViewById(rightBarId),
+                leftImageView.findViewById(leftTextId),
+                rightImageView.findViewById(rightTextId),
+                leftImageView.findViewById(leftCircleId),
+                rightImageView.findViewById(rightCircleId),
+                leftImageView.findViewById(leftMarkId),
+                rightImageView.findViewById(rightMarkId)
+        );
+    }
+
+
+    /**
+     * Change the vote image
+     * @param post          The StandardPost  being voted on
+     * @param imageView     The main image view of the post
+     * @param leftImageView The left side image view containing vote UI elements
+     * @param rightImageView The right side image view containing vote UI elements
+     * @param viewType      The type of view context such as  ExploreDialog or Categories
+     */
+    public static void changeImage(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String viewType) {
+        if (post == null || post.getCurrentVote() == null) return;
+
+        WeakReference<Context> context = new WeakReference<>(imageView.getContext());
+        VoteViews views = getVoteViews(leftImageView, rightImageView, viewType);
+        String currentVote = post.getCurrentVote();
+        Integer leftVotes = post.getLeftVotes();
+        Integer rightVotes = post.getRightVotes();
+        Integer allVotes = post.getAllVotes();
+
+        if (!currentVote.equals("none") && !currentVote.equals("skip")) {
+            applyVoteUI(views, imageView, leftVotes, rightVotes, allVotes, context, currentVote);
+        }
+    }
+
+    /**
+     * When a vote is submitted it checks if its not a skip or no vote, if its not it starts the animation.
+     *
+     * @param post          The StandardPost  being voted on
+     * @param imageView     The main image view of the post
+     * @param leftImageView The left side image view containing vote UI elements
+     * @param rightImageView The right side image view containing vote UI elements
+     * @param sideClicked   Indicates which side was clicked (left right or skip)
+     * @param viewType      The type of view context such as  ExploreDialog or Categories
+     */
+    public static void voteSubmitted(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String sideClicked, String viewType) {
+        String currentVote = post.getCurrentVote();
+        if (currentVote == null || currentVote.equals("none") || currentVote.equals("skip")) {
+            startVoteDetails(post, imageView, leftImageView, rightImageView, sideClicked, viewType);
+        }
+    }
+
+    /**
+     * Alters the posts details with the result of the vote.
+     *
+     * @param post          The StandardPost  being voted on
+     * @param imageView     The main image view of the post
+     * @param leftImageView The left side image view containing vote UI elements
+     * @param rightImageView The right side image view containing vote UI elements
+     * @param sideClicked   Indicates which side was clicked (left right or skip)
+     * @param viewType      The type of view context such as  ExploreDialog or Categories
+     */
+    private static void startVoteDetails(StandardPost post, ImageView imageView, RelativeLayout leftImageView, RelativeLayout rightImageView, String sideClicked, String viewType) {
+        WeakReference<Context> context = new WeakReference<>(imageView.getContext());
+        VoteViews views = getVoteViews(leftImageView, rightImageView, viewType);
+
         Integer leftVotes = post.getLeftVotes();
         Integer rightVotes = post.getRightVotes();
         Integer allVotes = post.getAllVotes() + 1;
         String currentVote = post.getCurrentVote();
 
-        if (sideClicked != null){
-            if (sideClicked.equals("rightClick")){
-                currentVote = "right";
-                rightVotes += 1;
-                post.setRightVotes(rightVotes);
-            } else if (sideClicked.equals("leftClick")){
-                currentVote = "left";
-                leftVotes += 1;
-                post.setLeftVotes(leftVotes);
-            } else if (sideClicked.equals("skip")){
-                currentVote = "skip";
-            }
-            post.setCurrentVote(currentVote);
-            post.setAllVotes(allVotes);
+        if ("rightClick".equals(sideClicked)) {
+            currentVote = "right";
+            post.setRightVotes(++rightVotes);
+        } else if ("leftClick".equals(sideClicked)) {
+            currentVote = "left";
+            post.setLeftVotes(++leftVotes);
+        } else if ("skip".equals(sideClicked)) {
+            currentVote = "skip";
         }
 
+        post.setCurrentVote(currentVote);
+        post.setAllVotes(allVotes);
 
-        imageView.setColorFilter(context.get().getColor(R.color.black_lowOpacity));
-        Integer leftPercentage = (int) (((double) leftVotes / (double) allVotes) * 100);
-        Integer rightPercentage = (int) (((double) rightVotes / (double) allVotes) * 100);
-
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-        popularItemImageLeftClickerBar.setVisibility(View.VISIBLE);
-        popularItemImageRightClickerBar.setVisibility(View.VISIBLE);
-        popularItemImageRightClickerBar.setBackgroundColor(context.get().getColor(R.color.red));
-        popularItemImageRightClickerBar.startAnimation(AnimationUtils.loadAnimation(context.get(),R.anim.bottom_to_top));
-        {
-            Integer TotalHeightAvailable = (int) (imageView.getHeight() * 0.4);
-            Integer barWidth = (int) (imageView.getWidth() * .03125);
-            Integer leftBarHeight =  ((leftPercentage * TotalHeightAvailable) / 100);
-            Integer rightBarHeight = ((rightPercentage * TotalHeightAvailable) / 100);
-            ViewGroup.LayoutParams rightBarLp = popularItemImageRightClickerBar.getLayoutParams();
-            rightBarLp.height = rightBarHeight;
-            rightBarLp.width = barWidth;
-            ViewGroup.LayoutParams leftBarLp = popularItemImageLeftClickerBar.getLayoutParams();
-            leftBarLp.height = leftBarHeight;
-            leftBarLp.width = barWidth;
-            popularItemImageLeftClickerBar.setLayoutParams(leftBarLp);
-            popularItemImageRightClickerBar.setLayoutParams(rightBarLp);
-            popularItemImageRightClickerBar.setBackground(context.get().getDrawable(R.drawable.popdialog));
-            popularItemImageLeftClickerBar.setBackground(context.get().getDrawable(R.drawable.popdialog));
-        }
-
-
-        {
-            Integer progressIndicatorSize = (int) (imageView.getWidth() * .14);
-            ViewGroup.LayoutParams leftCircleLp = leftCircularProgress.getLayoutParams();
-            leftCircleLp.width = (int) (progressIndicatorSize * 2.2);
-            leftCircleLp.height = (int) (progressIndicatorSize * 2.2);
-            leftCircularProgress.setLayoutParams(leftCircleLp);
-            ViewGroup.LayoutParams rightCircleLp = rightCircularProgress.getLayoutParams();
-            rightCircleLp.width = (int) (progressIndicatorSize * 2.2);
-            rightCircleLp.height = (int) (progressIndicatorSize * 2.2);
-            rightCircularProgress.setLayoutParams(rightCircleLp);
-            rightCircularProgress.setVoteCircleParameters(progressIndicatorSize, rightPercentage);
-            leftCircularProgress.setVoteCircleParameters(progressIndicatorSize, leftPercentage);
-            popularItemImageRightClickerBar.setVisibility(View.VISIBLE);
-            popularItemImageLeftClickerBar.setVisibility(View.VISIBLE);
-            leftCircularProgress.setVisibility(View.VISIBLE);
-            rightCircularProgress.setVisibility(View.VISIBLE);
-            leftCircularProgress.setColours(context.get().getColor(R.color.kinda_transparent_red), context.get().getColor(R.color.very_transparent_red));
-            rightCircularProgress.setColours(context.get().getColor(R.color.kinda_transparent_white), context.get().getColor(R.color.very_transparent_white));
-
-
-            Float widthChanger = .8F * (int) (int) (imageView.getWidth() * .14);
-
-            ViewGroup.LayoutParams leftVoteLp = leftVoteMark.getLayoutParams();
-            ViewGroup.LayoutParams rightVoteLp = leftVoteMark.getLayoutParams();
-
-            Float heightChanger = widthChanger * 1.263157895F;
-
-
-            leftVoteLp.height = heightChanger.intValue();
-            leftVoteLp.width = widthChanger.intValue();
-
-
-            rightVoteLp.height = heightChanger.intValue();
-            rightVoteLp.width = widthChanger.intValue();
-
-            rightVoteMark.setLayoutParams(rightVoteLp);
-            leftVoteMark.setLayoutParams(leftVoteLp);
-        }
-
-
-
-
-        Integer leftButtonMainColour;Integer rightButtonMainColour;Integer rightButtonEdgeColour;Integer leftButtonEdgeColour;
-        if (rightVotes > leftVotes){
-            popularItemImageRightClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.red));
-            popularItemImageLeftClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.white));
-            leftButtonMainColour = context.get().getColor(R.color.very_transparent_white);
-            leftButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_white);
-            rightButtonMainColour = context.get().getColor(R.color.very_transparent_red);
-            rightButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_red);
-        } else {
-            popularItemImageLeftClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.red));
-            popularItemImageRightClickerBar.setBackgroundTintList(context.get().getColorStateList(R.color.white));
-            leftButtonMainColour = context.get().getColor(R.color.very_transparent_red);
-            leftButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_red);
-            rightButtonMainColour = context.get().getColor(R.color.very_transparent_white);
-            rightButtonEdgeColour = context.get().getColor(R.color.kinda_transparent_white);
-            //leftCircularProgress.setBackgroundColor(context.get().getColor(R.color.teal_200));
-        }
-
-        leftCircularProgress.setColours(leftButtonEdgeColour, leftButtonMainColour);
-        rightCircularProgress.setColours(rightButtonEdgeColour, rightButtonMainColour );
-
-        if (currentVote.equals("right")){
-            rightVoteMark.setVisibility(View.VISIBLE);
-            leftVoteMark.setVisibility(View.GONE);
-        }else if (currentVote.equals("left")){
-            rightVoteMark.setVisibility(View.GONE);
-            leftVoteMark.setVisibility(View.VISIBLE);
-        }
-
-        leftBarText.setVisibility(View.VISIBLE);
-        rightBarText.setVisibility(View.VISIBLE);
-        leftBarText.setText(leftPercentage.toString() + " %");
-        rightBarText.setText(rightPercentage.toString() + " % ");
-        rightBarText.startAnimation(fadeIn);
+        applyVoteUI(views, imageView, leftVotes, rightVotes, allVotes, context, currentVote);
     }
 
+    /**
+     * Uses the user's current vote to creat an animation for the vote
+     * @param views views to use for the animation
+     * @param imageView The main image view of the post
+     * @param leftVotes number of left votes
+     * @param rightVotes number of right votes
+     * @param allVotes total number of votes
+     * @param context context to use
+     * @param currentVote which side the user voted
+     */
+    private static void applyVoteUI(VoteViews views, ImageView imageView, int leftVotes, int rightVotes, int allVotes, WeakReference<Context> context, String currentVote) {
+        int leftPercentage = (int)(((double) leftVotes / allVotes) * 100);
+        int rightPercentage = (int)(((double) rightVotes / allVotes) * 100);
+
+        imageView.setColorFilter(context.get().getColor(R.color.black_lowOpacity));
+
+        // Setup bars and circles
+        imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (imageView.getViewTreeObserver().isAlive()) imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                int totalHeight = (int) (imageView.getHeight() * 0.4);
+                int barWidth = (int) (imageView.getWidth() * BAR_WIDTH_RATIO);
+                int progressSize = (int) (imageView.getWidth() * PROGRESS_SIZE_RATIO);
+
+                setupBar(views.leftBar, leftPercentage, totalHeight, barWidth, context);
+                setupBar(views.rightBar, rightPercentage, totalHeight, barWidth, context);
+
+                setupCircle(views.leftCircle, progressSize, leftPercentage);
+                setupCircle(views.rightCircle, progressSize, rightPercentage);
+
+                setupVoteMark(views.leftMark, views.leftCircle);
+                setupVoteMark(views.rightMark, views.rightCircle);
+
+                applyColors(views, leftVotes, rightVotes, context);
+                setVoteMarksVisibility(views, currentVote);
+
+                views.leftText.setVisibility(View.VISIBLE);
+                views.rightText.setVisibility(View.VISIBLE);
+                views.leftText.setText(leftPercentage + " %");
+                views.rightText.setText(rightPercentage + " %");
+                views.rightText.startAnimation(new AlphaAnimation(0, 1) {{ setInterpolator(new DecelerateInterpolator()); setDuration(1000); }});
+
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Sets up the bar of the vote animation.
+     *
+     * @param bar the view of the bar
+     * @param percentage percentage of the image height to display the bar as
+     * @param totalHeight height of the image
+     * @param barWidth width of the bar
+     * @param context context to use
+     */
+    private static void setupBar(View bar, int percentage, int totalHeight, int barWidth, WeakReference<Context> context) {
+        ViewGroup.LayoutParams lp = bar.getLayoutParams();
+        lp.height = (percentage * totalHeight) / 100;
+        lp.width = barWidth;
+        bar.setLayoutParams(lp);
+        bar.setBackground(context.get().getDrawable(R.drawable.popdialog));
+        bar.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Sets up the circle for the side of the animation.
+     * @param circle circle that has been created
+     * @param size size of the image
+     * @param percentage percentage of the image to set the circle at
+     */
+    private static void setupCircle(VoteCircleShape circle, int size, int percentage) {
+        ViewGroup.LayoutParams lp = circle.getLayoutParams();
+        lp.width = (int) (size * 2.2);
+        lp.height = (int) (size * 2.2);
+        circle.setLayoutParams(lp);
+        circle.setVoteCircleParameters(size, percentage);
+        circle.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Displays the vote mark on the screen(the check)
+     * @param mark the mark to be applied
+     * @param circle the circle the mark will be in
+     */
+    private static void setupVoteMark(ImageView mark, VoteCircleShape circle) {
+        int width = (int) (circle.getWidth() * VOTE_MARK_RATIO);
+        int height = (int) (width * VOTE_MARK_ASPECT);
+        ViewGroup.LayoutParams lp = mark.getLayoutParams();
+        lp.width = width;
+        lp.height = height;
+        mark.setLayoutParams(lp);
+    }
+
+    /**
+     * Apply the colours to the views of the votes
+     * @param views the views class containing all the views
+     * @param leftVotes the number of left votes
+     * @param rightVotes the number of right votes
+     * @param context the context to use
+     */
+    private static void applyColors(VoteViews views, int leftVotes, int rightVotes, WeakReference<Context> context) {
+        int leftMain, leftEdge, rightMain, rightEdge;
+
+        if (rightVotes > leftVotes) {
+            views.rightBar.setBackgroundTintList(context.get().getColorStateList(R.color.red));
+            views.leftBar.setBackgroundTintList(context.get().getColorStateList(R.color.white));
+            leftMain = context.get().getColor(R.color.very_transparent_white);
+            leftEdge = context.get().getColor(R.color.kinda_transparent_white);
+            rightMain = context.get().getColor(R.color.very_transparent_red);
+            rightEdge = context.get().getColor(R.color.kinda_transparent_red);
+        } else {
+            views.leftBar.setBackgroundTintList(context.get().getColorStateList(R.color.red));
+            views.rightBar.setBackgroundTintList(context.get().getColorStateList(R.color.white));
+            leftMain = context.get().getColor(R.color.very_transparent_red);
+            leftEdge = context.get().getColor(R.color.kinda_transparent_red);
+            rightMain = context.get().getColor(R.color.very_transparent_white);
+            rightEdge = context.get().getColor(R.color.kinda_transparent_white);
+        }
+
+        views.leftCircle.setColours(leftEdge, leftMain);
+        views.rightCircle.setColours(rightEdge, rightMain);
+    }
+
+    /**
+     * Sets whether the tick in the vote should be displayed
+     * @param views views to use
+     * @param currentVote what the user voted
+     */
+    private static void setVoteMarksVisibility(VoteViews views, String currentVote) {
+        if ("right".equals(currentVote)) {
+            views.rightMark.setVisibility(View.VISIBLE);
+            views.leftMark.setVisibility(View.GONE);
+        } else if ("left".equals(currentVote)) {
+            views.rightMark.setVisibility(View.GONE);
+            views.leftMark.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * The animation from one vote to another
+     * @param oldNumber number to animate from
+     * @param newNumber number to animate to
+     * @param textView the text view to put the animation in
+     */
     public static void numberAnimator(Integer oldNumber, Integer newNumber, TextView textView) {
         ValueAnimator animator = ValueAnimator.ofInt(oldNumber, newNumber);
         animator.setDuration(400);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator animation) {
-                textView.setText(animation.getAnimatedValue().toString() + " votes");
-            }
-        });
-        if (oldNumber != newNumber) {
-            animator.start();
-        }
+        animator.addUpdateListener(animation -> textView.setText(animation.getAnimatedValue() + " votes"));
+        if (!oldNumber.equals(newNumber)) animator.start();
     }
 
-
+    /**
+     * Saves the vote by sending it to the server
+     * @param context context to use
+     * @param id id of the post
+     * @param vote what the user voted
+     * @param type type of view
+     */
     public static void saveVote(Context context, Long id, String vote, String type){
         HashMap<String, Object> insertMap = new HashMap<>();
         insertMap.put("PostId", id);

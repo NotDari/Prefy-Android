@@ -22,6 +22,11 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
+/**
+ * The recyclerview for the comments Activity
+ * Displays the comments text, the user who posted it and the post image they cmmented on.
+ * Uses Glide for image loading
+ */
 public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.ViewHolder> {
     private ArrayList<CommentActivity> commentActivityList;
 
@@ -33,6 +38,10 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
         this.commentActivityList = commentActivityList;
     }
 
+
+    /**
+     * Creates and inflates the view holder for each comment item.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -41,6 +50,12 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
         return holder;
     }
 
+    /**
+     * Binds the comment data to the given ViewHolder.
+     *
+     * @param holder   the ViewHolder representing a single comment item
+     * @param position the index of the item in the dataset
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -50,11 +65,17 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
         holder.textView.setText(getComment(commentActivityList.get(position).getUser().getUsername(), commentActivityList.get(position).getText(), holder.itemView.getContext()), TextView.BufferType.SPANNABLE);
     }
 
+    /**
+     * @return the total number of commentActivity items in the dataset
+     */
     @Override
     public int getItemCount() {
         return commentActivityList.size();
     }
 
+    /**
+     * ViewHolder class holding references to the UI components for a comment item.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView postImageView, profileImageView;
         TextView textView;
@@ -67,7 +88,14 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
         }
     }
 
-
+    /**
+     * Loads an image into the given ImageView using Glide.
+     * If the image is a profile image, applies a circular crop and falls back to a default image if needed.
+     *
+     * @param profile   whether the image is a profile image
+     * @param imageView the target ImageView
+     * @param imageLink the URL of the image to load
+     */
     private void initGlide(Boolean profile, ImageView imageView, String imageLink){
         if (profile){
             if (imageLink != null && !imageLink.isEmpty()){
@@ -89,6 +117,10 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
         }
     }
 
+
+    /**
+     * Loads a default profile image into the given ImageView.
+     */
     private void defaultImage(ImageView imageView){
         Glide.with(imageView)
                 .load(R.drawable.user_photo)
@@ -96,6 +128,16 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
                 .into(imageView);
     }
 
+    /**
+     * Builds a styled SpannableStringBuilder for the comment text.
+     * The username and comment text are colored differently, and placeholders
+     * are shown if either value is missing.
+     *
+     * @param username the username of the commenter
+     * @param comment  the text of the comment
+     * @param context  context for accessing colors
+     * @return a styled SpannableStringBuilder for display
+     */
     private SpannableStringBuilder getComment(String username, String comment, Context context){
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String textUsername;
@@ -132,13 +174,19 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
         return builder;
     }
 
-    private void initClickListener(View itemview, int postion){
+    /**
+     * Attaches a click listener to the item view that navigates to the user profile.
+     *
+     * @param itemview the item view being bound
+     * @param position the index of the item in the dataset
+     */
+    private void initClickListener(View itemview, int position){
         itemview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putLong("id", commentActivityList.get(postion).getUser().getId());
-                bundle.putParcelable("user", commentActivityList.get(postion).getUser());
+                bundle.putLong("id", commentActivityList.get(position).getUser().getId());
+                bundle.putParcelable("user", commentActivityList.get(position).getUser());
                 Navigation.findNavController(view).navigate(R.id.action_global_userProfile, bundle);
             }
         });

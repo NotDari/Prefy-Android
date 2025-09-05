@@ -3,6 +3,9 @@ package com.daribear.prefy.Report;
 
 import lombok.Data;
 
+/**
+ * The report data entity which represents the users report of a post or comment.
+ */
 @Data
 public class Report {
     private String type;

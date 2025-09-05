@@ -21,6 +21,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Handles retrievel of the following status.
+ * Basically whether the logged in user follows the provided list of users.
+ */
 public class FollowingRetrieving {
     private ArrayList<Long> userIdList;
     private GetFollowingDelegate delegate;
@@ -29,6 +33,7 @@ public class FollowingRetrieving {
 
     private HashMap<Long, Boolean> followMap;
 
+    //Constructor
     public FollowingRetrieving(ArrayList<Long> userIdList, GetFollowingDelegate delegate, String type) {
         this.userIdList = userIdList;
         this.delegate = delegate;
@@ -36,7 +41,10 @@ public class FollowingRetrieving {
         getFollowing();
     }
 
-
+    /**
+     * Calls a OKHTTP request to query the database for the list of following status.
+     * Removes duplicates before sending.
+     */
     private void getFollowing(){
         ArrayList<Long> smallerList = new ArrayList<>();
         for (int i = 0;i < userIdList.size(); i ++){
@@ -106,6 +114,10 @@ public class FollowingRetrieving {
         }
     }
 
+    /**
+     * Compares the following status from the server with the local database
+     * and updates followMap if there are differences.
+     */
     private void getDatabase(){
         SQLiteDatabase database = ServerAdminSingleton.getInstance().getSqLiteDatabase();
         if (database != null){

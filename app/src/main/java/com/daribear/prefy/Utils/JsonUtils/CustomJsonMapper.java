@@ -21,8 +21,16 @@ import java.util.ArrayList;
 
 import okhttp3.Response;
 
+/**
+ * Turns a json retrieved(from the backend) into classes, to be used within this application
+ */
 public class CustomJsonMapper {
 
+    /**
+     * Converts a responsebody into the User class
+     * @param response responsebody provided by the backend
+     * @return User retrieved from the json or null if failed
+     */
     public static User getUser(Response response){
         try {
             String responseString = response.body().string();
@@ -65,6 +73,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Converts a jsonObject into the User class
+     * @param jsonObject jsonObject that contains the user
+     * @return User retrieved from the json or null if failed
+     */
     public static User getUserFromObject(JSONObject jsonObject){
         try {
 
@@ -108,10 +121,20 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Retrieves a JWT token from the response body
+     * @param response responsebody provided by the backend
+     * @return the JWT token if found
+     */
     public static String getJWTToken(Response response){
         return response.header("Authorization");
     }
 
+    /**
+     * Retrieves an email from the responsebody if found
+     * @param response responsebody provided by the backend
+     * @return email string if found, else null
+     */
     public static String getEmail(Response response){
         try {
             JSONObject jsonObject = new JSONObject(response.body().string());
@@ -124,6 +147,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Retrieves a commentActivity List from the responsebody if found
+     * @param response responsebody provided by the backend
+     * @return commentActivity List if found, else null
+     */
     public static ArrayList<CommentActivity> getCommentActivityList(Response response){
         try {
             String responseString = response.body().string();
@@ -148,6 +176,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Retrieves a FollowerActivity List from the responsebody if found
+     * @param response responsebody provided by the backend
+     * @return FollowerActivity List if found, else null
+     */
     public static ArrayList<FollowerActivity> getFollowerActivityList(Response response){
         try {
             String responseString = response.body().string();
@@ -171,7 +204,12 @@ public class CustomJsonMapper {
         return null;
     }
 
-    //Only gets part of the VoteActivity, the other part is a post and a user
+    /**
+     * Retrieves part of the VoteActivity from the response body.
+     * For a full Vote Activity, the post and user also have to be retrieved.
+     * @param response responsebody provided by the backend
+     * @return Partial VoteActivity List if found, else null
+     */
     public static ArrayList<VoteActivity> getPartialVoteActivityList(Response response){
         ArrayList<VoteActivity> voteActivityList= new ArrayList<>();
         try {
@@ -194,6 +232,11 @@ public class CustomJsonMapper {
         return voteActivityList;
     }
 
+    /**
+     * Converts a jsonObject into the Post class
+     * @param jsonObject jsonObject that contains the user
+     * @return Post retrieved from the json or null if failed
+     */
     public static StandardPost getPostFromObject(JSONObject jsonObject){
         try {
             StandardPost standardPost = new StandardPost();
@@ -213,6 +256,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Converts a jsonObject into Popular Post class
+     * @param jsonObject jsonObject that contains the user
+     * @return Popular Post retrieved from the json or null if failed
+     */
     public static PopularPost getPopularPostFromObject(JSONObject jsonObject){
         try {
             PopularPost popularPost = new PopularPost();
@@ -233,6 +281,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Converts a jsonObject into the Comment class
+     * @param jsonObject jsonObject that contains the user
+     * @return Comment retrieved from the json or null if failed
+     */
     public static Comment getCommentFromObject(JSONObject jsonObject){
         try {
             Comment comment = new Comment();
@@ -253,7 +306,11 @@ public class CustomJsonMapper {
         return null;
     }
 
-
+    /**
+     * Converts a jsonObject into the FullComment class
+     * @param jsonObject jsonObject that contains the user
+     * @return FullComment retrieved from the json or null if failed
+     */
     public static FullComment getFullCommentFromObject(JSONObject jsonObject){
         try {
             FullComment fullComment = new FullComment();
@@ -272,6 +329,12 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Converts a responsebody into a custom error
+     * USed to determine what the issue in the backend is
+     * @param response responsebody provided by the backend
+     * @return Custom error retrieved from the json or null if failed
+     */
     public static CustomError getCustomError(Response response){
         try {
             JSONObject jsonObject = new JSONObject(response.body().string());
@@ -285,6 +348,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Converts a responsebody into a list of Standard Posts class
+     * @param response responsebody provided by the backend
+     * @return List of Standard Posts retrieved from the json or null if failed
+     */
     public static ArrayList<StandardPost> getPostListFromResponse(Response response){
         try {
             String responseString = response.body().string();
@@ -301,6 +369,11 @@ public class CustomJsonMapper {
         return null;
     }
 
+    /**
+     * Converts a responsebody into the PopularActivity class
+     * @param response responsebody provided by the backend
+     * @return PopularActivity retrieved from the json or null if failed
+     */
     public static PopularActivity getPopularActivityFromResponse(Response response){
         try {
             PopularActivity popularActivity = new PopularActivity();

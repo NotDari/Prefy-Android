@@ -10,11 +10,20 @@ import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
 
+/**
+ * The consent form for ads to comply with gdpr.
+ * Checks if they are in a region which requires consent.
+ * Shows the form if required.
+ */
 public class AdConsentForm {
     private ConsentInformation consentInformation;
     private ConsentForm consentForm;
 
-
+    /**
+     * Checks that state of the consent form for ads and GDPR compliance.
+     * If the consent form is available it calls load form to show the form.
+     * @param activity activity to show the ads in
+     */
     public void checkState(Activity activity){
         ConsentRequestParameters params = new ConsentRequestParameters
                 .Builder()
@@ -41,6 +50,11 @@ public class AdConsentForm {
                 });
     }
 
+    /**
+     * The loading of the consent form.
+     * Shows the consent form if they are in a required region, and haven't already given consent.
+     * @param activity the activity to shown the consent form in.
+     */
     private void loadForm(Activity activity) {
         UserMessagingPlatform.loadConsentForm(
                 activity,
@@ -48,6 +62,7 @@ public class AdConsentForm {
                     @Override
                     public void onConsentFormLoadSuccess(ConsentForm consentForm) {
                         AdConsentForm.this.consentForm = consentForm;
+                        //If they are in a region which requires consent.
                         if (consentInformation.getConsentStatus() == ConsentInformation.ConsentStatus.REQUIRED) {
                             consentForm.show(
                                     activity,

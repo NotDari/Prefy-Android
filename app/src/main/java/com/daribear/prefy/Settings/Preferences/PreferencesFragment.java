@@ -24,7 +24,10 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.UserMessagingPlatform;
 
-
+/**
+ * Fragment which represents a user's preferences.
+ * Allows for editing preferences such as dark mode, and resetting gdpr.
+ */
 public class PreferencesFragment extends Fragment {
     private ImageView backButton;
     private TextView textBack;
@@ -32,7 +35,7 @@ public class PreferencesFragment extends Fragment {
     private Utils utils;
     private Boolean temporaryDarkMode, temporaryAutoScroll;
 
-
+    //When the fragment is created
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,6 +46,10 @@ public class PreferencesFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Get the views of the fragment
+     * @param view base view
+     */
     private void getViews(View view){
         utils = new Utils(getActivity().getApplicationContext());
         backButton = view.findViewById(R.id.PreferencesTopBarBack);
@@ -52,6 +59,10 @@ public class PreferencesFragment extends Fragment {
         initExit(view);
     }
 
+    /**
+     * Create the exit of the fragment, if the user presses the button or text to exit.
+     * @param view base view
+     */
     private void initExit(View view){
         Context context = view.getContext();
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +79,18 @@ public class PreferencesFragment extends Fragment {
         });
     }
 
+    /**
+     * Initiates the switches to set the user's preferences.
+     * Sets up the dark mode and the auto scroll switches.
+     * Load and saves the preferences to shared preferences.
+     * @param view base view
+     */
     private void initSwitches(View view){
         Context context = view.getContext();
+        //dark mode default value
         temporaryDarkMode = utils.loadBoolean(context.getString(R.string.dark_mode_pref), false);
+
+
         darkModeSwitch.setChecked(temporaryDarkMode);
         darkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -84,7 +104,10 @@ public class PreferencesFragment extends Fragment {
                 utils.saveBoolean(context.getString(R.string.dark_mode_pref), temporaryDarkMode);
             }
         });
+        //Auto scroll default values
         temporaryAutoScroll = utils.loadBoolean(context.getString(R.string.auto_scroll_pref), true);
+
+        //Auto scroll switch
         autoScrollSwitch.setChecked(temporaryAutoScroll);
         autoScrollSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -95,6 +118,10 @@ public class PreferencesFragment extends Fragment {
         });
     }
 
+    /**
+     * Intiate the button which allows the user to reset their gdpr consent, which will make the form reshow later
+     * @param view the base view
+     */
     private void initGDPRConsentReset(View view){
         TextView gdprConsentTextView = view.findViewById(R.id.ResetAdConsentText);
         MaterialButton resetConsentButton = view.findViewById(R.id.settingsResetAdConsent);

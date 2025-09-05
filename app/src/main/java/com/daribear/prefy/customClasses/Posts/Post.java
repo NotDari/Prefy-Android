@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A post is a standard data entity that contains the details of the post.
+ * Often extended, and an be written to a parcel.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,6 +31,9 @@ public class Post implements Parcelable {
     private String currentVote;
 
 
+    /**
+     * Parcelable Creator to enable passing Post objects between Android components.
+     */
     public static final Creator<Post> CREATOR = new Creator<Post>() {
         @Override
         public Post createFromParcel(Parcel in) {
@@ -39,6 +46,11 @@ public class Post implements Parcelable {
         }
     };
 
+    /**
+     * Checks equality between posts based on the unique postId.
+     * @param o other object to compare
+     * @return true if both posts have the same postId
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +59,10 @@ public class Post implements Parcelable {
         return this.postId.equals(that.postId);
     }
 
+    /**
+     * Constructs a Post object from a Parcel, used in Parcelable.
+     * @param in Parcel containing post data
+     */
     public Post(Parcel in) {
         leftVotes = in.readInt();
         rightVotes = in.readInt();
@@ -58,12 +74,19 @@ public class Post implements Parcelable {
     }
 
 
+    /**
+     * Required method for Parcelable. Usually returns 0.
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-
+    /**
+     * Writes the Post's data to a Parcel so it can be passed between Android components.
+     * @param dest the Parcel to write data into
+     * @param flags additional flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(leftVotes);
@@ -75,6 +98,10 @@ public class Post implements Parcelable {
         dest.writeLong(postId);
     }
 
+    /**
+     * Returns a hash code based on postId.
+     * Used to identify unique objects, for equals.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(postId);

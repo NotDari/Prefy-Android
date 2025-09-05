@@ -25,6 +25,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * A class which creates a thread which retrieves a list of the top user by total vote counts.
+ */
 public class SearchTopUsersRetriever implements GetFollowingDelegate {
     private Integer limitTo;
     private Long endAt;
@@ -39,6 +42,9 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
         this.delegate = delegate;
     }
 
+    /**
+     * Creates the thread which retrieves a list of users by their top view count.
+     */
     public void initExecutor(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -94,9 +100,12 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
     }
 
 
-
-
-
+    /**
+     * Updates the retrieved users with their follow status
+     * and notifies the delegate that the request has finished.
+     *
+     * @param followList a map of user IDs to whether the current user follows them
+     */
     private void completed(HashMap<Long, Boolean> followList){
         for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
             Long key = entry.getKey();
@@ -111,6 +120,12 @@ public class SearchTopUsersRetriever implements GetFollowingDelegate {
         delegate.topCompleted(true, update,searchUserArrayList);
     }
 
+    /**
+     * Call the delegate saying the data has been retrieved
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

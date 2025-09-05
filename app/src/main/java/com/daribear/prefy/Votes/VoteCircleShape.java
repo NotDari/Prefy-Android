@@ -10,6 +10,11 @@ import android.view.View;
 
 import com.daribear.prefy.R;
 
+/**
+ * Creates the custom vote indicator using a custom View.
+ * has an outer ring to display what percentage of users voted for each image side
+ * has a central ring, outer ring(which displays the percentage)
+ */
 public class VoteCircleShape extends View {
 
     private Paint shadowColorPaint;
@@ -32,6 +37,7 @@ public class VoteCircleShape extends View {
         init(context);
     }
 
+    //Constructor
     public VoteCircleShape(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -42,11 +48,15 @@ public class VoteCircleShape extends View {
         init(context);
     }
 
+    //Constructor
     public VoteCircleShape(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
-
+    /**
+     * Initializes the paint objects and default parameters.
+     * @param context context to use
+     */
     private void init(Context context){
         strokeAngle = 180;
         mCirclePaint = new Paint();
@@ -62,6 +72,10 @@ public class VoteCircleShape extends View {
         mArcPaint.setStrokeWidth((float) (strokeRadiusVariable * radius));
 
     }
+
+    /**
+     * Measures the view and sets up the bounding rectangle for the arc
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
@@ -75,7 +89,9 @@ public class VoteCircleShape extends View {
         mArcRectF = new RectF(mCircleX- radius, mCircleY- radius, mCircleX+ radius, mCircleY+ radius);
     }
 
-
+    /**
+     * Draws the circle and the outer ring (which displays the progress) on the canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -85,6 +101,13 @@ public class VoteCircleShape extends View {
         canvas.drawArc(mArcRectF, -90 ,strokeAngle, false, mArcPaint);
     }
 
+    /**
+     * Sets the circle radius and vote percentage and
+     * calculates the outer ring
+     *
+     * @param radius radius of the circle
+     * @param percentage percentage value to represent
+     */
     public void setVoteCircleParameters(Integer radius, Integer percentage){
         this.radius = radius;
         Double stokeTest = ((double)percentage / 100) * 360;
@@ -93,6 +116,11 @@ public class VoteCircleShape extends View {
         mCircleY = getMeasuredHeight()/2;
     }
 
+    /**
+     * Sets the inner and outer ring colours seperately.
+     * @param StrokeColour outer ring colour
+     * @param innerCircleColour inner ring colour
+     */
     public void setColours(Integer StrokeColour, Integer innerCircleColour){
         this.mCircleBackground = innerCircleColour;
         this.mRingColor = StrokeColour;

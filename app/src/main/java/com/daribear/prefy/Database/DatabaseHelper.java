@@ -7,6 +7,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 
+/**
+ * DatabaseHelper is a class reponsible for managing the local SQLlist database.
+ * Creates all necessary tables when initialised.
+ *
+ * Uses singleton to ensure theres only 1
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper mInstance;
 
@@ -26,6 +32,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
+    /**
+     * Create all the necessary tables
+     * @param db sqlListDatabase
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sqlstatement = "CREATE TABLE PopularPostsUsers(id Long,username String, profileImageURL String, fullname String, postsNumber Long, votesNumber Long, prefsNumber Long, followerNumber Long, followingNumber Long,  rating Long, bio String, vk String, instagram, String, twitter String, verified Integer, following Integer);";

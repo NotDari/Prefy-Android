@@ -9,10 +9,18 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.daribear.prefy.Activities.MainActivity;
 
+/**
+ * Handles launching the activity for the submission of a post (image selection and cropping).
+ *
+ */
 public class PostStartActivity {
     private ActivityResultLauncher<Intent> imageResultLauncher;
     private ActivityResultLauncher<Intent> uCropResultLauncher;
 
+    /**
+     * register ActivityResultLaunchers to handle activity results for image cropping/selection
+     * @param activity activity used to register the launchers
+     */
     public void registerForActivityResult(MainActivity activity){
         imageResultLauncher = activity.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -42,9 +50,18 @@ public class PostStartActivity {
                 });
     }
 
+    /**
+     * Launches the image selection activity.
+     * @param intent to launch
+     */
     public void launchImageRetreiver(Intent intent){
         imageResultLauncher.launch(intent);
     }
+
+    /**
+     * Launches the cropping activity.
+     * @param intent intent to launch
+     */
     public void launchUcropRetreiver(Intent intent){
         uCropResultLauncher.launch(intent);
     }
