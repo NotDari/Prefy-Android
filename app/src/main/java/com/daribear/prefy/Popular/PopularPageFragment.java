@@ -26,7 +26,10 @@ import com.daribear.prefy.Votes.VoteHandler;
 import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
-
+/**
+ * A fragment which represents a popular post.
+ * Retrieves data as arguments, which allows it to populate the post UI
+ */
 public class PopularPageFragment extends Fragment implements PopularSkipDelegate{
     private User user;
     private StandardPost post;
@@ -43,14 +46,17 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular_page, container, false);
-        getData(view);
+        getData();
         initAutoScroll(view);
         initViews(view);
         initVotingSystem();
         return view;
     }
 
-    private void getData(View view){
+    /**
+     * Gets the data of the post and the user to populate the ui
+     */
+    private void getData(){
         Bundle args = getArguments();
         user = args.getParcelable("user");
         post = args.getParcelable("post");
@@ -58,6 +64,11 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
         popViewModel.init(getActivity().getApplicationContext());
     }
 
+    /**
+     * Create the view including loading the user username, image, whether they're verified.
+     * Loads in the posts, prepares the vote detection views, and prepares the comments
+     * @param view the baseview
+     */
     public void initViews(View view){
 
         ((TextView) view.findViewById(R.id.PopularItemQuestionText))
@@ -157,7 +168,11 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
         }
     }
 
-
+    /**
+     * Sets listeners on the vote layouts to detect a vote.
+     * If they're clicked on, calls the voteHandler to alert of the vote submitted, and prepare for the
+     * animation of the of the vote.
+     */
     private void initVotingSystem(){
         VoteHandler.changeImage(post, mainImage, leftCLick, rightClick, "Popular");
         rightClick.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +208,10 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
     }
 
 
-
+    /**
+     * Once the user clicks on the profile, and travels to the user profile
+     * @param view the baseview
+     */
     private void profileClick(View view){
         Bundle bundle = new Bundle();
         bundle.putLong("id", post.getUserId());
@@ -201,6 +219,10 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
         Navigation.findNavController(view).navigate(R.id.action_global_userProfile, bundle);
     }
 
+    /**
+     * If the user has auto scrolled enable, prepares for it.
+     * @param view the baseview
+     */
     private void initAutoScroll(View view){
         Context context = view.getContext();
         Utils utils = new Utils(context);
@@ -211,7 +233,11 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
         }
     }
 
-
+    /**
+     * Alerts the delegate when a vote occurs, and
+     * @param cooldown whether there is a cooldown
+     * @param removeVote whether to remove the vote
+     */
     private void voted(Boolean cooldown, Boolean removeVote){
         delegate.voted(cooldown, removeVote);
 
@@ -228,6 +254,9 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
 
     }
 
+    /**
+     * Called when skip is clicked, to prepare for autoScroll.
+     */
     @Override
     public void skipClicked() {
         if (post.getCurrentVote().equals("none") || post.getCurrentVote().equals("skip")) {
@@ -240,7 +269,10 @@ public class PopularPageFragment extends Fragment implements PopularSkipDelegate
         }
     }
 
-
+    /**
+     * get the shared pref of auto scroll
+     * @return whether auto scroll is enabled
+     */
     private Boolean getAutoScroll(){
         Utils utils = new Utils(PopularPageFragment.this.getContext());
         return utils.loadBoolean(getString(R.string.auto_scroll_pref), true);

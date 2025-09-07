@@ -18,7 +18,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-
+/**
+ * A thread which gets the popularPosts Data from the local cache in the database.
+ */
 public class NewCachePopularDataExecutor {
     private ArrayList<FullPost> fullPostList;
 
@@ -33,6 +35,10 @@ public class NewCachePopularDataExecutor {
         this.delegate = delegate;
     }
 
+    /**
+     * Starts A thread which gets the popularPosts Data from the local cache in the database.
+     * Gets the list of popular posts, their users, and seeing if the user has voted on it.
+     */
     public void init(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {

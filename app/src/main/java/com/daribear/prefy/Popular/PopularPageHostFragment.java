@@ -40,7 +40,9 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-
+/**
+ * the host fragment which hosts the pager which holds smaller fragments which populate the post.
+ */
 public class PopularPageHostFragment extends Fragment implements PopularPostVote, PopNoPostsDelegate {
     Boolean destroyed;
     private ProgressBar progressBar;
@@ -70,6 +72,10 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         return view;
     }
 
+    /**
+     * get the views of this fragment
+     * @param view the baseview
+     */
     public void getViews(View view) {
         destroyed = false;
         initValuesSet = false;
@@ -91,6 +97,9 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         popularPager = view.findViewById(R.id.PopularDariPager);
     }
 
+    /**
+     * Prepares the refresh listener for this page
+     */
     private void initRefresh(){
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -100,6 +109,13 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         });
     }
 
+    /**
+     * Gets the data from the popular posts view model.
+     * Acts if the data is currently refreshing or if there is no internet.
+     * Initiates the click listeners for the activity text so that they can see recent activity on their profile/posts
+     * and prepares the no internet text listener to prepare for attempting to reconnect to the internet.
+     * @param view the baseview
+     */
     private void getData(View view){
         progressBar.setVisibility(View.VISIBLE);
         popViewModel = new ViewModelProvider(getActivity()).get(NewPopularViewModel.class);
@@ -170,6 +186,12 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         });
     }
 
+    /**
+     * Create the viewpagers.
+     * Gets rid of the noInternetText, the loading progress bar and shows everything needed for the viewpager.
+     *
+     * @param fullPostList the list of posts to populate the pager with
+     */
     private void initViewPager(ArrayList<FullPost> fullPostList){
         if (!destroyed) {
             swipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -181,12 +203,14 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
             popularPager.setFragment(PopularPageHostFragment.this);
             popularPager.init();
             popularPager.setNoPostsDelegate(this);
-            noInternetText.setVisibility(View.GONE);
 
             initValuesSet = true;
         }
     }
 
+    /**
+     * Alters the internet available text based on whether posts have been loaded, and whether there is internet or not
+     */
     private void alterInternet(){
         if (!destroyed) {
             progressBar.setVisibility(View.GONE);
@@ -218,6 +242,10 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         }
     }
 
+    /**
+     * Initiates the activity text listener
+     * @param view baseview
+     */
     private void initActivityButton(View view){
         activityText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,6 +258,10 @@ public class PopularPageHostFragment extends Fragment implements PopularPostVote
         });
     }
 
+    /**
+     * Initiates the search button to go to the search page.
+     * @param view baseview
+     */
     private void initSearchPage(View view){
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override

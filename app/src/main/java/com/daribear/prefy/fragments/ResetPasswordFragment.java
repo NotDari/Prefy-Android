@@ -26,7 +26,9 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * The fragment which allows the user to get a reset password email by entering their username/email.
+ */
 public class ResetPasswordFragment extends Fragment {
     private MaterialButton submitButton, backButton;
     private EditText detailsEditText;
@@ -48,6 +50,10 @@ public class ResetPasswordFragment extends Fragment {
         detailsEditText = view.findViewById(R.id.resetPasswordDetailsEditText);
     }
 
+    /**
+     * Enables the back/submit buttons
+     * @param view baseview to find views from
+     */
     private void initButtons(View view){
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +70,11 @@ public class ResetPasswordFragment extends Fragment {
         });
     }
 
+    /**
+     * Sends a request to the server with the username/email provided, requesting a password reset email.
+     *
+     * @param details details
+     */
     private void initSubmit(String details){
         emailLoading = false;
         if (details != null){

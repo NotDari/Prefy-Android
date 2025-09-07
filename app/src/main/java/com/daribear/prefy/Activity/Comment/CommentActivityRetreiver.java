@@ -137,6 +137,7 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
 
     /**
      * Creates the following list for each comments Activity.
+     * This is whether the logged in user is following each user.
      */
     private void getFollowing(){
         if (commentActivityList != null) {
@@ -173,7 +174,8 @@ public class CommentActivityRetreiver implements GetFollowingDelegate {
     }
 
     /**
-     * When the follow retrieval thread has completed, it alerts this class as to whether it was successful or not
+     * When the follow retrieval thread has completed, it alerts this class as to whether it was successful or not,
+     * and provides the data if it was, using this function.
      * @param successful whether the retrieval was successful
      * @param followList list of user ids and whether the active user is following them
      * @param type retrieval type

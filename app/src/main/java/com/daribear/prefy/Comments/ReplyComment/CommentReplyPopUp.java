@@ -19,6 +19,10 @@ import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+/**
+ * The popup shown when the user clicks reply on the more options on a comment reply.
+ * Creates a popup that allows the user to reply, view profile or report the comment reply.
+ */
 public class CommentReplyPopUp implements DeleteDialogDelegate {
     private Comment comment;
     private BottomSheetDialog commentDialog;
@@ -38,7 +42,12 @@ public class CommentReplyPopUp implements DeleteDialogDelegate {
     }
 
 
-
+    /**
+     * sets up the inner views inside the bottom sheet dialog
+     * attaches click listeners to reply, profile, report and delete buttons to peform correct task and close dialog
+     *
+     * @param postDialog the dialog object that holds the views
+     */
     private void setUpViews(Dialog postDialog){
         ConstraintLayout replyLayout = postDialog.findViewById(R.id.CommentDialogReplyLayout);
         ConstraintLayout profileLayout = postDialog.findViewById(R.id.CommentDialogProfileLayout);
@@ -94,6 +103,9 @@ public class CommentReplyPopUp implements DeleteDialogDelegate {
         });
     }
 
+    /**
+     * Creates a new dialog and shows it
+     */
     public void initDialog(){
         commentDialog = new BottomSheetDialog(ownerActivity, R.style.BottomSheetDialog);
         commentDialog.setContentView(R.layout.comment_pop_up_dialog);
@@ -113,6 +125,10 @@ public class CommentReplyPopUp implements DeleteDialogDelegate {
 
     }
 
+    /**
+     * callback from delete dialog
+     * pushes delete to server and notifies delegate
+     */
     @Override
     public void deleteClicked() {
         UploadController.saveDelete(commentDialog.getContext().getApplicationContext(), "Comment", comment.getCommentId());

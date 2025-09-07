@@ -12,6 +12,11 @@ import java.util.List;
 
 import lombok.Getter;
 
+
+/**
+ * The activity view model which controls the data, between the repository, which retrieves the database from the server,
+ * and the ui
+ */
 public class ActivityViewModel extends ViewModel{
     private MutableLiveData<List<CommentActivity>> commentActivityData;
     private MutableLiveData<List<VoteActivity>> voteActivityData;
@@ -48,6 +53,9 @@ public class ActivityViewModel extends ViewModel{
         return dataRefreshing;
     }
 
+    /**
+     * Indicate to the repository to refresh the data
+     */
     public void refreshData(){
         if (!activityRepo.getDataRefreshing().getValue()) {
             activityRepo.setDataRefreshing(true);

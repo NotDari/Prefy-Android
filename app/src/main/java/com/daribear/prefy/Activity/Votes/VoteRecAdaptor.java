@@ -21,6 +21,11 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
+/**
+ * The recyclerview for the votesActivity
+ * Displays the comments text, the user who posted it and the post image they voted on.
+ * Uses Glide for image loading
+ */
 public class VoteRecAdaptor extends RecyclerView.Adapter<VoteRecAdaptor.ViewHolder> {
     private ArrayList<VoteActivity> voteActivityList;
 
@@ -32,6 +37,9 @@ public class VoteRecAdaptor extends RecyclerView.Adapter<VoteRecAdaptor.ViewHold
         this.voteActivityList = voteActivityList;
     }
 
+    /**
+     * Creates and inflates the view holder for each comment item.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,6 +48,12 @@ public class VoteRecAdaptor extends RecyclerView.Adapter<VoteRecAdaptor.ViewHold
         return holder;
     }
 
+    /**
+     * Binds the voteActivity data to the given ViewHolder.
+     *
+     * @param holder  the ViewHolder representing a single vote item
+     * @param position the index of the item in the dataset
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         initGlide(true, holder.profileImageView, voteActivityList.get(position).getUser().getProfileImageURL());
@@ -64,7 +78,12 @@ public class VoteRecAdaptor extends RecyclerView.Adapter<VoteRecAdaptor.ViewHold
             textView = itemView.findViewById(R.id.ActivityListItemText);
         }
     }
-
+    /**
+     * Load images using Glide library.
+     * @param profile True if the profile image is a non default one
+     * @param imageView The ImageView to load the image into
+     * @param imageLink The URL of the image
+     */
     private void initGlide(Boolean profile, ImageView imageView, String imageLink){
         if (profile){
             if (imageLink != null && !imageLink.isEmpty()){
@@ -86,12 +105,22 @@ public class VoteRecAdaptor extends RecyclerView.Adapter<VoteRecAdaptor.ViewHold
         }
     }
 
+    /**
+     * Loads a default profile image into the given ImageView.
+     * @param imageView the image view to load the data into
+     */
     private void defaultImage(ImageView imageView){
         Glide.with(imageView)
                 .load(R.drawable.user_photo)
                 .into(imageView);
     }
 
+    /**
+     * Creates the text saying "username and x other people voted on your post"
+     * @param voteActivity the voteActivity to create the text from
+     * @param context the context to use
+     * @return
+     */
     private SpannableStringBuilder getVoteText(VoteActivity voteActivity, Context context){
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String textUsername;
@@ -127,6 +156,11 @@ public class VoteRecAdaptor extends RecyclerView.Adapter<VoteRecAdaptor.ViewHold
         return builder;
     }
 
+    /**
+     * Adds a click listener for the profile image, so that the logged in user can view the other user's profile
+     * @param itemview the itemview that can be clicked on
+     * @param postion position in the data list
+     */
     private void initClickListener(View itemview, int postion){
         ImageView profileImage = itemview.findViewById(R.id.ActivityListItemProfileImage);
         profileImage.setOnClickListener(new View.OnClickListener() {

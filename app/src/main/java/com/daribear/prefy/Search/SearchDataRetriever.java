@@ -24,6 +24,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Retriever class to retrieve the search data. Uses a seperate thread
+ */
 public class SearchDataRetriever implements GetFollowingDelegate {
     private String text, originalString;
     private ArrayList<User> searchUserArrayList;
@@ -39,6 +42,9 @@ public class SearchDataRetriever implements GetFollowingDelegate {
         this.limitTo = limitTo;
     }
 
+    /**
+     * Creates the thread which contacts the endpoint for getting the search data.
+     */
     public void initExecutor(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -88,6 +94,13 @@ public class SearchDataRetriever implements GetFollowingDelegate {
             }
         });
     }
+
+    /**
+     * The following list has been compeleted.
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful) {
@@ -98,7 +111,9 @@ public class SearchDataRetriever implements GetFollowingDelegate {
         }
     }
 
-
+    /**
+     * The operation has been completed so return
+     */
     private void operationCompleted(HashMap<Long, Boolean> followList){
         for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
             Long key = entry.getKey();

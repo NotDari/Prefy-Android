@@ -20,7 +20,12 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
-
+/**
+ * The details gateway fragment.
+ * Selects a list of details that the user can edit based on the arguments sent to this fragment.
+ * Unfortunately the email and password altering is not yet available.
+ * Sends the user to the right fragment to edit the details, once they choose what to edit.
+ */
 public class DetailsEditGatewayFragment extends Fragment {
     private ImageView backButton, saveButton;
     private TextView titleText;
@@ -45,6 +50,9 @@ public class DetailsEditGatewayFragment extends Fragment {
         initBack();
     }
 
+    /**
+     * Add listener to the backstack to go back an item from the Navigation stack.
+     */
     private void initBack(){
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +62,11 @@ public class DetailsEditGatewayFragment extends Fragment {
         });
     }
 
+    /**
+     * Get the details passed to this fragment as arguments.
+     * Populates an itemlist with categories of details to show.
+     * @param view baseview to find views of
+     */
     private void getDetails(View view){
         String details = this.getArguments().getString("detail");
         String titleTextS;
@@ -81,6 +94,12 @@ public class DetailsEditGatewayFragment extends Fragment {
         createViews(view);
     }
 
+    /**
+     * dynamically creates buttons for each item in the detaillist.
+     * Navigates to the corresponding fragment with specific arguments
+     * Email and password not yet implemented.
+     * @param view baseview to find other views
+     */
     private void createViews(View view){
         Context appContext = view.getContext().getApplicationContext();
         for (String s : itemList){

@@ -8,6 +8,9 @@ import com.daribear.prefy.Network.UploadController.UploadController;
 import com.daribear.prefy.Popular.NewPopularRepository;
 import com.daribear.prefy.Profile.CurrentUserRepository;
 
+/**
+ * Controller responsible for initialising the main repositories.
+ */
 public class ViewModelDataController {
     private Context ApplicationContext;
 
@@ -15,6 +18,10 @@ public class ViewModelDataController {
         ApplicationContext = applicationContext;
     }
 
+    /**
+     * Initialises all the repositories, which are all singletons.
+     * Starts the initial set ups.
+     */
     public void initViewModels(){
         NewPopularRepository popRepo = NewPopularRepository.getInstance(ApplicationContext);
         ActivityRepository activityRepo = ActivityRepository.getInstance();

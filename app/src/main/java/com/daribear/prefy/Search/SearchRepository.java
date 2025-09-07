@@ -8,6 +8,10 @@ import com.daribear.prefy.Profile.User;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * The repository which handles the search data.
+ * This represents the current search of the user, the page details and the list of users.
+ */
 public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStringDelegate{
     private static SearchRepository instance;
     private MutableLiveData<ArrayList<User>> searchlistMutable;
@@ -78,6 +82,9 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         instance = null;
     }
 
+    /**
+     * Called to get more users once the user scrolls far down enough.
+     */
     public void viewScrolled(){
         if (currentSearch != null){
             if (!dataLoading) {
@@ -99,6 +106,11 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         }
     }
 
+    /**
+     * Called when one of the users is altered.
+     * Allows for the user data to be updated
+     * @param user user to update
+     */
     public void userAltered(User user){
         ArrayList<User> userList = searchlistMutable.getValue();
         Boolean changed = false;
@@ -115,6 +127,12 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         }
     }
 
+    /**
+     * Sets the following of a user (whether the current user follows them).
+     *
+     * @param userId user to alter the following of
+     * @param following whether its a follow or unfollow.
+     */
     public void setFollowing(Long userId, Boolean following){
         ArrayList<User> userList = searchlistMutable.getValue();
         Boolean changed = false;
@@ -132,7 +150,14 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
 
     }
 
-
+    /**
+     * Callback when the search user retriever is complete.
+     * Updates the data.
+     * @param successful if the retrieval was successful
+     * @param update if it was an update or not
+     * @param text text of the search
+     * @param searchUserArrayList the datalist
+     */
     @Override
     public void stringCompleted(Boolean successful, Boolean update, String text, ArrayList<User> searchUserArrayList) {
         if (successful) {
@@ -162,6 +187,13 @@ public class SearchRepository implements SearchUsersTopDelegate, SearchUsersStri
         dataLoading = false;
     }
 
+    /**
+     * Callback when the top user retrievers is complete.
+     * Updates the data.
+     * @param successful if the retrieval was successful
+     * @param update if it was an update or not
+     * @param searchUserArrayList the datalist
+     */
     @Override
     public void topCompleted(Boolean successful, Boolean update, ArrayList<User> searchUserArrayList) {
         if (successful){

@@ -32,6 +32,10 @@ import java.util.concurrent.Executors
 import kotlin.math.sign
 
 
+/**
+ * The fragment which allows the user to log in.
+ * Contains the username/email and password fields to log in.
+ */
 class log_in_fragment : androidx.fragment.app.Fragment(){
     private var _binding: FragmentLogInBinding? = null
 
@@ -86,6 +90,11 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
         })
     }
 
+    /**
+     * Handles the login button, which will get the username/email and password fields from the edittext, and then
+     * attempt to get the login token.
+     * Also enables the clicking of the forgotten details button to reset the password.
+     */
     private fun handleLoginButtonPressed(){
         val passwordEditText = binding.LogInPasswordEditText
         val emailEditText = binding.LogInEmailEditText
@@ -119,6 +128,9 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
 
     }
 
+    /**
+     * enable the bottom text which allows the user to switch between registering and signing in
+     */
     private fun handleBottomText(){
         val DontHaveAccount = requireActivity().findViewById<TextView>(R.id.signUpAlreadyHaveanAccount)
         val textButton = requireActivity().findViewById<TextView>(R.id.SignUplogInButton)
@@ -131,6 +143,10 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
         }
     }
 
+    /**
+     * Check the playintegrity token. If it doesn't exist, retrieve it.
+     * Once it exists, attempt to sign the user in
+     */
     private fun getToken(email:String, password:String){
         val playIntegrity : PlayIntegrity = PlayIntegrity.getInstance()
         if (playIntegrity.token == null){
@@ -156,7 +172,9 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
         }
     }
 
-
+    /**
+     * Attempt to Sign in the user by sending the username, password and token to the server.
+     */
     private fun signIn(email:String, password:String, token:String){
 
         val executor = Executors.newSingleThreadExecutor();
@@ -272,6 +290,9 @@ class log_in_fragment : androidx.fragment.app.Fragment(){
 
     }
 
+    /**
+     * Saves the users details to the shared prefs.
+     */
     fun addPrefs(user : User){
         sharedprefs.putStringSharedPref(getString(R.string.save_fullname_pref), user.fullname)
         sharedprefs.putLongSharedPref(getString(R.string.save_postCount_pref), user.postsNumber)

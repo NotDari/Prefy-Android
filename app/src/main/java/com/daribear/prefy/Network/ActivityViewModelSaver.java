@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * A helper class which saves data from the repositories into the database, to be cached for when the app is next opened.
+ */
 public class ActivityViewModelSaver {
     private Context ApplicationContext;
     private final String popularpostTableName = "PopularPostsPosts";
@@ -30,6 +33,10 @@ public class ActivityViewModelSaver {
         ApplicationContext = applicationContext;
     }
 
+    /**
+     * Gets called when the view is destroyed.
+     * Calls the savePopulkar function() which saves the data from the popular repositorty/view model into the database.
+     */
     public void viewDestroyed(){
 
         ExecutorService executor = Executors.newSingleThreadExecutor();

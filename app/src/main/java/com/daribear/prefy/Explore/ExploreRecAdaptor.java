@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Recycler view which represents the explore page.
+ * It displays  a header section, the categories, so the user can choose one, featured posts and a list of recent posts.
+ */
 public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private ExplorePostSet explorePostSet;
     public final Integer Explore_HEADER = 0;
@@ -41,6 +45,7 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         getCategories(parentActivity.getApplicationContext());
     }
 
+    // Inflate different views based on whether its a header or a post.
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -65,7 +70,10 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         return holder;
     }
 
-
+    /**
+     * Gets the list of different categories.
+     * @param applicationContext context of the application to use
+     */
     private void getCategories(Context applicationContext){
         String[] CategoriesList = applicationContext.getResources().getStringArray(R.array.post_categories);
         TypedArray ImagesList = applicationContext.getResources().obtainTypedArray(R.array.post_category_images);
@@ -91,6 +99,7 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.secondChoiceDrawable = resIds[secondChoice];
     }
 
+    //Bind the viewholder based on which viewtype it is
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == Explore_RECTWOIMAGES){
@@ -121,6 +130,10 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         return 1 + explorePostSet.getPostList().size();
     }
 
+    /**
+     * Sets the initial data of the recyclerview. If the data list isn't empty, notify the recyclerview.
+     * @param explorePostSet
+     */
     public void initData(ExplorePostSet explorePostSet) {
         Integer originalSize = this.explorePostSet.getPostList().size();
         this.explorePostSet = new ExplorePostSet();
@@ -135,6 +148,10 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /**
+     * Update the data with new data
+     * @param explorePostSet list of data to be added.
+     */
     public void updateData(ExplorePostSet explorePostSet){
         if (explorePostSet != null & this.explorePostSet != null){
             Integer originalSize = this.explorePostSet.getPostList().size();
@@ -147,13 +164,20 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /**
+     * Update the list of categories
+     */
     public void updateCategories(){
         getCategories(parentActivity.getApplicationContext());
         CategoryClass categoryClass = new CategoryClass(firstChoiceName, secondChoiceName, firstChoiceDrawable, secondChoiceDrawable);
         headerController.updateCategories(categoryClass);
     }
 
-
+    /**
+     * Get the view type of a specific position
+     * @param position position to query
+     * @return
+     */
     @Override
     public int getItemViewType(int position) {
         if (position == 0){
@@ -181,6 +205,12 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
         }
     }
+
+    /**
+     * Inidialises glide
+     * @param imageView image to load the image into
+     * @param pos position of the data in the list
+     */
     private void initGlide(ImageView imageView, Integer pos){
         if (explorePostSet.getPostList().get(pos).getStandardPost().getImageURL() != null) {
             Glide
@@ -190,6 +220,9 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /*
+        Update the featured posts.
+     */
     public void alterFeaturedPosts(List<FullPost> fullFeaturedPostList){
         this.fullFeaturedPostArrayList = fullFeaturedPostList;
         if (headerController != null){
@@ -197,6 +230,11 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    /**
+     * If an item is clicked, creates a post dialog to show the post that has been clicked on
+     * @param position position of the item
+     * @param holder the recyclerview viewholder to set the listener for
+     */
     private void ItemViewClicked(Integer position, RecyclerView.ViewHolder holder){
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,14 +245,5 @@ public class ExploreRecAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
-    public Double returnLastCreationDate(){
-        if (explorePostSet != null){
-            if (explorePostSet.getPostList()!= null){
-                if (explorePostSet.getPostList().size() > 0){
-                    return explorePostSet.getPostList().get(explorePostSet.getPostList().size() - 1).getStandardPost().getCreationDate();
-                }
-            }
-        }
-        return null;
-    }
+
 }

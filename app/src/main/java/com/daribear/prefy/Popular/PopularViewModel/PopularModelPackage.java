@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * A data entity which represents the PopularModel, contains a list of full posts and the retrieval type
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

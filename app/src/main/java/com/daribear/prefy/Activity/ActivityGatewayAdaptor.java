@@ -16,6 +16,9 @@ import com.daribear.prefy.Activity.Votes.VoteRecAdaptor;
 
 import java.util.ArrayList;
 
+/**
+ * THE gateway to the Activity recyclerviews, handle comment votes and followers
+ */
 public class ActivityGatewayAdaptor {
     private Integer RecViewId;
     private View view;
@@ -25,6 +28,7 @@ public class ActivityGatewayAdaptor {
     private VoteRecAdaptor voteAdaptor;
     private FollowerRecAdaptor followerAdaptor;
 
+    //constructor
     public ActivityGatewayAdaptor(Integer recViewId, View view, Context context, RecyclerView recView) {
         RecViewId = recViewId;
         this.view = view;
@@ -32,6 +36,10 @@ public class ActivityGatewayAdaptor {
         this.recView = recView;
     }
 
+    /**
+     * setup recyclerview for comment list
+     * @param commentActivityList list of comment data
+     */
     public void displayEmptyComment(ArrayList<CommentActivity> commentActivityList){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();
@@ -48,11 +56,19 @@ public class ActivityGatewayAdaptor {
         recView.setNestedScrollingEnabled(false);
     }
 
+    /**
+     * refresh comment adapter data
+     * @param commentActivityList list of commentData to update with
+     */
     public void updateCommentData(ArrayList<CommentActivity> commentActivityList){
         commentAdaptor.setCommentActivityList(commentActivityList);
         commentAdaptor.notifyDataSetChanged();
     }
 
+    /**
+     * setup recyclerview for voteActivity list
+     * @param voteActivityList list of starting vote data
+     */
     public void displayEmptyVote(ArrayList<VoteActivity> voteActivityList){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();
@@ -69,12 +85,20 @@ public class ActivityGatewayAdaptor {
         recView.setNestedScrollingEnabled(false);
     }
 
+    /**
+     * refresh vote adapter data
+     * @param voteActivityList list of voteActivity to update with
+     */
     public void updateVoteData(ArrayList<VoteActivity> voteActivityList){
         voteAdaptor.setVoteActivityList(voteActivityList);
         voteAdaptor.notifyDataSetChanged();
     }
 
 
+    /**
+     * setup recyclerview for followActivity list
+     * @param followerActivityList list of starting follower data
+     */
     public void displayEmptyFollower(ArrayList<FollowerActivity> followerActivityList){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();
@@ -91,6 +115,10 @@ public class ActivityGatewayAdaptor {
         recView.setNestedScrollingEnabled(false);
     }
 
+    /**
+     * refresh follower adapter data
+     * @param followerActivityList list of followActivity to update with
+     */
     public void updateFollowerData(ArrayList<FollowerActivity> followerActivityList){
         followerAdaptor.setFollowerActivityList(followerActivityList);
         followerAdaptor.notifyDataSetChanged();

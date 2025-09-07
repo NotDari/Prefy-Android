@@ -94,7 +94,9 @@ public class handleCommentsRecView implements CommentRetreiverInterface, Comment
 
     }
 
-
+    /**
+     * Initialise no internet state
+     */
     private void initNoInternet(){
         gateway.initNoInternet();
 
@@ -110,10 +112,7 @@ public class handleCommentsRecView implements CommentRetreiverInterface, Comment
         recView.setVisibility(View.VISIBLE);
     }
 
-    public void commentDeleted(Comment comment){
-        gateway.commentdeleted(comment);
-        recView.setVisibility(View.VISIBLE);
-    }
+
 
     private void getMoreData(){
         CommentUpdaterExecutor commentUpdaterExecutor = new CommentUpdaterExecutor(post.getPostId(), this, pageNumber);

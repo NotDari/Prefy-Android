@@ -26,6 +26,9 @@ import java.io.File;
 
 import lombok.Getter;
 
+/**
+ * The utility class which handles the launch of the image selection and cropping of the image.
+ */
 public class ProfileImageSelector {
     private final String UCROP_IMAGE_FILE_NAME = "UCROP_IMAGE_FILE";
     private ActivityResultLauncher<Intent> ImageResultLauncher;
@@ -34,7 +37,11 @@ public class ProfileImageSelector {
     @Getter
     private Uri currentURI;
 
-
+    /**
+     * Registers the result launchers for both cropping and selection of the image.
+     * @param activity the parent activity
+     * @param fragment the fragment which will receive the callbacks
+     */
     public void registerForActivityResult(Activity activity, Fragment fragment){
         ImageResultLauncher = fragment.registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -60,6 +67,12 @@ public class ProfileImageSelector {
                 });
     }
 
+    /**
+     * Handles when the profile image is clicked.
+     * Starts the process to select the image.
+     * @param imageView imageview to load the image into
+     * @param saveButton the save button to use
+     */
     public void imageClicked(ImageView imageView, ImageView saveButton){
         this.imageView = imageView;
         this.saveButton = saveButton;
@@ -67,7 +80,9 @@ public class ProfileImageSelector {
     }
 
 
-
+    /**
+     * Launches the UCROP activity to gather the image and allow the user to crop it.
+     */
     private void GetImage(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -76,7 +91,12 @@ public class ProfileImageSelector {
     }
 
 
-
+    /**
+     * Handles the result of UCROP, whether the image was gathered successfully
+     * @param activity activity
+     * @param resultCode the UCROP result code to check whether it was a success
+     * @param data Intent containing the cropped image URI
+     */
     public void UcropActivityResult(Activity activity, int resultCode, @Nullable Intent data){
         if (resultCode == RESULT_OK) {
             final Uri resultUri = UCrop.getOutput(data);
@@ -86,6 +106,12 @@ public class ProfileImageSelector {
         }
     }
 
+    /**
+     * Initialises UCROP with specific cropping options.
+     *
+     * @param activity the parent activity
+     * @param sourceUri the uri of the image to be cropped
+     */
     private void initUCrop(Activity activity ,Uri sourceUri){
         String destinationName = UCROP_IMAGE_FILE_NAME + ".png";
         UCrop.Options UcropOptions = new UCrop.Options();
@@ -101,6 +127,10 @@ public class ProfileImageSelector {
 
     }
 
+    /**
+     * Use glide to load the image into the profile image
+     * @param imageURI the uri of the image to load
+     */
     private void setImage(Uri imageURI){
         Glide.with(imageView)
                 .load(imageURI)

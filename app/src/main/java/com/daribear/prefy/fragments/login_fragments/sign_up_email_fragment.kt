@@ -37,7 +37,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.Executors
 
-
+/**
+ * The registering fragment which requires the user to enter their email.
+ * Cehcks if the email is valid
+ */
 class sign_up_email_fragment : androidx.fragment.app.Fragment() {
     private var _binding: FragmentSignUpEmailBinding? = null
 
@@ -80,6 +83,9 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
 
     }
 
+    /**
+     * Handle the submission of the create account button, and sends the details to the getToken.
+     */
     fun handleInput(){
         val emailEditText = binding.EmailEditText
         val passwordEditText = binding.passwordEditText
@@ -105,6 +111,9 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
         }
     }
 
+    /**
+     * Attempts to get the json integrity token.
+     */
     private fun getToken(json: JSONObject){
         val playIntegrity : PlayIntegrity = PlayIntegrity.getInstance()
         if (playIntegrity.token == null){
@@ -132,6 +141,9 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
         }
     }
 
+    /**
+     * Send the request to my api, requesting the registering of the user.
+     */
     fun sendRequest(json : JSONObject){
         Executors.newSingleThreadExecutor().execute(){
             val client = OkHttpClient()
@@ -189,6 +201,9 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
         }
     }
 
+    /**
+     * Has a button to show hide the password within the edit text.
+     */
     private fun changeVisibility(){
         var textVisible = false;
         binding.passwordEditText.setOnTouchListener(object : View.OnTouchListener {
@@ -215,25 +230,6 @@ class sign_up_email_fragment : androidx.fragment.app.Fragment() {
         })
     }
 
-    private fun checkDone(){
-        if (authenticationdone && fullnamedone && userdone){
-            val sharedprefs = SharedPrefs(requireActivity())
-            sharedprefs.putStringSharedPref(getString(R.string.save_username_pref), username)
-            sharedprefs.putStringSharedPref(getString(R.string.save_email_pref), email)
-            sharedprefs.putStringSharedPref(getString(R.string.save_fullname_pref), full_name)
-            sharedprefs.putStringSharedPref(getString(R.string.save_password_pref), password)
-            sharedprefs.putStringSharedPref(getString(R.string.save_profileP_pref), "none")
-            sharedprefs.putLongSharedPref(getString(R.string.save_prefCount_pref), 0);
-            sharedprefs.putLongSharedPref(getString(R.string.save_voteCount_pref), 0);
-            sharedprefs.putLongSharedPref(getString(R.string.save_postCount_pref), 0);
-            sharedprefs.putStringSharedPref(getString(R.string.save_instagram_pref), "");
-            sharedprefs.putStringSharedPref(getString(R.string.save_twitter_pref), "");
-            sharedprefs.putStringSharedPref(getString(R.string.save_vk_pref), "");
-            val intent = Intent(activity, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(intent)
-        }
-    }
 
 
     private fun enableLinks() {

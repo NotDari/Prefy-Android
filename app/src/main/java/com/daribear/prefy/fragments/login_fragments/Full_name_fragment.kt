@@ -17,6 +17,9 @@ import com.daribear.prefy.databinding.FragmentFullNameBinding
 import java.util.*
 
 
+/**
+ * The fragment which requires the user to enter their full name  and date of birth for registering
+ */
 class Full_name_fragment : Fragment() {
     private var _binding: FragmentFullNameBinding? = null
 
@@ -50,6 +53,9 @@ class Full_name_fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    /**
+     * The nect button to go to the next fragment
+     */
     fun handleNextButton(){
         val nextButton = binding.signUpFullNameNextMaterialButton
         val editText = binding.FullNameEditText
@@ -74,6 +80,9 @@ class Full_name_fragment : Fragment() {
         }
     }
 
+    /**
+     * Create the picker to allow the user to enter their date of birth.
+     */
     private fun handleDateOfBirthButton(){
         val dobButton = binding.DateOfBirthEditText
         val parentsPermission = binding.GetParentPermissionText
@@ -129,6 +138,9 @@ class Full_name_fragment : Fragment() {
         }
     }
 
+    /**
+     * Remove the signup/login text
+     */
     private fun handleBottomText(){
         val SignUpLoginTextView = requireActivity().findViewById<RelativeLayout>(R.id.SignUpLoginTextView)
         SignUpLoginTextView.isVisible = false

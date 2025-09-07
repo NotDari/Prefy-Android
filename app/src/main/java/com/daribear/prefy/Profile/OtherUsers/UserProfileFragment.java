@@ -15,6 +15,9 @@ import com.daribear.prefy.Profile.ProfilePostsRec.ProfilePostsGateway;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 
+/**
+ * The fragment which represents the profile of a user.
+ */
 public class UserProfileFragment extends Fragment {
     private User user;
     private SwipeRefreshLayout refreshLayout;
@@ -31,6 +34,10 @@ public class UserProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Sets a refresh listener which allows for the refreshing of data
+     * @param view baseview to use
+     */
     private void initRefresh(View view){
         refreshLayout = view.findViewById(R.id.ProfileSwipeRefreshlayout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -44,6 +51,10 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
+    /**
+     * Gets data, which means setting up the recylerview and the userController
+     * @param view
+     */
     private void getData(View view){
         destroyed = false;
         RecyclerView recView = view.findViewById(R.id.ProfileRecView);
@@ -56,6 +67,9 @@ public class UserProfileFragment extends Fragment {
 
     }
 
+    /**
+     * Get passed in user details
+     */
     private void getBundle(){
         this.user = getArguments().getParcelable("user");
     }

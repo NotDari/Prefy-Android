@@ -28,6 +28,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * The endpoint for uploading data from the upload tables.
+ * Uploads everything on a single thread.
+ */
 public class UploadEndpoint {
     private static UploadEndpoint instance;
     private Context appContext;
@@ -63,6 +67,10 @@ public class UploadEndpoint {
         return instance;
     }
 
+    /**
+     * Starts the upload process on a seperate thread, which goes through every upload table, and attempts to upload them to the database.
+     * If successful it is removed from the database, else it stays there
+     */
     public void startUploads(){
         if (!checking){
             Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -490,7 +498,12 @@ public class UploadEndpoint {
     }
 
 
-
+    /**
+     * Removes a vote from the local database as it has been uploaded successfully
+     * @param db database
+     * @param PostId post the vote is on
+     * @param Vote vote
+     */
     public void removeVoteFromDb(SQLiteDatabase db, Long PostId, String Vote){
         Cursor cursor = db.rawQuery("Select * FROM UploadVotes WHERE PostId = " + PostId, null);
         if (cursor.getCount() > 0){
@@ -509,6 +522,11 @@ public class UploadEndpoint {
         popCursor.close();
     }
 
+    /**
+     * Remove an activity from the database as it has been uploaded successfully
+     * @param db database
+     * @param Type type of activityClear to remove from the database
+     */
     public void removeActivityFromDb(SQLiteDatabase db, String Type){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
@@ -518,6 +536,11 @@ public class UploadEndpoint {
         db.delete("UploadActivityClear","Type=?",new String[]{Type});
     }
 
+    /**
+     * Removes a comment from the database as it has been uploaded successfully
+     * @param db database
+     * @param comment comment to remove from the database
+     */
     public void removeCommentFromDb(SQLiteDatabase db, Comment comment){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
@@ -526,7 +549,11 @@ public class UploadEndpoint {
     }
 
 
-
+    /**
+     * Removes a report from the database as it has been uploaded successfully
+     * @param db database
+     * @param report report to remove from the database
+     */
     public void removeReportFromDb(SQLiteDatabase db, Report report){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
@@ -534,6 +561,13 @@ public class UploadEndpoint {
         db.delete("UploadReports","userId=? and CreationDate=?",new String[]{report.getUserId().toString(), report.getCreationDate().toString()});
     }
 
+    /**
+     * Removes a comment/post delete from the database as it has been uploaded successfully
+     * @param db database
+     * @param type type of item (comment/post)
+     * @param itemId id of the item
+     * @param userId logged in user id
+     */
     public void removeDeleteFromDb(SQLiteDatabase db, String type, Long itemId, Long userId){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
@@ -541,6 +575,12 @@ public class UploadEndpoint {
         db.delete("UploadDeleteTable","UserId=? and ItemId=? and Type=?",new String[]{userId.toString(), itemId.toString(), type.toString()});
     }
 
+    /**
+     * Removes a follow from the database as it has been uploaded successfully
+     * @param db database
+     * @param userId id of the user
+     * @param userFollowId id of the user to follow/unfollow
+     */
     public void removeFollowFromDb(SQLiteDatabase db, Long userId, Long userFollowId){
         db.execSQL("UPDATE " + "UploadTasks" +
                 " SET " + "Count" + " = " + "Count" + " - 1" +
@@ -548,6 +588,13 @@ public class UploadEndpoint {
         db.delete("UploadFollowTable","UserId=? and FollowingUserId=?",new String[]{userId.toString(), userFollowId.toString()});
     }
 
+    /**
+     * Updates and increments the follow failed count following a failed upload
+     * @param db database
+     * @param originalFailedCount the original failed count (to increment)
+     * @param userId user id
+     * @param userFollowId id of the user to follow
+     */
     public void updateFollowFailedCount(SQLiteDatabase db, Integer originalFailedCount, Long userId, Long userFollowId){
 
         ContentValues cv = new ContentValues();
@@ -555,6 +602,9 @@ public class UploadEndpoint {
         db.update(uploadFollowTable, cv, "UserId=? and FollowingUserId=?",new String[]{userId.toString(), userFollowId.toString()});
     }
 
+    /**
+     * Check if all the uploads have been completed succesfully.
+     */
     private void checkCompleted(){
         if (IntegerCount == CompletedCount){
             Boolean delay = false;

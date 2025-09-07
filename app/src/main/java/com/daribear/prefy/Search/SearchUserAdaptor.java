@@ -17,6 +17,11 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
+
+/**
+ * RecyclerView adapter for displaying search results of users
+ * it handles profile images, counts, click navigation, and infinite scroll triggers
+ */
 public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.ViewHolder> {
     private SearchRecViewTopTargetReached topDelegate;
     private SearchRecSearchTargetReached stringDelegate;
@@ -64,10 +69,9 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
     }
 
 
-
-
-
-
+    /**
+     * add more users to the existing list (used for pagination)
+     */
     public void addUsers(ArrayList<User> searchUserArrayList){
         for (User user: searchUserArrayList){
             if (this.searchUserArrayList != null) {
@@ -96,6 +100,9 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
         }
     }
 
+    /**
+     * Initialise follower and post counts with correct singular/plural text
+     */
     private void initCounts(ViewHolder holder, int position){
         String followeradditionalText;
         String postadditionalText;
@@ -113,7 +120,9 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
         holder.PostCount.setText(searchUserArrayList.get(position).getPostsNumber() + postadditionalText);
     }
 
-
+    /**
+     * Load profile image using Glide, or default if no image in profile
+     */
     private void initGlide(ViewHolder holder, int position, String imageUrl){
         if (imageUrl != null) {
             if (!imageUrl.equals("none")) {
@@ -131,6 +140,10 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
         }
     }
 
+
+    /**
+     * Load default profile image
+     */
     private void defaultImage(ViewHolder holder){
         Glide
                 .with(holder.profileImage)
@@ -139,12 +152,18 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
                 .into(holder.profileImage);
     }
 
+    /**
+     * set text fields for bio, username, fullname
+     */
     private void initTexts(ViewHolder holder, int position){
         holder.bio.setText(searchUserArrayList.get(position).getBio());
         holder.username.setText(searchUserArrayList.get(position).getUsername());
         holder.fullname.setText(searchUserArrayList.get(position).getFullname());
     }
 
+    /**
+     * Set click listener to navigate to user profile
+     */
     private void initClickListener(ViewHolder holder, int position){
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,11 +175,16 @@ public class SearchUserAdaptor extends RecyclerView.Adapter<SearchUserAdaptor.Vi
         });
     }
 
+
+    /**
+     * check if scroll has reached the target item
+     * also triggers delegate based on type
+     */
     private void initTargetReached(Integer adaptorPosition){
         if (adaptorPosition == targetSize - 1) {
             if (type != null){
                 if (type.equals("Top")) {
-                    topDelegate.topReached();
+                    topDelegate.endReached();
                 }else if (type.equals("String")){
                     stringDelegate.topReached(searchUserArrayList.get(searchUserArrayList.size()- 1).getUsername());
                 }

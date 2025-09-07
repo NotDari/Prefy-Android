@@ -27,6 +27,9 @@ import com.daribear.prefy.Utils.NoInternetDropDown;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The fragment contains a recyclerview(list) of all the ActivityFollowers, which shows all the recent people who have followed the user.
+ */
 public class ActivityFollowersFragment extends Fragment {
     private ProgressBar progressBar;
     private RelativeLayout noActivity;
@@ -48,6 +51,10 @@ public class ActivityFollowersFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Get default views
+     * @param view base view
+     */
     private void getViews(View view){
         destroyed = false;
         noActivity = view.findViewById(R.id.ActivityFollowersNoItems);
@@ -60,10 +67,18 @@ public class ActivityFollowersFragment extends Fragment {
         gateway.displayEmptyFollower(new ArrayList<>());
     }
 
+    /**
+     * Show that the user has seen it, so there doesn't need to be an alert.
+     * @param appContext the context to use
+     */
     private void resetActivity(Context appContext){
         UploadController.saveActivityClear(appContext, "Followers");
     }
 
+    /**
+     * Gets the data from the viewModel, checking if the data is refreshing or if there is no internet.
+     * @param view the baseview to use
+     */
     private void getData(View view){
         resetActivity(view.getContext().getApplicationContext());
         viewModel = new ViewModelProvider(ActivityFollowersFragment.this).get(ActivityViewModel.class);
@@ -101,6 +116,10 @@ public class ActivityFollowersFragment extends Fragment {
         });
 
     }
+
+    /**
+     * The data is refreshing so show the progress bar if there is no existing data.
+     */
     private void dataRefreshing(){
         dataRefreshing = true;
         if (!initDataSet) {
@@ -110,6 +129,10 @@ public class ActivityFollowersFragment extends Fragment {
             noActivity.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * THe data has stopped refreshing, and check if internet available
+     */
     private void dataNotRefreshing(){
         dataRefreshing = false;
         if (!internetAvailable){
@@ -117,7 +140,10 @@ public class ActivityFollowersFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Since no internet is available, show the no internet text and detects clicks.
+     * These clicks will attempt to connect to the internet again.
+     */
     private void noInternet(){
         if (!destroyed) {
             if (!initDataSet) {
@@ -140,7 +166,9 @@ public class ActivityFollowersFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Use the data retrieved from the viewmodel to use for the recyclerview.
+     */
     private void setData(){
         if (!destroyed){
             noInternet.setVisibility(View.GONE);
@@ -156,13 +184,6 @@ public class ActivityFollowersFragment extends Fragment {
         }
     }
 
-    public void FullDataRefresh(){
-        if (!destroyed){
-            if (viewModel != null){
-                viewModel.init();
-            }
-        }
-    }
 
 
     @Override

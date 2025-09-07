@@ -7,8 +7,15 @@ import com.daribear.prefy.Explore.ExploreRepository;
 import com.daribear.prefy.Popular.NewPopularRepository;
 import com.daribear.prefy.Profile.CurrentUserRepository;
 
+/**
+ * Helper class which Refreshes the context in all of the view models.
+ */
 public class RefreshInternet {
 
+    /**
+     * Goes and refreshes all the viewmodels, to see if there is new internet.
+     * @param appContext the context with which to use
+     */
     public static void RefreshInternet(Context appContext){
         ExploreRepository exploreRepo = ExploreRepository.getInstance();
         if (exploreRepo.getInternetAvailable().getValue() != null) {

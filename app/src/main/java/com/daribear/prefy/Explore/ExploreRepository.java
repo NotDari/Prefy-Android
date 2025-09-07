@@ -10,6 +10,9 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The repository which handles
+ */
 public class ExploreRepository implements ExploreWholeInterface{
     private static ExploreRepository instance;
     private MutableLiveData<ExplorePostSet> explorePostSetMutable;
@@ -45,6 +48,10 @@ public class ExploreRepository implements ExploreWholeInterface{
         return explorePostSetMutable;
     }
 
+    /**
+     * Removes a post from the explore repository
+     * @param standardPost the psot to remove
+     */
     public void deleteItem(StandardPost standardPost){
         ExplorePostSet explorePostSet = explorePostSetMutable.getValue();
         ArrayList<FullPost> fullPostList = explorePostSet.getPostList();
@@ -56,6 +63,11 @@ public class ExploreRepository implements ExploreWholeInterface{
         explorePostSetMutable.setValue(explorePostSet);
     }
 
+    /**
+     * When the user votes on a post, this is called. Alters the post in the repository to represent the change the new vote causes
+     * @param postId post that was voted on
+     * @param vote what the user voted.
+     */
     public void itemVote(Long postId, String vote){
         if (explorePostSetMutable.getValue() != null) {
             Boolean changed = false;
@@ -83,6 +95,10 @@ public class ExploreRepository implements ExploreWholeInterface{
         }
     }
 
+    /**
+     * Called when one of the users who owned a post, has changed details, so it updates the user.
+     * @param user user which has been altered
+     */
     public void userAltered(User user){
         if (explorePostSetMutable.getValue() != null) {
             Boolean changed = false;
@@ -114,14 +130,10 @@ public class ExploreRepository implements ExploreWholeInterface{
         return internetAvailable;
     }
 
-    public void updateData(Double lastCreationDate){
-        if (lastCreationDate == null){
-            lastCreationDate = 999999999999999999999999999999D;
-        }
-        ExplorePageExecutor executor = new ExplorePageExecutor("All", this, 18, 0, true);
-        executor.initExecutor();
-    }
 
+    /**
+     * Refresh the data in this repository
+     */
     public void refreshData(){
         ExplorePageExecutor executor = new ExplorePageExecutor("All", this, 18, 0, false);
         executor.initExecutor();
@@ -132,6 +144,13 @@ public class ExploreRepository implements ExploreWholeInterface{
     }
 
 
+    /**
+     * Called when the ExplorePageExecutor has completed, updates the data in the repository.
+     * @param successful whether it was successful
+     * @param update whether the data was an update or the initial setting of data
+     * @param explorePostSet the data of recent posts
+     * @param fullFeaturedPostArrayList the featured post data.
+     */
     @Override
     public void completed(Boolean successful, Boolean update, ExplorePostSet explorePostSet, ArrayList<FullPost> fullFeaturedPostArrayList) {
         internetAvailable.postValue(successful);

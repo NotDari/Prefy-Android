@@ -12,6 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Data entity represeting a user. Implements parelable to
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -38,8 +41,10 @@ public class User implements Parcelable{
     private Boolean following;
 
 
-
-
+    /**
+     * Gets a user from a parcel
+     * @param in the parcel to get the user from
+     */
     protected User(Parcel in) {
         username = ParcelableHelper.readStringFromParcel(in);
         profileImageURL = ParcelableHelper.readStringFromParcel(in);
@@ -65,6 +70,11 @@ public class User implements Parcelable{
         return 0;
     }
 
+    /**
+     * Convert the user to a parcel
+     * @param dest destination parcelable to write into
+     * @param flags additional flags to add
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         ParcelableHelper.writeStringToParcel(dest,username);

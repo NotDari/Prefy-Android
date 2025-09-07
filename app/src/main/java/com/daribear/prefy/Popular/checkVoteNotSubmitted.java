@@ -3,6 +3,9 @@ package com.daribear.prefy.Popular;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * Helper class to check whether the upload table has uploaded the post already or not
+ */
 public class checkVoteNotSubmitted {
     private final String uploadVotesTable = "UploadVotes";
 

@@ -22,6 +22,9 @@ import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 
+/**
+ * The fragment which represents the profile of the logged in user. Which can be accessed using the bottom navigation.
+ */
 public class HomeProfileFragment extends Fragment{
     private String username, imageUrl;
     private Boolean viewDestroyed;
@@ -42,7 +45,7 @@ public class HomeProfileFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         getViews(view);
-        getData(view);
+        getData();
         handleSharedPrefs(view);
         initRefresh(view);
         return view;
@@ -56,7 +59,9 @@ public class HomeProfileFragment extends Fragment{
         noPostsLayout = view.findViewById(R.id.ProfileFragmentNoPosts);
     }
 
-
+    /**
+     * Set up a refresh listener to listen to the user swipe for refreshing of data.
+     */
     private void initRefresh(View view){
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -68,6 +73,10 @@ public class HomeProfileFragment extends Fragment{
         });
     }
 
+    /**
+     * Retrieve all the user's details from the shared prefs
+     * @param view
+     */
     private void handleSharedPrefs(View view){
         if (!DataAlreadySet) {
             viewDestroyed = false;
@@ -101,14 +110,21 @@ public class HomeProfileFragment extends Fragment{
         }
     }
 
+    /**
+     * Inits the recyclerview gatewar
+     * @param view baseview
+     * @param user logged in user
+     */
     private void initGateway(View view, User user){
         gateway = new ProfilePostsGateway(getActivity(),recView, view, user, true);
         gateway.displayView();
     }
 
 
-
-    private void getData(View view){
+    /**
+     * Call the user viewmodel to get the user's posts and the users data if its different
+     */
+    private void getData(){
         DataAlreadySet = false;
         progressBar.setVisibility(View.VISIBLE);
         viewModel = new ViewModelProvider(HomeProfileFragment.this).get(CurrentUserViewModel.class);
@@ -155,6 +171,9 @@ public class HomeProfileFragment extends Fragment{
         });
     }
 
+    /**
+     * Init the text when there is no internet, so that the user can click it to refresh internet.
+     */
     private void initNoInternet(){
         progressBar.setVisibility(View.GONE);
         noInternetText.setVisibility(View.VISIBLE);

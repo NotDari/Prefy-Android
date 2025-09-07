@@ -11,6 +11,9 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ * The gateway to the recyclerview for the profile posts
+ */
 public class ProfilePostListGateway {
     private ArrayList<StandardPost> postList;
     private Integer RecViewId;
@@ -33,7 +36,9 @@ public class ProfilePostListGateway {
         this.parentActivity = parentActivity;
     }
 
-
+    /**
+     * Display the recyclerview for the profile posts
+     */
     public void displayView(){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();

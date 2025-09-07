@@ -9,6 +9,9 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ * The repository which handles the
+ */
 public class CurrentUserRepository implements ProfileHandlerInt {
     private static CurrentUserRepository instance;
     private MutableLiveData<WholeProfile> wholeProfileMutable;
@@ -28,6 +31,10 @@ public class CurrentUserRepository implements ProfileHandlerInt {
         return (instance == null);
     }
 
+    /**
+     * Delete a post from the user's post list
+     * @param standardPost the post to delte
+     */
     public void deleteItem(StandardPost standardPost){
         WholeProfile wholeProfile = wholeProfileMutable.getValue();
         ArrayList<StandardPost> postList = wholeProfile.getPostListContainer().getPostList();
@@ -39,6 +46,11 @@ public class CurrentUserRepository implements ProfileHandlerInt {
         wholeProfileMutable.setValue(wholeProfile);
     }
 
+    /**
+     * User votes on one of their own posts, so must edit the post item in this repository to include tha tvote
+     * @param postId post they voted on
+     * @param vote what they voted
+     */
     public void itemVote(Long postId, String vote){
         if (wholeProfileMutable.getValue() != null) {
             Boolean changed = false;
@@ -66,6 +78,9 @@ public class CurrentUserRepository implements ProfileHandlerInt {
         }
     }
 
+    /**
+     * Calls the executor to get the current user data.
+     */
     public void getCurrentUserData(){
         wholeProfileMutable = new MutableLiveData<>();
         GetUserDetailsExecutor wholeProfileExecutor = new GetUserDetailsExecutor(ServerAdminSingleton.getInstance().getLoggedInId(), this);
@@ -76,6 +91,9 @@ public class CurrentUserRepository implements ProfileHandlerInt {
         return wholeProfileMutable;
     }
 
+    /**
+     * Refreshes the data
+     */
     public void refreshData(){
         GetUserDetailsExecutor wholeProfileExecutor = new GetUserDetailsExecutor(ServerAdminSingleton.getInstance().getLoggedInId(), this);
         wholeProfileExecutor.initExecutor();
@@ -92,6 +110,11 @@ public class CurrentUserRepository implements ProfileHandlerInt {
         instance = null;
     }
 
+    /**
+     * Callback when the data executor returns completed
+     * @param successful whether it was successful
+     * @param wholeProfile the data retrieved.
+     */
     @Override
     public void taskDone(Boolean successful, WholeProfile wholeProfile) {
         if (successful){

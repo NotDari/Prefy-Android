@@ -299,7 +299,7 @@ public class SubmitPostDialog implements PermissionReceived {
     }
 
     /**
-     * Initializes the remove buttons for left and right images.
+     * Initialises the remove buttons for left and right images.
      */
     private void initImageRemoveButtons(){
         leftRemove.setOnClickListener(new View.OnClickListener() {
@@ -523,7 +523,7 @@ public class SubmitPostDialog implements PermissionReceived {
     }
 
     /**
-     * Initializes the category selection Flexbox layout.
+     * Initialises the category selection Flexbox layout.
      * Dynamically adds TextViews for each category and sets up click listeners.
      * Also configures the "More/Less" button to expand/collapse categories.
      *

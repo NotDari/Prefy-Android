@@ -120,6 +120,7 @@ public class CommentRecAdaptor extends RecyclerView.Adapter<CommentRecAdaptor.Vi
 
     /**
      * Loads a default profile image into the given ImageView.
+     * @param imageView the image view to load the data into
      */
     private void defaultImage(ImageView imageView){
         Glide.with(imageView)

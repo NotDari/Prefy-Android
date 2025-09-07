@@ -28,6 +28,11 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for displaying comments in a RecyclerView.
+ * it handles headers, comment items, and footers
+ * Also supports deletion of comments.
+ */
 public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements CommentDeleted{
     public final Integer COMMENT_HEADER = 0;
     public final Integer COMMENT_ITEMS = 1;
@@ -51,6 +56,10 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.commentDelegate = commentDelegate;
     }
 
+    /**
+     * Inflate view holders based on type
+
+     */
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,6 +71,7 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         else if (viewType == COMMENT_ITEMS){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_list_item, parent, false);
             holder = new CommentItemViewHolder(view);
+            //adjust profile image size based on screen width
             DisplayMetrics displayMetrics = new DisplayMetrics();
             ((Activity)  ( ((CommentItemViewHolder)holder).userProfileImage.getContext())).getWindowManager()
                     .getDefaultDisplay()
@@ -76,6 +86,7 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_footer_item, parent, false);
             view.setForegroundGravity(View.TEXT_ALIGNMENT_CENTER);
             holder = new CommentFooterViewHolder(view);
+            //set top margin for footer
             DisplayMetrics displayMetrics = new DisplayMetrics();
             ((Activity)  ( ((CommentFooterViewHolder)holder).itemView.getContext())).getWindowManager()
                     .getDefaultDisplay()
@@ -91,6 +102,11 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         return holder;
     }
 
+    /**
+     * Bind data to view holders
+     * @param holder view holder
+     * @param position position in the adapter
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == COMMENT_ITEMS){
@@ -128,26 +144,15 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 holder.itemView.setVisibility(View.VISIBLE);
             }
-           // ((TextView)holder.itemView).setText("View More");
+            // ((TextView)holder.itemView).setText("View More");
         }
-    }
-    public void addComments(ArrayList<FullRecComment> commentList){
-        noInternetDefault = false;
-        for (int i = this.commentList.size(); i < commentList.size(); i ++){
-            this.commentList.add(commentList.get(i));
-        }
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (commentList.size() > 0) {
-                    commentHeaderItem.NoItemsCheck(false);
-                } else {
-                    commentHeaderItem.NoItemsCheck(true);
-                }
-            }
-        });
     }
 
+
+    /**
+     * Set the entire comment list
+     * @param commentList new comment list
+     */
     public void setCommentList(ArrayList<FullRecComment> commentList) {
         this.commentList = commentList;
         noInternetDefault = false;
@@ -163,11 +168,20 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
 
     }
-
+    /**
+     * Get current comment list
+     * @return current list of comments
+     */
     public ArrayList<FullRecComment> getCommentList() {
         return commentList;
     }
 
+    /**
+     * Determine type of item for RecyclerView to make it a footer, item or header
+     *
+     * @param position position of item
+     * @return type of item
+     */
     @Override
     public int getItemViewType(int position) {
         if (position == 0){
@@ -185,6 +199,10 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
+    /**
+     * DeleteClicked has been called in the pop up so it was called back to here
+     * @param commentId id of comment to delete
+     */
     @Override
     public void deleteClicked(Long commentId) {
 
@@ -198,6 +216,9 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
+    /**
+     * ViewHolder for individual comment items
+     */
     public class CommentItemViewHolder extends RecyclerView.ViewHolder {
         public TextView usernameText, commentText, timeSinceText, bottomView;
         public ImageView userProfileImage;
@@ -237,6 +258,10 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+
+    /**
+     * Initialise "No Internet" state for header
+     */
     public void initNoInternet(){
         if (commentHeaderItem != null) {
             commentHeaderItem.initNoInternet();
@@ -245,6 +270,11 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * Load users profile image with Glide
+     * @param holder view holder
+     * @param position position of comment
+     */
     private void initGlide(CommentItemViewHolder holder, int position){
         String image = commentList.get(position).getFullComment().getComment().getUser().getProfileImageURL();
         if (image != null){
@@ -259,10 +289,12 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public void removeComment(Long commentId){
 
-    }
-
+    /**
+     * Set click listener for navigating to user profile
+     * @param holder view holder
+     * @param position position of comment
+     */
     private void handleClick(CommentItemViewHolder holder, int position){
         holder.userProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,7 +306,10 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
     }
-
+    /**
+     * Set visibility of view more footer
+     * @param visible whether to show it or not
+     */
     public void setViewMoreVisibility(Boolean visible){
         viewMoreVisible = visible;
         if (currentFooterViewHolder != null){
@@ -292,6 +327,10 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * Set click listener for footer view more
+     * @param holder footer view holder
+     */
     private void viewMoreClicked(CommentFooterViewHolder holder){
         holder.viewMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -301,6 +340,11 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
         });
     }
 
+    /**
+     * Set click listener for click on more button for more comments
+     * @param holder comment view holder
+     * @param position position of comment
+     */
     private void handleMoreClick(CommentItemViewHolder holder, int position){
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,6 +355,7 @@ public class CommentListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } catch (CloneNotSupportedException e) {
                     throw new RuntimeException(e);
                 }
+                // Initialise popup dialog for more options
                 CommentMorePopUpDialog dialog = new CommentMorePopUpDialog(fullComment, parentActivity, commentDelegate, CommentListAdaptor.this::deleteClicked);
                 Integer bottomNavHeight = parentActivity.findViewById(R.id.BottomNav).getHeight();
                 dialog.setCoordinates(0, bottomNavHeight);

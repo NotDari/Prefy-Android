@@ -20,6 +20,10 @@ import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+/**
+ * Popup dialog for handling additional comment actions
+ * such as reply, view profile, report, or delete
+ */
 public class CommentMorePopUpDialog implements DeleteDialogDelegate {
     private FullComment fullComment;
     private BottomSheetDialog commentDialog;
@@ -36,12 +40,21 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
         this.commentDeleteDelegate = commentDeleteDelegate;
     }
 
+    /**
+     * Set coordinates for custom positioning of the popup
+     * @param x x offset
+     * @param y y offset
+     */
     public void setCoordinates(Integer x, Integer y){
         changeCoordinates = true ;
         this.changeCoordinatesX = x;
         this.changeCoordinatesY = y;
     }
 
+    /**
+     * Initialise and attach click listeners to all views in dialog
+     * @param postDialog the dialog to initialise
+     */
     private void setUpViews(Dialog postDialog){
         ConstraintLayout replyLayout = postDialog.findViewById(R.id.CommentDialogReplyLayout);
         ConstraintLayout profileLayout = postDialog.findViewById(R.id.CommentDialogProfileLayout);
@@ -49,6 +62,7 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
         ConstraintLayout deleteLayout = postDialog.findViewById(R.id.CommentDialogDeleteLayout);
         Utils utils = new Utils(ownerActivity);
         View deleteView = postDialog.findViewById(R.id.CommentDialogDeleteView);
+        // Show delete option only if current user is the comment author
         if (fullComment.getComment().getUser().getId().equals(utils.loadLong(ownerActivity.getString(R.string.save_user_id), 0))){
             deleteLayout.setVisibility(View.VISIBLE);
             deleteView.setVisibility(View.VISIBLE);
@@ -56,6 +70,7 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
             deleteLayout.setVisibility(View.GONE);
             deleteView.setVisibility(View.GONE);
         }
+        //Reply click listener
         replyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +78,8 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
                 postDialog.dismiss();
             }
         });
+        //Profile click listener
+
         profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +90,7 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
                 postDialog.dismiss();
             }
         });
+        //Report click listener
         reportLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +105,7 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
                 }
             }
         });
+        // Delete click listener
         deleteLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +116,9 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
 
     }
 
+    /**
+     * Initialise and show the popup dialog
+     */
     public void initDialog(){
         commentDialog = new BottomSheetDialog(ownerActivity, R.style.BottomSheetDialog);
         commentDialog.setContentView(R.layout.comment_pop_up_dialog);
@@ -116,20 +138,10 @@ public class CommentMorePopUpDialog implements DeleteDialogDelegate {
 
     }
 
-    private void initLocation(Window dialogWindow, Dialog postDialog){
-        if (changeCoordinates){
-            LinearLayout PostDiaFullLay = postDialog.findViewById(R.id.PostDiaFullLay);
-            WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
-            wlp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-            wlp.x = changeCoordinatesX;
-            wlp.y = changeCoordinatesY + PostDiaFullLay.getHeight()/2;
-            dialogWindow.setAttributes(wlp);
 
-        }
-
-
-    }
-
+    /**
+     * Called when delete is clicked in popup
+     */
     @Override
     public void deleteClicked() {
         UploadController.saveDelete(commentDialog.getContext().getApplicationContext(), "Comment", fullComment.getComment().getCommentId());

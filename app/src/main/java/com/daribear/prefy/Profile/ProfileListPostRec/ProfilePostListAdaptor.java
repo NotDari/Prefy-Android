@@ -29,6 +29,14 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ * The recyclerview for the profile posts.
+ * This adapter is responsible for displaying a list of StandardPost items on a user's profile.
+ * Each item shows the post image, question, vote counts, user info, and comment counts.
+ * It also handles interactions such as voting, opening the post dropdown menu, navigating to comments,
+ * and adjusting the layout to match top and bottom bars.
+ *
+ */
 public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostListAdaptor.ViewHolder>{
     private ArrayList<StandardPost> postList;
     private String username, profileImageUrl;
@@ -42,6 +50,7 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
         this.parentActivity = parentActivity;
     }
 
+    //Inflate the view
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +59,7 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
         return holder;
     }
 
+    //Bind the viewholder for each posts
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Integer totalVotes = (postList.get(position).getLeftVotes() + postList.get(position).getRightVotes());
@@ -122,6 +132,9 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
             defaultImage(holder);
         }
     }
+    /**
+     * Set the default image if the user has no profile photo
+     */
     private void defaultImage(ViewHolder holder){
         Glide
                 .with(holder.profileImage)
@@ -130,6 +143,11 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
                 .into(holder.profileImage);
     }
 
+    /**
+     * Initaites the vote system to allow the user to vote on the post
+     * @param holder the viewholder
+     * @param position the position of the item in the datalist
+     */
     private void initVoteSystem(ViewHolder holder, int position){
         Context context = holder.itemView.getContext();
         holder.leftVote.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +163,9 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
             }
         });
     }
+    /**
+     * Initiates a click on the comments button, which will navigae to the comments page
+     */
     private void initCommentsClick(ViewHolder holder, int position){
         holder.commentsText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +181,11 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
         });
     }
 
+    /**
+     * Gets the bar heights to use for the vote animation
+     * @param topbar the topbar
+     * @param bottomBar the bottom bar
+     */
     private void getBarHeights(ConstraintLayout topbar, ConstraintLayout bottomBar){
         topbar.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
@@ -181,6 +207,18 @@ public class ProfilePostListAdaptor extends RecyclerView.Adapter<ProfilePostList
         });
     }
 
+    /**
+     * Initializes the "more" button for a post item in the RecyclerView.
+     *
+     * When clicked, this button opens a PostDropDownDialog with options for the post.
+     * It sets up the dialog with:
+     * The post details (StandardPost and current user)
+     * Whether the current user owns the post
+     * Screen coordinates for positioning the dialog
+     * The post image to display in the dialog
+     * @param holder the viewholder
+     * @param position the position of the post in the datalist
+     */
     private void initMoreButton(ViewHolder holder, int position){
         PostDropDownDialog dialog = new PostDropDownDialog(holder.moreButton.getContext(), parentActivity,null, null);
         holder.moreButton.setOnClickListener(new View.OnClickListener() {

@@ -7,6 +7,10 @@ import androidx.lifecycle.ViewModel;
 import com.daribear.prefy.Profile.ProfilePostsRec.ProfileRetreiver.WholeProfile;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
+/**
+ * The view model which acts as a gateway between the CurrentUserRepository and the UI.
+ * Handles the data handling of the logged in user, for their profile.
+ */
 public class CurrentUserViewModel extends ViewModel {
     private CurrentUserRepository userRepo;
     private MutableLiveData<WholeProfile> wholeProfileMutable;

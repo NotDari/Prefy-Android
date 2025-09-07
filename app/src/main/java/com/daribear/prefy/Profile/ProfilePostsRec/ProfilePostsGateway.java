@@ -19,6 +19,10 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+
+/**
+ * The gateway which is the intermediary to the recyclerview for a user's profile posts
+ */
 public class ProfilePostsGateway implements ProfileHandlerInt {
     private ArrayList<StandardPost> postList;
     private Activity activity;
@@ -40,6 +44,10 @@ public class ProfilePostsGateway implements ProfileHandlerInt {
         this.user = user;
     }
 
+    /**
+     * Display the main view of the recyclerview. Shows the profile with width 3 if its the first item.
+     * Else shows a grid with max width 3 with posts of width 1.
+     */
     public void displayView(){
         Integer spanCount = 3;
         this.context = recView.getContext();
@@ -87,11 +95,17 @@ public class ProfilePostsGateway implements ProfileHandlerInt {
         scrollListener();
     }
 
+    /**
+     * Set the initial posts
+     * @param postList the posts to set
+     */
     public void setInitPosts(ArrayList<StandardPost> postList){
         scrollUpdateLoading = false;
         adaptor.initPostList(postList);
     }
-
+    /**
+     * Set the scroll listener which loads more data if the scrolling is near the bottom.
+     */
     public void scrollListener(){
         scrollUpdateLoading = true;
         recView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -116,6 +130,11 @@ public class ProfilePostsGateway implements ProfileHandlerInt {
 
     }
 
+    /**
+     * Loads more data, as the user has scrolled to the bottom.
+     * @param userId user id of the user to get more posts of
+     * @param pageNumber the page number to get the posts of
+     */
     private void getMoreData(Long userId, Integer pageNumber){
         Integer postLimit = Integer.parseInt(view.getContext().getString(R.string.Search_Load_Count)) ;
         if (!scrollUpdateLoading && ((adaptor.getItemCount()-1) % postLimit == 0)) {
@@ -135,7 +154,12 @@ public class ProfilePostsGateway implements ProfileHandlerInt {
 
     }
 
-
+    /**
+     * Callback when the getMorePosts has been completed. It adds more data to the wholeprofile container
+     *
+     * @param successful whether it was successful
+     * @param wholeProfile the data retrieved.
+     */
     @Override
     public void taskDone(Boolean successful, WholeProfile wholeProfile) {
         if (successful){

@@ -24,6 +24,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Starts a thread to get the profile details of a user and then calls another class to get the user's posts.
+ */
 public class GetUserDetailsExecutor implements ProfileHandlerInt, GetFollowingDelegate {
     private Long id;
     private ProfileHandlerInt delegate;
@@ -41,6 +44,9 @@ public class GetUserDetailsExecutor implements ProfileHandlerInt, GetFollowingDe
         this.delegate = delegate;
     }
 
+    /**
+     * Starts a thread to get the profile details of a user and then calls another class to get the user's posts.
+     */
     public void initExecutor(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -98,7 +104,12 @@ public class GetUserDetailsExecutor implements ProfileHandlerInt, GetFollowingDe
         }
     }
 
-
+    /**
+     * When getting the user's profile posts is complete, this is called.
+     *
+     * @param successful whether it was successful
+     * @param wholeProfile the data retrieved.
+     */
     @Override
     public void taskDone(Boolean successful, WholeProfile wholeProfile) {
         if (successful) {
@@ -114,6 +125,12 @@ public class GetUserDetailsExecutor implements ProfileHandlerInt, GetFollowingDe
         }
     }
 
+    /**
+     * This is called when getting the list of whether the user follows them or not.
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

@@ -7,6 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+
+/**
+ * Gateway class to manage the explore category selector RecyclerView
+ * iot sets up the adapter, layout manager, and binds category titles and images
+ */
 public class ExploreCategorySelectorGateway {
     private ArrayList<String> categoryTitle;
     private ArrayList<Integer> categoryImages;
@@ -23,6 +28,11 @@ public class ExploreCategorySelectorGateway {
         this.imageWidth = imageWidth;
     }
 
+
+    /**
+     * Display the RecyclerView with categories
+     * it sets the adapter and uses a 3-column GridLayout
+     */
     public void displayView(){
         adaptor = new ExploreCategorySelectorAdaptor(categoryTitle, categoryImages, imageWidth);
         recView.setAdapter(adaptor);

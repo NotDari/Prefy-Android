@@ -26,6 +26,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Class to fetch comments for a post
+ * Handles network requests, pagination and checking which users are followed
+ */
 public class getCommentsExecutor implements GetFollowingDelegate {
     private Long postId;
     private CommentRetreiverInterface delegate;
@@ -44,16 +48,21 @@ public class getCommentsExecutor implements GetFollowingDelegate {
 
 
 
-
+    /**
+     * Starts a separate thread to fetch comments from the server
+     */
     public void initExecutor(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                //Get server info and auth token
                 serverAddress = ServerAdminSingleton.getInstance().getServerAddress();
                 authToken = ServerAdminSingleton.getInstance().getServerAuthToken();
                 OkHttpClient client = new OkHttpClient();
                 fullCommentList = new ArrayList<>();
+
+                //Build request URL
                 HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Comments/PostComments").newBuilder();
                 httpBuilder.addEncodedQueryParameter("postId", postId.toString());
                 httpBuilder.addEncodedQueryParameter("pageNumber", "0");
@@ -63,12 +72,14 @@ public class getCommentsExecutor implements GetFollowingDelegate {
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Authorization", authToken)
                         .build();
+                //Check internet availability
                 if (GetInternet.isInternetAvailable()) {
                     try {
                         Response response = client.newCall(request).execute();
                         if (response.isSuccessful()){
                             String responseString = response.body().string();
                             JSONArray jsonArray = new JSONArray(responseString);
+                            //Parse json into FullRecComment objects
                             for (int i = 0; i < jsonArray.length(); i++){
                                 JSONObject jsonObjectTemp = jsonArray.getJSONObject(i);
                                 FullRecComment fullRecComment = new FullRecComment();
@@ -96,6 +107,9 @@ public class getCommentsExecutor implements GetFollowingDelegate {
         });
     }
 
+    /**
+     * Check which users are being followed by the logged in user for the retrieved comments
+     */
     private void getUserFollowing(){
         if (fullCommentList.size() == 0){
             success();
@@ -113,11 +127,19 @@ public class getCommentsExecutor implements GetFollowingDelegate {
 
 
 
-
+    /**
+     * Called when comments and following info have been successfully fetched
+     */
     private void success(){
         delegate.complete(true, false, fullCommentList, 0);
     }
 
+    /**
+     * Callback from FollowingRetrieving to update following status of users
+     * @param successful whether retrieval was successful
+     * @param followList map of user ids to following status
+     * @param type type of retrieval
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful) {

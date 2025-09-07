@@ -20,6 +20,16 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The repository which handles all the data details necessary for the popular pages.
+ * It handles:
+ * Fetching popular posts from the cache or web
+ * Tracking votes and user interactions on posts
+ * Maintains live data objects for UI observers
+ * Updates popular activity statistics (votes, comments, total activity)
+ * Handling addition and removal of posts in the popular feed
+ *
+ */
 public class NewPopularRepository implements NewCachePopularDataRetreiverInterface, RetreivePopularDataInterface , PopularActivityRetrieverInterface {
     private static NewPopularRepository instance;
 
@@ -52,6 +62,11 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         return instance;
     }
 
+    /**
+     * Sets up the livedata for the popular posts, if not yet created.
+     * Gets the initial set of posts and associated details.
+     * @return
+     */
     public MutableLiveData<PopularModelPackage> getInitData(){
         if (popularModelMutable == null){
             popularModelMutable = new MutableLiveData<>();
@@ -74,6 +89,9 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         return popularModelMutable;
     }
 
+    /**
+     * Removes an item from the popularModelPackage, which contains the data of this repository.
+     */
     public void removeItem(){
         PopularModelPackage popularModelPackage = getPopularModelMutable().getValue();
         if (popularModelPackage.getFullPostList().size() > 0) {
@@ -84,11 +102,19 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         }
     }
 
+    /**
+     * Calls the executor which gets the Popular Activity
+     */
     public void getPopularActivity(){
         PopularActivityRetreiver popularActivityRetreiver = new PopularActivityRetreiver(this);
         popularActivityRetreiver.init();
     }
 
+    /**
+     * Called when the current user votes on a post.Changes the post within this repository's data to reflect that change
+     * @param postId id of post to change
+     * @param vote vote the user made.
+     */
     public void itemVote(Long postId, String vote){
         if (popularModelMutable.getValue() != null) {
             Boolean changed = false;
@@ -109,6 +135,10 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         }
     }
 
+    /**
+     * Called when a user is altered in one of the posts, and thus this repository's data has to be changed aswell.
+     * @param user the new user, that has been changed.
+     */
     public void userAltered(User user){
         if (popularModelMutable.getValue() != null) {
             Boolean changed = false;
@@ -130,6 +160,10 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         }
     }
 
+    /**
+     * Called when more popular posts are required.
+     * Gets more popular posts and adds them to the data list.
+     */
     public void getMoreData(){
         if (!dataLoading){
             ArrayList<Long> avoidList = new ArrayList<>();
@@ -148,6 +182,9 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         }
     }
 
+    /**
+     * Resets all the activities in this repository
+     */
     public void resetActivity(){
         PopularActivity popularActivity = new PopularActivity();
         popularActivity.setTotalActivities(0);
@@ -165,7 +202,11 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
     }
 
 
-
+    /**
+     * Delected for when retrieving popularActivity is complete
+     * @param successful whether it succesfully retrieved the data
+     * @param popularActivity the popularActivity retrieved
+     */
     @Override
     public void taskCompleted(Boolean successful, PopularActivity popularActivity) {
         if (successful){
@@ -173,6 +214,12 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         }
     }
 
+    /**
+     * Called when retrieving data is complete.
+     * @param successful whether it was successful
+     * @param fullPostList the list of posts retrieved
+     * @param type the type retrieved
+     */
     @Override
     public void taskComplete(Boolean successful, ArrayList<FullPost> fullPostList, String type) {
         dataLoading = false;
@@ -206,6 +253,12 @@ public class NewPopularRepository implements NewCachePopularDataRetreiverInterfa
         }
     }
 
+    /**
+     * Called when retrieving data is complete.
+     * @param successful whether it was successful
+     * @param postList list of posts retrieved
+     * @param avoidList lists of posts to avoid, as they have already been retrieved/seen
+     */
     @Override
     public void completed(Boolean successful, ArrayList<FullPost> postList, ArrayList<Long> avoidList) {
         postIdVoteList.postValue(avoidList);

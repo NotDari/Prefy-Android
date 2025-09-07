@@ -18,6 +18,10 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
+/**
+ * RecyclerView Adapter for displaying explore category selector items
+ * handles category title, image, sizing, and click navigation
+ */
 public class ExploreCategorySelectorAdaptor extends RecyclerView.Adapter<ExploreCategorySelectorAdaptor.ViewHolder>{
     private ArrayList<String> categoryTitleList;
     private ArrayList<Integer> categoryImagesList;
@@ -28,7 +32,9 @@ public class ExploreCategorySelectorAdaptor extends RecyclerView.Adapter<Explore
         this.categoryImagesList = categoryImagesList;
         this.imageWidth = imageWidth;
     }
-
+    /**
+     * Inflate view and adjust image and text sizes according to given width
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,6 +49,12 @@ public class ExploreCategorySelectorAdaptor extends RecyclerView.Adapter<Explore
         return holder;
     }
 
+
+    /**
+     * Bind data to the viewHolder
+     * @param holder viewHolder to bind
+     * @param position position of item
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textView.setText(categoryTitleList.get(holder.getAdapterPosition()));
@@ -63,6 +75,9 @@ public class ExploreCategorySelectorAdaptor extends RecyclerView.Adapter<Explore
         return categoryTitleList.size();
     }
 
+    /**
+     * viewHolder class to hold and reuse item views
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout relLayout;
         private ImageView imageView;
@@ -77,6 +92,11 @@ public class ExploreCategorySelectorAdaptor extends RecyclerView.Adapter<Explore
         }
     }
 
+    /**
+     * Handle category click and navigate to posts of that category
+     * @param view clicked view
+     * @param position position of clicked item
+     */
     private void viewClicked(View view,int position){
         Bundle bundle = new Bundle();
         bundle.putString("category", categoryTitleList.get(position));

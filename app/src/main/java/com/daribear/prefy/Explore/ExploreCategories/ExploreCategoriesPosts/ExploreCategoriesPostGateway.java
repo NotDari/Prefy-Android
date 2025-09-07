@@ -11,6 +11,10 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 
+/**
+ * Gateway class to manage posts for a specific explore category, it
+ * handles recyclerView initialisation, adapter setup, and data updates
+ */
 public class ExploreCategoriesPostGateway {
     private Integer RecViewId;
     private View view;
@@ -27,7 +31,9 @@ public class ExploreCategoriesPostGateway {
         this.activity = activity;
     }
 
-
+    /**
+     * Initialise the recyclerView, set adapter, layout manager and scrolling
+     */
     public void displayView(){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();
@@ -36,6 +42,7 @@ public class ExploreCategoriesPostGateway {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context){
             @Override
             public boolean checkLayoutParams(RecyclerView.LayoutParams lp) {
+                //adjust height of each item to 90% of RecyclerView height
                 lp.height = (int) (getHeight() * .9);
                 return super.checkLayoutParams(lp);
             }
@@ -49,11 +56,4 @@ public class ExploreCategoriesPostGateway {
     }
 
 
-    public void destroyView(){
-        this.view = null;
-        //adaptor.viewDestroyed();
-        adaptor = null;
-        recView = null;
-
-    }
 }

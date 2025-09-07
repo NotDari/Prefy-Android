@@ -17,6 +17,10 @@ import com.daribear.prefy.Explore.ExplorePostSet;
 import com.daribear.prefy.R;
 
 
+/**
+ * fragment to display posts of a specific explore category
+ * handles back navigation, no internet state, and data retrieval
+ */
 public class ExploreCategoriesPostFragment extends Fragment implements ExploreCategoryInterface {
     private ImageView backButton;
     private TextView titleCategory, noInternetText;
@@ -40,6 +44,9 @@ public class ExploreCategoriesPostFragment extends Fragment implements ExploreCa
 
     }
 
+    /**
+     * fetch posts for the selected category
+     */
     private void getData(){
         progressBar.setVisibility(View.VISIBLE);
         ExploreCategoriesRetreiver exploreCategoriesRetreiver = new ExploreCategoriesRetreiver(this, null, categoryTitle, 18);
@@ -52,6 +59,7 @@ public class ExploreCategoriesPostFragment extends Fragment implements ExploreCa
         noInternetText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //hide error text and retry text
                 noInternetText.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
                 getData();
@@ -59,7 +67,10 @@ public class ExploreCategoriesPostFragment extends Fragment implements ExploreCa
         });
     }
 
-
+    /**
+     *  Initialise all the views and setup the gateway for recyclerview
+     * @param view baseview
+     */
     private void getViews(View view){
         backButton = view.findViewById(R.id.ExploreCategoriesListListTopBarBack);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -71,12 +82,18 @@ public class ExploreCategoriesPostFragment extends Fragment implements ExploreCa
         titleCategory = view.findViewById(R.id.ExploreCategoriesListListTopBarTitle);
         titleCategory.setText(categoryTitle);
         recView = view.findViewById(R.id.ExploreCategoriesListListRecView);
+        //setup gateway to take RecyclerView posts
         gateway = new ExploreCategoriesPostGateway(R.id.ExploreCategoriesListListRecView, view, view.getContext(), getActivity());
         gateway.displayView();
         progressBar = view.findViewById(R.id.ExploreCategoriesListListProgressBar);
         noInternetText = view.findViewById(R.id.ExploreCategoriesListListNoInternet);
     }
 
+    /**
+     * Callback for when category posts are retrieved
+     * @param successful whether the network call was successful or not
+     * @param explorePostSet set of posts retrieved
+     */
     @Override
     public void Completed(Boolean successful, ExplorePostSet explorePostSet) {
         if (getActivity() != null) {
@@ -85,6 +102,7 @@ public class ExploreCategoriesPostFragment extends Fragment implements ExploreCa
                 public void run() {
                     progressBar.setVisibility(View.GONE);
                     if (successful) {
+                        //update gateway with new data
                         gateway.updateData(explorePostSet.getPostList());
                     } else {
                         noInternet();

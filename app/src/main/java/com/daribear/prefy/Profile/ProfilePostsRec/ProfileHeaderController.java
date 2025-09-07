@@ -27,6 +27,11 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.Objects;
 
+/**
+ * The controller which handles the header of the user.
+ * Contains the image, name, bio and social medias etc
+ * Also shows whether the user is following them, whether the user is verified etc.
+ */
 public class ProfileHeaderController {
     private View view;
     private User user;
@@ -48,6 +53,10 @@ public class ProfileHeaderController {
         setViews();
     }
 
+    /**
+     * Get a list of views to use
+     * @param view baseview
+     */
     private void getViews(View view){
         settingsButton = view.findViewById(R.id.ProfileSettingsButton);
         backButton = view.findViewById(R.id.ProfileBackButton);
@@ -65,6 +74,13 @@ public class ProfileHeaderController {
         }
     }
 
+    /**
+     * Init a specific top bar if this is the user's profile from the dashboard.
+     * The topbar contains the settings if its the logged in user from the bottom nav.
+     * If its not, then it contains a back button, as the user found this profile from search or clicking on a user's profile.
+     *
+     * @param view baseview
+     */
     private void initTopBar(View view){
         if (currentUser) {
             settingsButton.setVisibility(View.VISIBLE);

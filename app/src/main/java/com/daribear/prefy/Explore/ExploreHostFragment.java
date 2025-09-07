@@ -22,6 +22,10 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 import java.util.List;
 
 
+/**
+ * Fragment for the Explore page
+ * Handles posts feed, featured posts , pull refresh  and no internet state
+ */
 public class ExploreHostFragment extends Fragment {
     private RecyclerView recView;
     private ExploreViewModel viewModel;
@@ -46,6 +50,9 @@ public class ExploreHostFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Initialise views and RecyclerView
+     */
     private void getViews(View view){
         recView = view.findViewById(R.id.ExploreRecView);
         refreshLayout = view.findViewById(R.id.ExploreHostSwipeRefresh);
@@ -56,11 +63,15 @@ public class ExploreHostFragment extends Fragment {
     }
 
 
+    /**
+     * Fetch initial data and attach observers for LiveDat to get updates
+     */
     private void getData(){
         initDataSet = false;
         progressBar.setVisibility(View.VISIBLE);
         viewModel = new ViewModelProvider(ExploreHostFragment.this).get(ExploreViewModel.class);
         viewModel.init();
+        //observe featured posts LiveData
         viewModel.getFeaturedPostList().observe(getViewLifecycleOwner(), new Observer<List<FullPost>>() {
             @Override
             public void onChanged(List<FullPost> fullFeaturedPosts) {
@@ -70,6 +81,7 @@ public class ExploreHostFragment extends Fragment {
                 }
             }
         });
+        //observe explore posts LiveData
         viewModel.getExplorePostSetMutable().observe(getViewLifecycleOwner(), new Observer<ExplorePostSet>() {
             @Override
             public void onChanged(ExplorePostSet explorePostSet) {
@@ -81,6 +93,7 @@ public class ExploreHostFragment extends Fragment {
                 }
             }
         });
+        //observe internet available LiveData
         viewModel.getInternetAvailable().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -101,6 +114,9 @@ public class ExploreHostFragment extends Fragment {
 
     }
 
+    /**
+     * Initialise no internet state, it shows dropdown and retry option
+     */
     private void initNoInternet(){
         NoInternetDropDown.getInstance(getActivity()).showDropDown();
         noInternetText.setOnClickListener(new View.OnClickListener() {
@@ -124,14 +140,16 @@ public class ExploreHostFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Setup pull refresh functionality
+     */
     private void setUpRecView(View view){
         gateway = new NewExploreGateway(recView, view, getActivity());
         gateway.displayView();
     }
 
 
-
+    //Scroll to Top of recyclerview
     public void initScrollToTop(){
         recView.smoothScrollToPosition(0);
     }

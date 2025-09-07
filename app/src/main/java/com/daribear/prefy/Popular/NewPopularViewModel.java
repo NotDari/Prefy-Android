@@ -11,6 +11,10 @@ import com.daribear.prefy.Profile.User;
 
 import lombok.Getter;
 
+/**
+ * The viewmodel which represents the gateway beteeen the ui and the popular posts repository.
+ * handles the calling for pagination of popular posts to remove them or get more, for the repository.
+ */
 public class NewPopularViewModel extends ViewModel {
     private MutableLiveData<PopularModelPackage> popPostSetData;
 

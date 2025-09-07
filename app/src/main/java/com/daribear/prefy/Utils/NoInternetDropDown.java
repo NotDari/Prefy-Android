@@ -10,7 +10,10 @@ import android.widget.TextView;
 import com.daribear.prefy.R;
 import com.google.android.material.snackbar.Snackbar;
 
-
+/**
+ * A dropdown that shows when there is no internet.
+ * Is a singleton to stop multiple being shown at once
+ */
 public class NoInternetDropDown {
     private Activity activity;
     private static NoInternetDropDown instance;
@@ -31,6 +34,9 @@ public class NoInternetDropDown {
         return instance;
     }
 
+    /**
+     * Show the dropdown
+     */
     public void showDropDown() {
         if (!snackbar.isShown()){
             snackbar.show();
@@ -41,44 +47,9 @@ public class NoInternetDropDown {
 
 
 
-    private void expand(View v) {
-        v.setVisibility(View.VISIBLE);
-        Animation animSlidedown = AnimationUtils.loadAnimation(v.getContext(),R.anim.internet_slide_down);
-        v.startAnimation(animSlidedown);
-    }
 
-    private void collapse(final View v) {
-        Animation animSlidedown = AnimationUtils.loadAnimation(v.getContext(),R.anim.internet_slide_up);
-        v.startAnimation(animSlidedown);
-        animSlidedown.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                v.setVisibility(View.GONE);
-                initCooldown();
-                animSlidedown.setAnimationListener(null);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-
-    private void initCooldown(){
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                viewActive = false;
-            }
-        }, 30000); //
-    }
 
 
 

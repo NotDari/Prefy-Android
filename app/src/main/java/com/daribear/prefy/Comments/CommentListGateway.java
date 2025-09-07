@@ -13,6 +13,11 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.ArrayList;
 
+
+/**
+ * Gateway class for managing comment RecyclerView
+ * Handles adding data, initializing views, and submitting comments
+ */
 public class CommentListGateway {
     private ArrayList<FullRecComment> commentList;
     private Integer RecViewId;
@@ -40,6 +45,9 @@ public class CommentListGateway {
         this.commentDelegate = commentDelegate;
     }
 
+    /**
+     * Initialise RecyclerView with empty data
+     */
     public void displayEmptyView(){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();
@@ -54,9 +62,12 @@ public class CommentListGateway {
         };
         recView.setLayoutManager(linearLayoutManager);
         viewMoreVisible = false;
-        detectViewMore();
     }
 
+    /**
+     * Add a list of comments to RecyclerView
+     * @param addCommentList list of comments to add
+     */
     public void addData(ArrayList<FullRecComment> addCommentList){
         adaptor.setCommentList(addCommentList);
         parentActivity.runOnUiThread(new Runnable() {
@@ -68,10 +79,17 @@ public class CommentListGateway {
 
     }
 
+    /**
+     * Initialise no internet state
+     */
     public void initNoInternet(){
         adaptor.initNoInternet();
     }
 
+    /**
+     * Add a single comment to recycler view
+     * @param comment comment to be added
+     */
     public void addComment(FullRecComment comment){
         Integer originalSize = adaptor.getItemCount();
         adaptor.getCommentList().add(comment);
@@ -79,6 +97,10 @@ public class CommentListGateway {
         adaptor.notifyDataSetChanged();
     }
 
+    /**
+     * Submit a new comment, wrap into FullRecComment and update recycler view
+     * @param comment comment object submitted
+     */
     public void commentSubmitted(Comment comment){
         FullRecComment fullRecComment = new FullRecComment();
         FullComment fullComment = new FullComment();
@@ -96,18 +118,17 @@ public class CommentListGateway {
 
     }
 
-    public void commentdeleted(Comment comment){
-       adaptor.removeComment(comment.getCommentId());
-    }
 
-    public void detectViewMore(){
-    }
 
+    /**
+     * Set the view more footer visibility
+     * @param visible whether view more should be visible
+     */
     public void setViewMoreVisibility(Boolean visible){
         adaptor.setViewMoreVisibility(visible);
     }
 
-
+    //Destroy views to stop memory leaks
     public void destroyView(){
         this.view = null;
         //adaptor.viewDestroyed();

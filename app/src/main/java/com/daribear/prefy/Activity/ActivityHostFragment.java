@@ -24,7 +24,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
+/**
+ * The host Fragment for the new activities data.
+ * Has 3 tabs, one for each of the different type of activity.
+ */
 public class ActivityHostFragment extends Fragment {
     private ViewPager2 viewpager;
     private TabLayout tablayout;
@@ -34,7 +37,7 @@ public class ActivityHostFragment extends Fragment {
     private Boolean refreshing = false;
 
 
-
+    //Create the fragment view
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,12 +47,20 @@ public class ActivityHostFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Get the list of views in the fragment
+     * @param view baseview
+     */
     public void getViews(View view){
         tablayout = view.findViewById(R.id.ActivityTabLayout);
         viewpager = view.findViewById(R.id.ActivitiyViewPager);
         initSwipeRefresh(view);
     }
 
+    /**
+     * configure the pager adapter and attach tabs.
+     * sets titles of tabs based on TabNames
+     */
     public void setUpTransition(){
 
         ActivityCollectionAdaptor activityCollectionAdaptor = new ActivityCollectionAdaptor(this);
@@ -62,6 +73,11 @@ public class ActivityHostFragment extends Fragment {
 
     }
 
+    /**
+     * Setup of enabling the swipeRefreshLayout to search for more data.
+     * observes the viewmodel for updating ui
+     * @param view baseview
+     */
     public void initSwipeRefresh(View view){
         viewModel = new ViewModelProvider(ActivityHostFragment.this).get(ActivityViewModel.class);
         viewModel.init();
@@ -90,6 +106,10 @@ public class ActivityHostFragment extends Fragment {
 
 }
 
+/**
+ * Adapter for a viewpager2, which has fragments for each tab.
+ * Uses the ActivityVotesFragment,ActivityCommentsFragment or ActivityFollowersFragment based on which tab is
+ */
 @SuppressWarnings("ALL")
 class ActivityCollectionAdaptor extends FragmentStateAdapter {
 
@@ -97,6 +117,11 @@ class ActivityCollectionAdaptor extends FragmentStateAdapter {
         super(fragment);
     }
 
+    /**
+     * Create the fragment based on the position
+     * @param position position of the tab layout.
+     * @return the Fragment
+     */
     @NonNull
     @Override
     public Fragment createFragment(int position) {

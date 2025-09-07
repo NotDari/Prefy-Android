@@ -31,6 +31,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * The class which retrieves popular posts from the server while excluding posts,
+ * that the user has already interacted with (via the avoidList).
+ *
+ */
 public class WebDataRetriever implements GetFollowingDelegate {
     Integer count = 10;
 
@@ -55,7 +60,9 @@ public class WebDataRetriever implements GetFollowingDelegate {
         this.retrievalType = retrievalType;
     }
 
-
+    /**
+     * Creates a thread which retrieves the popular posts
+     */
     public void initExec(){
         serverAddress = ServerAdminSingleton.getInstance().getServerAddress();
         authToken = ServerAdminSingleton.getInstance().getServerAuthToken();
@@ -124,6 +131,9 @@ public class WebDataRetriever implements GetFollowingDelegate {
         });
     }
 
+    /**
+     * Retrieves the user details for each of the popular posts
+     */
     private void getUserDetails(){
         if (fullPostList.size() == 0){
             userDetailsDone = true;
@@ -179,7 +189,9 @@ public class WebDataRetriever implements GetFollowingDelegate {
     }
 
 
-
+    /**
+     * Retrieve whether the user is following each of the popular posts users.
+     */
     private void getUserFollowing(){
         if (fullPostList.size() == 0){
             userFollowing = true;
@@ -193,6 +205,9 @@ public class WebDataRetriever implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Called when all network tasks have been completed
+     */
     private void operationCompleted(){
         if (userDetailsDone  && userFollowing){
             if (followList != null) {
@@ -209,6 +224,12 @@ public class WebDataRetriever implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Callback when the following list have been retrieved.
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

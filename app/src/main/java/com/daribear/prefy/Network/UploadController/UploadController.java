@@ -12,6 +12,9 @@ import com.daribear.prefy.Utils.ServerAdminSingleton;
 
 import java.util.HashMap;
 
+/**
+ * The controller which saves the valeus it needs to be uploaded to the database.
+ */
 public class UploadController {
     private static final String UploadTableName = "UploadTasks";
     private static final String VotesTableName = "UploadVotes";
@@ -24,6 +27,11 @@ public class UploadController {
     private static final String FollowTableName = "UploadFollowTable";
     private static final String Count = "Count";
 
+    /**
+     * Saves a vote to the uploadVote table
+     * @param appContext context with which to use
+     * @param Vote the vote to save to the table
+     */
     public static void saveVote(Context appContext, HashMap<String, Object> Vote){
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
         Cursor checkCursor = db.rawQuery("SELECT * FROM " + VotesTableName +
@@ -43,6 +51,11 @@ public class UploadController {
         checkCursor.close();
     }
 
+    /**
+     * Saves an activityClear to the activityClear table
+     * @param appContext context with which to use
+     * @param type Which type of activity clear it is
+     */
     public static void saveActivityClear(Context appContext, String type){
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -61,6 +74,11 @@ public class UploadController {
         attemptUpload(appContext);
     }
 
+    /**
+     * Saves a comment to the upload comments table
+     * @param appContext context with which to use
+     * @param comment comment to save
+     */
     public static void saveComment(Context appContext, Comment comment){
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
         db.execSQL("UPDATE " + UploadTableName +
@@ -80,6 +98,11 @@ public class UploadController {
         //contentValues.put("", comment.get);
     }
 
+    /**
+     * Saves a report to the uplaod report table
+     * @param appContext context with which to use
+     * @param report report to upload
+     */
     public static void saveReport(Context appContext, Report report){
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
         db.execSQL("UPDATE " + UploadTableName +
@@ -97,6 +120,12 @@ public class UploadController {
         attemptUpload(appContext);
     }
 
+    /**
+     * Saves a delete to the upload delete table
+     * @param appContext context with which to use
+     * @param type type of delete(comment or post)
+     * @param itemId id of the item to delete
+     */
     public static void saveDelete(Context appContext, String type, Long itemId){
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
         db.execSQL("UPDATE " + UploadTableName +
@@ -112,6 +141,12 @@ public class UploadController {
     }
 
 
+    /**
+     * Saves a follow to the database
+     * @param appContext context which which to use
+     * @param FollowingUserId the id of the user to change the following of
+     * @param Follow whether its a follow or an unfollow
+     */
     public static void saveFollow(Context appContext, Long FollowingUserId , Boolean Follow){
         SQLiteDatabase db = DatabaseHelper.getInstance(appContext).getWritableDatabase();
 
@@ -151,6 +186,10 @@ public class UploadController {
         checkCursor.close();
     }
 
+    /**
+     * Calls on the upload endpoint to start uploading
+     * @param appContext context with which to use
+     */
     public static void attemptUpload(Context appContext){
         UploadEndpoint endpoint = UploadEndpoint.getInstance(appContext);
         endpoint.startUploads();

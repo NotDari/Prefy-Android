@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * A data entity representing the explore post set.
+ * Contains a list of full posts.
+ */
 @Getter
 @Setter
 public class ExplorePostSet {

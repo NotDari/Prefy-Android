@@ -41,7 +41,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * This is the fragment where the user sends feedback through the submission of a suggestions.
+ *
+ */
 public class FeedbackFragment extends Fragment {
     private ImageView backButton;
     private TextView continueButton;
@@ -75,6 +78,10 @@ public class FeedbackFragment extends Fragment {
         });
     }
 
+    /**
+     * This is the continue button, which creates the suggestions and sends it to the server.
+     * @param view baseview
+     */
     private void initContinue(View view){
         editText = view.findViewById(R.id.FeedBackEditText);
         continueButton = view.findViewById(R.id.FeedbackContinueButton);
@@ -136,6 +143,10 @@ public class FeedbackFragment extends Fragment {
         });
     }
 
+    /**
+     * Shows the toast confirming whether the feedback was sent.
+     * @param success boolean indicating whether it was a success
+     */
     private void showToast(Boolean success){
         if (!isDetached()){
             if (getActivity() != null){

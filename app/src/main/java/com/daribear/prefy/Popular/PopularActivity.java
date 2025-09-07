@@ -3,6 +3,10 @@ package com.daribear.prefy.Popular;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Class which represents the activity statistics for a popular post.
+ * Contains the totalActivities, and the votes and comments Counts.
+ */
 @Getter
 @Setter
 public class PopularActivity {
@@ -10,28 +14,4 @@ public class PopularActivity {
     Integer votesCount;
     Integer commentsCount;
 
-    public void subtractVotes(){
-        if (totalActivities != null & votesCount != null) {
-            if (totalActivities - votesCount > 0) {
-                totalActivities -= votesCount;
-                votesCount = 0;
-            } else {
-                totalActivities = 0;
-                votesCount = 0;
-                commentsCount = 0;
-            }
-        }
-    }
-    public void subtractComments(){
-        if (totalActivities != null & commentsCount != null) {
-            if (totalActivities - commentsCount > 0) {
-                totalActivities -= commentsCount;
-                commentsCount = 0;
-            } else {
-                totalActivities = 0;
-                votesCount = 0;
-                commentsCount = 0;
-            }
-        }
-    }
 }

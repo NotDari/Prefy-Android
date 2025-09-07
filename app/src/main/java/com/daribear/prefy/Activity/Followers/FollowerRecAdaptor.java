@@ -24,15 +24,18 @@ import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 
+/**
+ * The recycler view for the followActivities.
+ * Displays the list of follow activities by showing the follower's profile image, username and the "followed you" text.
+ */
 @AllArgsConstructor
 public class FollowerRecAdaptor extends RecyclerView.Adapter<FollowerRecAdaptor.ViewHolder> {
     @Setter
     private ArrayList<FollowerActivity> followerActivityList;
 
-
-
-
-
+    /**
+     * Inflates the item layout and returns a ViewHolder.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,6 +43,11 @@ public class FollowerRecAdaptor extends RecyclerView.Adapter<FollowerRecAdaptor.
         return new ViewHolder(view);
     }
 
+    /**
+     * Binds the data at the given position to the ViewHolder.
+     * @param holder The ViewHolder to bind data to
+     * @param position The position of the item in the data list
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         initGlide(true, holder.profileImageView, followerActivityList.get(position).getUser().getProfileImageURL());
@@ -48,11 +56,18 @@ public class FollowerRecAdaptor extends RecyclerView.Adapter<FollowerRecAdaptor.
         holder.textView.setText(getFollowerText(followerActivityList.get(position), holder.itemView.getContext()));
     }
 
+    /**
+     * Gets the number of items in the recyclerview
+     * @return the number of items in the recyclerview.
+     */
     @Override
     public int getItemCount() {
         return followerActivityList.size();
     }
 
+    /**
+     * ViewHolder class for holding references to the views in each item.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView postImageView, profileImageView;
         TextView textView;
@@ -65,6 +80,12 @@ public class FollowerRecAdaptor extends RecyclerView.Adapter<FollowerRecAdaptor.
         }
     }
 
+    /**
+     * Load images using Glide library.
+     * @param profile True if the profile image is a non default one
+     * @param imageView The ImageView to load the image into
+     * @param imageLink The URL of the image
+     */
     private void initGlide(Boolean profile, ImageView imageView, String imageLink){
         if (profile){
             if (imageLink != null && !imageLink.isEmpty()){
@@ -86,12 +107,22 @@ public class FollowerRecAdaptor extends RecyclerView.Adapter<FollowerRecAdaptor.
         }
     }
 
+    /**
+     * Loads a default profile image into the given ImageView.
+     * @param imageView the image view to load the data into
+     */
     private void defaultImage(ImageView imageView){
         Glide.with(imageView)
                 .load(R.drawable.user_photo)
                 .into(imageView);
     }
 
+    /**
+     * Creates the text saying "username followed you" in different colours.
+     * @param followerActivity the followActivity to create the text from
+     * @param context the context to use
+     * @return
+     */
     private SpannableStringBuilder getFollowerText(FollowerActivity followerActivity, Context context){
         SpannableStringBuilder builder = new SpannableStringBuilder();
         String textUsername;
@@ -113,6 +144,11 @@ public class FollowerRecAdaptor extends RecyclerView.Adapter<FollowerRecAdaptor.
         return builder;
     }
 
+    /**
+     * Adds a click listener for the profile image, so that the logged in user can view the other user's profile
+     * @param itemview the itemview that can be clicked on
+     * @param postion position in the data list
+     */
     private void initClickListener(View itemview, int postion){
         ImageView profileImage = itemview.findViewById(R.id.ActivityListItemProfileImage);
         profileImage.setOnClickListener(new View.OnClickListener() {

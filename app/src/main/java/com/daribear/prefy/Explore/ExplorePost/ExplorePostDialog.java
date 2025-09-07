@@ -26,6 +26,11 @@ import com.daribear.prefy.Votes.VoteHandler;
 import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
+
+/**
+ * Dialog for displaying an Explore post in detail
+ * handles votes, options, comments and navigation to profiles
+ */
 public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDelegate {
     private Dialog dialog;
     private Context context;
@@ -49,7 +54,9 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         fullFeaturedPost.setStandardPost(post);
     }
 
-
+    /**
+     * initialise and show the dialog
+     */
     public void initDialog(){
         dialog = new Dialog(context, android.R.style.Theme_DeviceDefault_NoActionBar);
         dialog.setContentView(R.layout.explore_item_dialog);
@@ -59,6 +66,10 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         dialog.show();
     }
 
+
+    /**
+     * finds and assign views from the layout
+     */
     private void setUpViews(){
         closeButton = dialog.findViewById(R.id.ExploreDialogCloseButton);
         profileImage = dialog.findViewById(R.id.ExploreDialogItemUserImage);
@@ -73,6 +84,9 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         commentsButton = dialog.findViewById(R.id.ExploreDialogItemCommentsButton);
     }
 
+    /**
+     * Initialise all UI-related dialog methods
+     */
     private void initMethods(){
         initClose();
         initViews();
@@ -81,6 +95,9 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         initComments();
     }
 
+    /**
+     * Initialise voting system for the post
+     */
     public void initVotingSystem(){
         VoteHandler.changeImage(fullFeaturedPost.getStandardPost(), postImage, leftCLick, rightClick, "ExploreDialog");
         rightClick.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +116,9 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         });
     }
 
+    /**
+     * Populate UI elements with post and user data
+     */
     private void initViews(){
         postQuestion.setText(fullFeaturedPost.getStandardPost().getQuestion());
         postTime.setText(dateSinceSystem.getTimeSince(fullFeaturedPost.getStandardPost().getCreationDate()));
@@ -112,6 +132,10 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         initImages();
     }
 
+
+    /**
+     * Load post and user images using Glide
+     */
     private void initImages(){
         if (fullFeaturedPost.getUser().getProfileImageURL() != null ) {
             if (!fullFeaturedPost.getUser().getProfileImageURL().isEmpty() && !fullFeaturedPost.getUser().getProfileImageURL().equals("none")){
@@ -134,6 +158,7 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         Glide.with(postImage)
                 .load(fullFeaturedPost.getStandardPost().getImageURL())
                 .into(postImage);
+        //Navigate to user profile on profile image click
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +171,10 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         });
     }
 
+
+    /**
+     * Initialise close button behaviour
+     */
     private void initClose(){
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +184,10 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         });
     }
 
+
+    /**
+     * Initialise comment button behaviour
+     */
     private void initComments(){
         commentsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +201,9 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         });
     }
 
+    /**
+     * Initialise options button behaviour and PostDropDownDialog
+     */
     private void initOptions(){
         PostDropDownDialog dialog = new PostDropDownDialog(optionsButton.getContext(), parentActivity,ExplorePostDialog.this, ExplorePostDialog.this);
         optionsButton.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +223,10 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         });
     }
 
+    /**
+     * Callback from PostDropDownDialog when reply clicked
+     * Hides this dialog
+     */
     @Override
     public void replyClicked() {
         if (dialog.isShowing()){
@@ -194,6 +234,10 @@ public class ExplorePostDialog implements PostDropDownDialogDelegate, DeleteDele
         }
     }
 
+    /**
+     * Callback from PostDropDownDialog when post is deleted
+     * Removes post from items
+     */
     @Override
     public void itemDeleted() {
         FullPost fullPost = new FullPost(fullFeaturedPost.getStandardPost(), fullFeaturedPost.getUser());

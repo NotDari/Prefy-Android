@@ -159,7 +159,7 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
     }
 
     /**
-     * Initializes the save button with its click listener for saving images
+     * Initialises the save button with its click listener for saving images
      */
     private void initSaveLayout(ConstraintLayout saveLayout) {
         saveLayout.setOnClickListener(view -> {
@@ -179,7 +179,7 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
     }
 
     /**
-     * Initializes the profile button to navigate to the user's profile
+     * Initialises the profile button to navigate to the user's profile
      */
     private void initProfileLayout(ConstraintLayout profileLayout) {
         profileLayout.setOnClickListener(view -> {
@@ -194,7 +194,7 @@ public class PostDropDownDialog implements DeleteDialogDelegate , PermissionRece
     }
 
     /**
-     * Initializes the report button to open the report fragment for the post
+     * Initialises the report button to open the report fragment for the post
      */
     private void initReportLayout(ConstraintLayout reportLayout) {
         reportLayout.setOnClickListener(view -> {

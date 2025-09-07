@@ -1,5 +1,8 @@
 package com.daribear.prefy.Utils;
 
+/**
+ * Storage used to specify errors from the backend.
+ */
 public class ErrorStorage {
 
     public enum ErrorType{

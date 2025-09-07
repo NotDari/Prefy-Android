@@ -19,13 +19,14 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
+/**
+ * Class which fetches comments for a specific post
+ * Handles pagination and network requests
+ */
 public class CommentUpdaterExecutor {
     private Long postId;
     private CommentRetreiverInterface delegate;
-    private ArrayList<User> userList;
     private ArrayList<FullRecComment> fullCommentList;
-    private Integer commentCount;
     private Integer currentCommentCount = 0;
     private Integer pageNumber;
     private String serverAddress, authToken;
@@ -36,33 +37,41 @@ public class CommentUpdaterExecutor {
         this.pageNumber = pageNumber;
     }
 
-
+    /**
+     * Creates a seperate thread to retrieve a list of comments for a specific post.
+     */
     public void initExecutor(){
         //TODO update to new
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                //Get server info and auth token
                 serverAddress = ServerAdminSingleton.getInstance().getServerAddress();
                 authToken = ServerAdminSingleton.getInstance().getServerAuthToken();
                 OkHttpClient client = new OkHttpClient();
                 fullCommentList = new ArrayList<>();
+
+                //Build URL with query parameters
                 HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Comments/PostComments").newBuilder();
                 httpBuilder.addEncodedQueryParameter("postId", postId.toString());
                 pageNumber += 1;
                 httpBuilder.addEncodedQueryParameter("pageNumber", pageNumber.toString());
+                //Create request
                 Request request = new Request.Builder()
                         .url(httpBuilder.build())
                         .method("GET", null)
                         .addHeader("Content-Type", "application/json")
                         .addHeader("Authorization", authToken)
                         .build();
+                //Check internet connection
                 if (GetInternet.isInternetAvailable()) {
                     try {
                         Response response = client.newCall(request).execute();
                         if (response.isSuccessful()){
                             String responseString = response.body().string();
                             JSONArray jsonArray = new JSONArray(responseString);
+                            //Parse json into FullRecComment objects
                             for (int i = 0; i < jsonArray.length(); i++){
                                 JSONObject jsonObjectTemp = jsonArray.getJSONObject(i);
                                 FullRecComment fullRecComment = new FullRecComment();
@@ -87,11 +96,10 @@ public class CommentUpdaterExecutor {
         });
     }
 
-
-
-
-
-
+    /**
+     * Called when comments are successfully fetched
+     * Notifies delegate with full comment list and page number
+     */
     private void success(){
         delegate.complete(true,true, fullCommentList, pageNumber);
     }

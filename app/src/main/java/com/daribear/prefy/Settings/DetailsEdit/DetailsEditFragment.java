@@ -57,7 +57,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * The details edit fragment which allows the user to edit one of a user's details.
+ * Receives which detail to alter from arguments, and what the current value is based on what is stored.
+ */
 public class DetailsEditFragment extends Fragment {
     private ImageView backButton, saveButton;
     private TextView titleText;
@@ -105,6 +108,12 @@ public class DetailsEditFragment extends Fragment {
         getValue(view,detail);
     }
 
+    /**
+     * Retrieve which value to allow the user to edit and calls the correct function to allow the clicking and saving.
+     * Changes the drawable based on which was selected.
+     * @param view the baseview to find other views from
+     * @param detail which value to edit
+     */
     private void getValue(View view, String detail){
         Context appContext = view.getContext().getApplicationContext();
         Utils utils = new Utils(appContext);
@@ -173,6 +182,15 @@ public class DetailsEditFragment extends Fragment {
         titleText.setText(detail);
     }
 
+    /**
+     * Create the edit text with a specific image.
+     * Allows creates a checker to make sure the detail cannot be changed if the user tries to save the same value.
+     * Also checks the user can't save a null value if that detail doesn't allow it
+     * @param view baseview to use
+     * @param extraText hint text
+     * @param nullable whether this detail can be empty
+     * @param characterLim character limit for this detail
+     */
     private void createEditText(View view, String extraText, Boolean nullable, Integer characterLim){
         editText = new EditText(view.getContext());
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -391,6 +409,9 @@ public class DetailsEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Create the button to save the username, and perform the saving of the username if clicked (to both server and local)
+     */
     private void initUsernameSaveButton(){
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -452,6 +473,9 @@ public class DetailsEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Create the button to save the bio, and perform the saving of the bio if clicked (to both server and local)
+     */
     private void initSaveBio(){
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -500,10 +524,10 @@ public class DetailsEditFragment extends Fragment {
         });
     }
 
-    private void initEmailSave(){
 
-    }
-
+    /**
+     * Create the button to save the full name, and perform the saving of the full name if clicked (to both server and local)
+     */
     private void initSaveFullName(){
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -557,6 +581,11 @@ public class DetailsEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Create the button to save one of the social medias, and perform the saving of the social media if clicked. (to both server and local)
+     * Saves the individual social media
+     * @param socialMedia which social media to save
+     */
     private void initSocialMediaSave(String socialMedia){
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -623,6 +652,10 @@ public class DetailsEditFragment extends Fragment {
         });
     }
 
+    /**
+     * Performs a toast on another thread.
+     * @param text text of toast to show
+     */
     private void ToastOnOtherThread(String text){
         if (!isDetached()) {
             getActivity().runOnUiThread(new Runnable() {
@@ -634,6 +667,9 @@ public class DetailsEditFragment extends Fragment {
         }
     }
 
+    /**
+     * Resets the buttons on the main thread
+     */
     private void resetButtons(){
         if (!isDetached()) {
             getActivity().runOnUiThread(new Runnable() {
@@ -648,6 +684,9 @@ public class DetailsEditFragment extends Fragment {
         }
     }
 
+    /**
+     * Alters the colours of the buttons
+     */
     private void alterButtons(){
         if (!isDetached()) {
             if (editText != null) {
@@ -658,6 +697,10 @@ public class DetailsEditFragment extends Fragment {
             backButton.setEnabled(false);
         }
     }
+
+    /**
+     * Navigate back on the main thread.
+     */
     private void otherThreadBack(){
         if (!isDetached()) {
             getActivity().runOnUiThread(new Runnable() {

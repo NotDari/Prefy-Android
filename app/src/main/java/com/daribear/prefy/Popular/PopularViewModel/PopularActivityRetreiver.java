@@ -14,6 +14,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Retrieves the popular activities from the database.
+ */
 public class PopularActivityRetreiver {
     private PopularActivityRetrieverInterface delegate;
 
@@ -22,6 +25,9 @@ public class PopularActivityRetreiver {
         this.delegate = delegate;
     }
 
+    /**
+     * Starts a thread which will attempt to receive the popularActivity from the database.
+     */
     public void init(){
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override

@@ -17,6 +17,10 @@ import com.daribear.prefy.R;
 import java.util.ArrayList;
 
 
+/**
+ * Fragment to display the explore category selector screen
+ * Handles back navigatson, loads category titles and images aswell as initialises the gateway
+ */
 public class ExploreCategorySelectorFragment extends Fragment {
     private RecyclerView recView;
 
@@ -29,6 +33,10 @@ public class ExploreCategorySelectorFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Initialise views and setup top bar back navigation
+     * @param view base view of fragment
+     */
     private void getViews(View view){
         recView = view.findViewById(R.id.ExploreCategoriesSelectorRecView);
         view.findViewById(R.id.ExploreCategoriesSelectorTopBarBack).setOnClickListener(new View.OnClickListener() {
@@ -41,6 +49,11 @@ public class ExploreCategorySelectorFragment extends Fragment {
         titleText.setText("Categories");
     }
 
+    /**
+     * Load category titles and images from resources
+     * Initialise and display the ExploreCategorySelectorGateway
+     * @param view base view
+     */
     private void getData(View view){
         String[] CategoriesList = view.getContext().getApplicationContext().getResources().getStringArray(R.array.post_categories);
         TypedArray ImagesList = view.getContext().getApplicationContext().getResources().obtainTypedArray(R.array.post_category_images);
@@ -57,6 +70,7 @@ public class ExploreCategorySelectorFragment extends Fragment {
             categoryTitles.add(CategoriesList[i]);
             categoryImages.add(resIds[i]);
         }
+        //initialise gateway and display RecyclerView
         ExploreCategorySelectorGateway gateway = new ExploreCategorySelectorGateway(categoryTitles, categoryImages, recView, imageWidth);
         gateway.displayView();
     }

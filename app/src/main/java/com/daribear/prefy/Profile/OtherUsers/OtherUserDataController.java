@@ -19,6 +19,9 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ * Controller which handles the data of a user that is not the logged in user.
+ */
 public class OtherUserDataController implements ProfileHandlerInt {
     private View view;
     private ProfilePostsGateway gateway;
@@ -56,12 +59,17 @@ public class OtherUserDataController implements ProfileHandlerInt {
     }
 
 
-
+    /**
+     * Refreshes the data.
+     */
     public void refreshData(){
         GetUserDetailsExecutor executor = new GetUserDetailsExecutor(user.getId(), this);
         executor.initExecutor();
     }
 
+    /**
+     * Displays the no internet text in the fragment, as there is no internet.
+     */
     private void initNoInternet(){
         noInternetText.setVisibility(View.VISIBLE);
         noPostsLayout.setVisibility(View.GONE);
@@ -75,6 +83,9 @@ public class OtherUserDataController implements ProfileHandlerInt {
         });
     }
 
+    /**
+     * Init the no posts layout when the user has no posts
+     */
     private void initNoPosts(){
         progressBar.setVisibility(View.GONE);
         noInternetText.setVisibility(View.GONE);
@@ -82,7 +93,9 @@ public class OtherUserDataController implements ProfileHandlerInt {
     }
 
 
-
+    /**
+     * Loads the first set of posts. Uses the Search_load_count preset value to load that many posts.
+     */
     private void loadPosts(){
         progressBar.setVisibility(View.VISIBLE);
         Integer limit = Integer.parseInt(context.getString(R.string.Search_Load_Count));
@@ -96,6 +109,12 @@ public class OtherUserDataController implements ProfileHandlerInt {
         gateway = null;
     }
 
+    /**
+     * Called when the retrieving of profile posts has completed.
+     *
+     * @param successful whether it was successful
+     * @param wholeProfile the data retrieved.
+     */
     @Override
     public void taskDone(Boolean successful, WholeProfile wholeProfile) {
         if (!destroyed){

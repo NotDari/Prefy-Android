@@ -29,6 +29,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * An executor that retrieves the posts of the explore page.
+ * Fetches both featured and recent posts, along with their users, following status and logged in user's votes on the posts.
+ */
 public class ExplorePageExecutor implements GetFollowingDelegate {
     private String type;
     private ArrayList<FullPost> fullFeaturedPostArrayList;
@@ -52,6 +56,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         this.update = update;
     }
 
+    /**
+     * Start the executor
+     */
     public void initExecutor(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -65,6 +72,11 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
             }
         });
     }
+
+    /**
+     * Set all the checks to false, so that it is known when it is complete.
+     * Also gets essential details like serveraddress and authToken.
+     */
     private void setChecksToFalse(){
         featuredPostUsers = false;
         recentPostUsers = false;
@@ -76,7 +88,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         client = new OkHttpClient();
     }
 
-
+    /**
+     * Gets the featured posts.
+     */
     private void initFeaturedPosts(){
         fullFeaturedPostArrayList = new ArrayList<>();
         HttpUrl.Builder httpBuilder = HttpUrl.parse(serverAddress + "/prefy/v1/Posts/FeaturedPosts").newBuilder();
@@ -119,10 +133,10 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
     }
 
 
-
-
+    /**
+     * Gets the users of the posts of the featured users.
+     */
     private void getFeaturedPostsUsers(){
-
         if (fullFeaturedPostArrayList.size() == 0){
             featuredPostUsers = true;
             operationCompleted();
@@ -171,7 +185,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         }
     }
 
-
+    /**
+     * Gets whether the logged in user is following the poster.
+     */
     private void getFeaturedPostsFollowing(){
         if (fullFeaturedPostArrayList.size() == 0) {
             featuredUsersFollowing = true;
@@ -186,7 +202,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         }
     }
 
-
+    /**
+     * Get the list of recent posts that have been uploaded by the user.
+     */
     private void initRecentPosts(){
         client = new OkHttpClient();
         ArrayList<FullPost> postList = new ArrayList<>();
@@ -250,7 +268,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
     }
 
 
-
+    /**
+     * Gets the vote of the current user on each post.
+     */
     private void getCurrentUserPostVotes(){
         ArrayList<Long> postIdList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
@@ -294,7 +314,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         }
     }
 
-
+    /**
+     * Gets the users for each of the recent posts.
+     */
     private void getRecentPostsUsers(){
         ArrayList<Long> idList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
@@ -345,6 +367,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
 
     }
 
+    /**
+     * Gets whether or not the logged in user is following the poster of the recent post.
+     */
     private void getRecentPostsFollowing(){
         if (explorePostSet.getPostList().size() == 0) {
             recentUsersFollowing = true;
@@ -360,7 +385,9 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
     }
 
 
-
+    /**
+     * Check if all tasks have been complete. Since requests are async they may all be complete at different times.
+     */
     private synchronized void operationCompleted(){
         if (featuredPostUsers && recentPostUsers && userVotesDone && recentUsersFollowing && featuredUsersFollowing){
             if (featuredFollowing != null) {
@@ -387,7 +414,13 @@ public class ExplorePageExecutor implements GetFollowingDelegate {
         }
     }
 
-
+    /**
+     * Called when the thread getting whether the user is following the othr users returns.
+     * Gives which type it was.
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

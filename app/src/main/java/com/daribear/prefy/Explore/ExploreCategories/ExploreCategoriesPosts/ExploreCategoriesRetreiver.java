@@ -29,6 +29,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Retrieves posts for a specific explore category
+ * Gets user info, votes, and following status
+ */
 public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
     private ExploreCategoryInterface delegate;
     //private Long lastCreationDate;
@@ -59,7 +63,10 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
     }
 
 
-
+    /**
+     * Fetch posts from server based on category and page
+     * Runs in a new thread.
+     */
     private void getPosts(){
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
@@ -73,6 +80,7 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
                 } else {
                     pageNumber += 1;
                 }
+                //build request
                 httpBuilder.addEncodedQueryParameter("pageNumber", pageNumber.toString());
                 httpBuilder.addEncodedQueryParameter("limit", limitCount.toString());
                 Request request = new Request.Builder()
@@ -94,6 +102,7 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
                             }
                             explorePostSet = new ExplorePostSet();
                             explorePostSet.setPostList(postList);
+                            //get additional details
                             getUsers();
                             getUserCurrentVotes();
                             getUsersFollowing();
@@ -118,6 +127,9 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
     }
 
 
+    /**
+     * Fetch user info who own the posts
+     */
     private void getUsers(){
         ArrayList<Long> idList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
@@ -142,6 +154,7 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
                         if (!jsonArray.isNull(i)) {
                             JSONObject tempObject = jsonArray.getJSONObject(i);
                             User user = CustomJsonMapper.getUserFromObject(tempObject);
+                            //assign user to corresponding posts
                             int[] indexList = IntStream.range(0, explorePostSet.getPostList().size())
                                     .filter(f -> explorePostSet.getPostList().get(f).getStandardPost().getUserId().equals(user.getId()))
                                     .toArray();
@@ -168,7 +181,9 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
 
     }
 
-
+    /**
+     * Fetch current user votes for posts
+     */
     private void getUserCurrentVotes(){
         ArrayList<Long> postIdList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
@@ -214,6 +229,9 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Retrieve following status for users of posts
+     */
     private void getUsersFollowing(){
         if (explorePostSet.getPostList().size() == 0){
             followingDone = true;
@@ -227,7 +245,10 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
         }
     }
 
-
+    /**
+     * Called whenever a part of the fetch is completed
+     * Ensures users, votes and following are all retrieved before callback
+     */
     private void operationCompleted(){
         if (usersDone && votesDone && followingDone) {
             if (followList != null) {
@@ -244,6 +265,9 @@ public class ExploreCategoriesRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Callback from FollowingRetrieving to mark following status done
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

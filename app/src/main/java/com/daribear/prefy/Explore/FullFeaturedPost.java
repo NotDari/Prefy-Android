@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+/**
+ * Class which contains the full featured post. Contains the featured post(post key) and the post itself.
+ */
 @Getter
 @Setter
 public class FullFeaturedPost {

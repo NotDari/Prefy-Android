@@ -4,6 +4,9 @@ import com.daribear.prefy.Profile.User;
 
 import lombok.Data;
 
+/**
+ * The data entity class which represents a followActivity, which is when a user follows the logged in user.
+ */
 @Data
 public class FollowerActivity {
     private User user;

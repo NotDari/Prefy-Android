@@ -9,9 +9,18 @@ import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.Search.SearchViewModel;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
+/**
+ * A helper class to allow the altering of items from view models.
+ * When a post is deleted or a vote happens, it has to be updated throughout every saved post in every repository.
+ * This class helps with that.
+ */
 public class ItemAlterer {
 
-
+    /**
+     * Delete a post from the explore repository and the currentuser view model
+     * @param standardPost post to be deleted
+     * @param appContext context to use
+     */
     public static void deleteItem(StandardPost standardPost, Context appContext){
         ExploreViewModel exploreViewModel = new ExploreViewModel();
         exploreViewModel.init();
@@ -22,6 +31,13 @@ public class ItemAlterer {
         currentUserViewModel.deleteItem(standardPost);
     }
 
+    /**
+     * Adds an item vote to every repository, except to the one where the user voted on it.
+     * @param postId id of post the vote occurs on
+     * @param vote what the vote was
+     * @param appContext context to use
+     * @param type type of post
+     */
     public static void itemVote(Long postId, String vote, Context appContext, String type){
         if (!type.equals("Popular")) {
             NewPopularViewModel newPopularViewModel = new NewPopularViewModel();
@@ -43,7 +59,11 @@ public class ItemAlterer {
 
     }
 
-
+    /**
+     * Called when a user changes. Changes it in every repository
+     * @param user user to change
+     * @param appContext context to use
+     */
     public static void userChange(User user, Context appContext){
         ExploreViewModel exploreViewModel = new ExploreViewModel();
         exploreViewModel.init();

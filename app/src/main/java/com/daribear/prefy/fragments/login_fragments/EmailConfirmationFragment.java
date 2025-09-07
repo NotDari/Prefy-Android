@@ -38,7 +38,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
+/**
+ * The fragment which states that the user needs to confirm their user.
+ * Calls the endpoint to send a verification email to the server, and then checks if the user has confirmed it.
+ */
 public class EmailConfirmationFragment extends Fragment {
     private TextView resendEmail;
     private MaterialButton emailConfirmedButton;
@@ -71,7 +74,9 @@ public class EmailConfirmationFragment extends Fragment {
         setResendEmail();
         emailConfirmed();
     }
-
+    /**
+     * Contact the api to resend the email to the user which will allow them to confirm their email.
+     */
     private void setResendEmail(){
         resendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +123,11 @@ public class EmailConfirmationFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up the click listener for the email confirmation button.
+     * When clicked, it prevents multiple clicks and starts the process
+     * of verifying the user's email by retrieving a Play Integrity token.
+     */
     private void emailConfirmed(){
         emailConfirmedButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +140,12 @@ public class EmailConfirmationFragment extends Fragment {
         });
     }
 
+    /**
+     * Attempts to sign the user in, using the play integrity token.
+     * If the user does, saves the auth token and details and goes to the mainactivity
+     * Else, allow for the email confirmation to be clicked again.
+     * @param token play integrity token
+     */
     private void signIn(String token){
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
@@ -195,6 +211,14 @@ public class EmailConfirmationFragment extends Fragment {
         });
     }
 
+    /**
+     * Retrieves the Play Integrity token for the user.
+     *
+     * If the token is not already available, it sets a delegate to be called
+     * once the token is obtained. If the token is successfully retrieved,
+     * it proceeds to sign in the user. If retrieval fails, a toast message
+     * is shown and the email confirmation button is re-enabled.
+     */
     private void getToken(){
         PlayIntegrity playIntegrity = PlayIntegrity.getInstance();
         if (playIntegrity.getToken() == null){

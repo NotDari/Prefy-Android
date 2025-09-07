@@ -23,6 +23,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * The executor class which attempts to receive a specific user's posts from the database
+ */
 public class ProfileExecutor {
     private Long id;
     private ProfileHandlerInt delegate;
@@ -42,6 +45,9 @@ public class ProfileExecutor {
         this.pageNumber = pageNumber;
     }
 
+    /**
+     * Creates a thread which attempts to receive the post list from a specific user from the database
+     */
     public void initExecutor(){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -83,6 +89,9 @@ public class ProfileExecutor {
         });
     }
 
+    /**
+     * Get the list of the current logged in user's votes on the posts.
+     */
     private void getUserCurrentVotes(){
         ArrayList<Long> postIdList = new ArrayList<>();
         for (int i = 0; i < postList.size(); i ++){
@@ -128,7 +137,10 @@ public class ProfileExecutor {
     }
 
 
-
+    /**
+     * Called when the operation is completed.
+     * Tells the delegate it is complete.
+     */
     private void OperationCompleted(){
         WholeProfile wholeProfile = new WholeProfile();
         PostListContainer postListContainer = new PostListContainer();

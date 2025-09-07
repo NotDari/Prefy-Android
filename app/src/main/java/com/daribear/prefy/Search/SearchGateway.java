@@ -12,6 +12,9 @@ import com.daribear.prefy.R;
 
 import java.util.ArrayList;
 
+/**
+ * The gateway fragment for the search recyclerview.
+ */
 public class SearchGateway implements SearchRecViewTopTargetReached, SearchRecSearchTargetReached{
     private Integer RecViewId;
     private View view;
@@ -32,6 +35,10 @@ public class SearchGateway implements SearchRecViewTopTargetReached, SearchRecSe
         adaptor.setType(type);
     }
 
+    /**
+     * Displays an empty view in the recyclerview
+     * @param fragmentHeight the height of the fragment.(Used to dynamically calculate recyclerview entry height)
+     */
     public void displayEmptyView(Integer fragmentHeight){
         recView = view.findViewById(RecViewId);
         this.context = recView.getContext();
@@ -55,42 +62,14 @@ public class SearchGateway implements SearchRecViewTopTargetReached, SearchRecSe
         adaptor.notifyDataSetChanged();
 
     }
-    //TODO Can optimise all RecView Setters and stuff throughout the whole application
-    public void updateData(ArrayList<User> searchUserArrayList) {
-        adaptor.setSearchUserArrayList(searchUserArrayList);
-        adaptor.notifyDataSetChanged();
-    }
-
-    public void resetData(){
-        Integer size = adaptor.getItemCount();
-        adaptor.setSearchUserArrayList(new ArrayList<>());
-        adaptor.notifyItemRangeRemoved(0, size);
-    }
 
 
-
-
-
-    private void addData(ArrayList<User> searchUserArrayList){
-
-        adaptor.addUsers(searchUserArrayList);
-    }
-
-
-    public void destroyView(){
-        this.view = null;
-        //adaptor.viewDestroyed();
-        adaptor = null;
-        recView = null;
-        this.context = null;
-
-    }
-
-
-
-
+    /**
+     * Callback when the top of the recyclerview has been reached.
+     * Tells the searchviewmodel to refresh the data
+     */
     @Override
-    public void topReached() {
+    public void endReached() {
         if (adaptor.getItemCount() > 10) {
             SearchViewModel searchViewModel = new SearchViewModel();
             searchViewModel.init();
@@ -99,7 +78,10 @@ public class SearchGateway implements SearchRecViewTopTargetReached, SearchRecSe
         }
     }
 
-
+    /**
+     * Callback when the bottom of the recyclerview has been reached.
+     * Tells the searchviewmodel to get more data
+     */
     @Override
     public void topReached(String lastUsername) {
         if (adaptor.getItemCount() > 10) {

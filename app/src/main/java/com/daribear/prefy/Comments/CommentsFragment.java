@@ -36,6 +36,10 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+/**
+ * Fragment to display comments for a post
+ * Handles submission, replies, and displaying comment list
+ */
 public class CommentsFragment extends Fragment implements CommentReplyClicked{
     private handleCommentsRecView commentsRecView;
     private User user;
@@ -55,8 +59,13 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         return view;
     }
 
+    /**
+     * Initialise the back button system and input resize
+     * @param view base view of fragment
+     */
     private void initBackSystem(View view){
         ImageView backButton = view.findViewById(R.id.CommentsTopBarBack);
+        // Navigate up the stack on back pressed
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,6 +76,10 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         resizeSubmitCommentEditText(view);
     }
 
+    /**
+     * Show or hide bottom navigation
+     * @param hide whether or not to hide
+     */
     private void alterBottomNavVisibility(Boolean hide){
         BottomNavigationView bottomNavigation = getActivity().findViewById(R.id.BottomNav);
         if (hide){
@@ -76,6 +89,10 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         }
     }
 
+    /**
+     * Resize comment input EditText based on screen size
+     * @param view base view
+     */
     private void resizeSubmitCommentEditText(View view){
         AppCompatEditText submitCommentEdit = view.findViewById(R.id.CommentEditText);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -89,6 +106,11 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         submitComment(submitCommentEdit, view);
     }
 
+    /**
+     * Initialise the submit comment button
+     * @param submitCommentEdit EditText for comment input
+     * @param view base view
+     */
     private void submitComment(AppCompatEditText submitCommentEdit, View view){
         replyActive = false;
         ImageButton submitButton = view.findViewById(R.id.CommentSendButton);
@@ -130,6 +152,10 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         });
     }
 
+    /**
+     * Get data passed to fragment and initialise comment list
+     * @param view base view
+     */
     private void getData(View view){
         Context context = view.getContext();
         User user = this.getArguments().getParcelable("user");
@@ -141,38 +167,12 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         commentsRecView.initSetup();
     }
 
-    private void initViews(View view){
-        ImageView postImage = view.findViewById(R.id.CommentPostImageView);
-        initGlide(postImage, post.getImageURL());
-        ImageView posterProfileImage = view.findViewById(R.id.CommentsPosterProfileImage);
-        if (!user.getProfileImageURL().equals("none")) {
-            Glide.with(posterProfileImage)
-                    .load(user.getProfileImageURL())
-                    .circleCrop()
-                    .into(posterProfileImage);
-        } else{
-            Glide.with(posterProfileImage)
-                    .load(R.drawable.user_photo)
-                    .circleCrop()
-                    .into(posterProfileImage);
-        }
-        TextView posterUsernameText = view.findViewById(R.id.CommentsPosterProfileUsername);
-        posterUsernameText.setText(user.getUsername());
-        TextView posterTime = view.findViewById(R.id.CommentsPosterPostDate);
-        posterTime.setText(dateSinceSystem.getTimeSince(post.getCreationDate()));
-        RecyclerView recyclerView = view.findViewById(R.id.CommentsRecView);
 
-        TextView questionText = view.findViewById(R.id.CommentQuestionText);
-        questionText.setText(post.getQuestion());
 
-    }
-
-    private void initGlide(ImageView imageView, String imageURL){
-        Glide.with(imageView)
-                .load(imageURL)
-                .into(imageView);
-    }
-
+    /**
+     * Initialise reply layout for showing reply state
+     * @param view base view
+     */
     private void initReplyLay(View view){
         this.replyLay = view.findViewById(R.id.CommentReplyConsLay);
         ImageButton closeButton = view.findViewById(R.id.CommentsReplyLayClose);
@@ -189,7 +189,12 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
             }
         });
     }
-
+    /**
+     * Set reply layout visible and show which user is being replied to
+     * @param replyUsername username being replied to
+     * @param replyId id of comment being replied to
+     * @param subParentID id of sub-parent comment (for nested replies)
+     */
     private void setReplyLay(String replyUsername, Long replyId, Long subParentID){
         replyLay.setVisibility(View.VISIBLE);
         replyActive = true;
@@ -207,6 +212,9 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         textView.setText(builder);
     }
 
+    /**
+     * Hide reply layout and reset reply state
+     */
     private void removeReplyLay(){
         replyActive = false;
         replyId = null;
@@ -215,7 +223,9 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
         replyLay.setVisibility(View.GONE);
     }
 
-
+    /**
+     * Reset bottom navigation visibility and destroy comment list on fragment destroy
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -225,12 +235,23 @@ public class CommentsFragment extends Fragment implements CommentReplyClicked{
 
 
 
+    /**
+     * Handle main comment reply click from callback
+     * @param replyUsername username of comment being replied to
+     * @param replyId id of comment being replied to
+     */
     @Override
     public void mainReplyClicked(String replyUsername, Long replyId) {
         replyActive = true;
         setReplyLay(replyUsername, replyId, null);
     }
 
+    /**
+     * Handle sub-reply click (nested reply) from callback
+     * @param replyUsername username being replied to
+     * @param parentID id of parent comment
+     * @param subParentID id of sub-parent comment
+     */
     @Override
     public void subReplyClicked(String replyUsername, Long parentID, Long subParentID) {
         replyActive = true;

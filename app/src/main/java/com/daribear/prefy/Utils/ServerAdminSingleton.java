@@ -7,6 +7,10 @@ import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.SharedPreferences.Utils;
 
+/**
+ * A singletong class which handles certain details such as the logged in user's id, the server address,
+ * and the authtoken.
+ */
 public class ServerAdminSingleton {
     private static ServerAdminSingleton instance;
     private String serverAddress;
@@ -38,6 +42,10 @@ public class ServerAdminSingleton {
         this.serverAuthToken = serverAuthToken;
     }
 
+    /**
+     * Alter the id of the logged ij user.
+     * @param context context to use for loading shared prefs
+     */
     public void alterLoggedInUser(Context context){
         Utils utils = new Utils(context);
         Long userId = utils.loadLong(context.getString(R.string.save_user_id), -1);
@@ -59,6 +67,11 @@ public class ServerAdminSingleton {
         this.sqLiteDatabase = sqLiteDatabase;
     }
 
+    /**
+     * Retrieves the current details from shared prefs
+     * @param appContext application context to use
+     * @return the logged in user
+     */
     public static User getCurrentUser(Context appContext){
         Utils utils = new Utils(appContext);
         User user = new User();

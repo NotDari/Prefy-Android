@@ -22,6 +22,9 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class ProfilePostsAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private PostListContainer postListContainer;
     private Boolean fromHomeProfile;

@@ -54,7 +54,7 @@ public class VoteCircleShape extends View {
     }
 
     /**
-     * Initializes the paint objects and default parameters.
+     * Initialises the paint objects and default parameters.
      * @param context context to use
      */
     private void init(Context context){

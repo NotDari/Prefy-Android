@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+/**
+ * The data entity representing the popularpostset. Contains the list of posts and their users.
+ */
 @Getter
 @Setter
 public class PopularPostSet {

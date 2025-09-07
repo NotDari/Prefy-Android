@@ -25,6 +25,10 @@ import com.daribear.prefy.Votes.VoteHandler;
 import com.daribear.prefy.customClasses.Posts.FullPost;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
+/**
+ * The fragment which displays a single post for a user.
+ * Handles displaying of the post, and the ability to vote.
+ */
 public class ProfilePostListItemFragment extends Fragment implements DeleteDelegate {
     private User user;
     private StandardPost post;
@@ -69,7 +73,15 @@ public class ProfilePostListItemFragment extends Fragment implements DeleteDeleg
         });
     }
 
-
+    /**
+     * Sets up all the views for the profile post item fragment.
+     * Binds layout elements, populates them with data, and adds click listeners:
+     * Back button navigates up
+     * Options button opens the post dropdown dialog
+     * Comments button navigates to the comments fragment
+     * User image navigates to the user's profile
+     * Also sets up the voting image handler and initializes vote interactions.
+     */
     private void setUpViews(View view){
         {
             userImage = view.findViewById(R.id.ProfilePostListItemFragmentUserImage);
@@ -133,6 +145,9 @@ public class ProfilePostListItemFragment extends Fragment implements DeleteDeleg
         initVote();
     }
 
+    /**
+     * Inits the glide image handling for the user's profile
+     */
     private void initGlide(){
         if (user.getProfileImageURL() != null) {
             if (!user.getProfileImageURL().equals("none")) {
@@ -154,6 +169,9 @@ public class ProfilePostListItemFragment extends Fragment implements DeleteDeleg
         }
     }
 
+    /**
+     * Loads the default profile image in, if the user has no profile
+     */
     private void defaultImage(){
         Glide
                 .with(userImage)
@@ -162,6 +180,9 @@ public class ProfilePostListItemFragment extends Fragment implements DeleteDeleg
                 .into(userImage);
     }
 
+    /**
+     * Called when the item is deleted.
+     */
     @Override
     public void itemDeleted() {
         if (!isDetached()) {

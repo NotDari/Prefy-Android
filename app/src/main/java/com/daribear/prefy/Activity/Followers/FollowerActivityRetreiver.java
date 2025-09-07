@@ -25,6 +25,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * The class for retrieving the followActivities from the server.
+ * Also gets the associated user details of the users who followed the user and whether the current user is following them.
+ */
 public class FollowerActivityRetreiver implements GetFollowingDelegate {
     private followerRetrieverInterface delegate;
     private ArrayList<FollowerActivity> followerActivityList;
@@ -37,6 +41,9 @@ public class FollowerActivityRetreiver implements GetFollowingDelegate {
         this.delegate = delegate;
     }
 
+    /**
+     * Creates the thread which retrieves a list of followActivities.
+     */
     public void initExecutor(){
         UsersComplete = false;
         UsersFollowingComplete = false;
@@ -72,6 +79,10 @@ public class FollowerActivityRetreiver implements GetFollowingDelegate {
             }
         });
     }
+    /**
+     * Get the associated user details for each followActivity.
+     * This gets the user details, for quick loading if the logged in user clicks on their profile.
+     */
     private void getUserDetails() {
         if (followerActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
@@ -123,6 +134,10 @@ public class FollowerActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Creates the following list for each comments Activity.
+     * This is whether the logged in user is following each user.
+     */
     private void getFollowing(){
         if (followerActivityList != null) {
             ArrayList<Long> userList = new ArrayList<>();
@@ -132,7 +147,9 @@ public class FollowerActivityRetreiver implements GetFollowingDelegate {
             FollowingRetrieving followingRetrieving = new FollowingRetrieving(userList, this, null);
         }
     }
-
+    /**
+     * Creates the final list and alerts the delegate that the process has been completed
+     */
     private void completed(){
         if (UsersFollowingComplete && UsersComplete){
             for (Map.Entry<Long, Boolean> entry : followList.entrySet()) {
@@ -147,10 +164,21 @@ public class FollowerActivityRetreiver implements GetFollowingDelegate {
         }
     }
 
+    /**
+     * Alerts the delegate that that the process has failed.
+     */
     private void requestfailed(){
         delegate.followerCompleted(false, null);
     }
 
+    /**
+     * When the follow retrieval thread has completed, it alerts this class as to whether it was successful or not,
+     * and provides the data if it was, using this function.
+     *
+     * @param successful whether the retrieval was successful
+     * @param followList list of user ids and whether the active user is following them
+     * @param type retrieval type
+     */
     @Override
     public void completed(Boolean successful, HashMap<Long, Boolean> followList, String type) {
         if (successful){

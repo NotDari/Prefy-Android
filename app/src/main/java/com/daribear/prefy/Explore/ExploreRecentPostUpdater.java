@@ -29,6 +29,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ *
+ */
 public class ExploreRecentPostUpdater implements GetFollowingDelegate {
     private Integer pageNumber;
     private Integer limitCount;
@@ -169,6 +172,10 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
         }
 
     }
+
+    /**
+     * Gets the list of the users of the recent posts previously retrieved.
+     */
     private void getRecentPostsUsers(){
         ArrayList<Long> idList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){
@@ -218,6 +225,9 @@ public class ExploreRecentPostUpdater implements GetFollowingDelegate {
 
     }
 
+    /**
+     * Gets whether the user is following the
+     */
     private void getUsersFollowing(){
         ArrayList<Long> idList = new ArrayList<>();
         for (int i = 0; i < explorePostSet.getPostList().size(); i ++){

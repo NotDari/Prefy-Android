@@ -9,6 +9,11 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.List;
 
+/**
+ * The viewmodel which represents the explore data.
+ * Contains the list of featured posts and recent posts.
+ * Acts as the middleman between the ui and the repositories.
+ */
 public class ExploreViewModel extends ViewModel {
     private MutableLiveData<ExplorePostSet> explorePostSetMutable;
     private MutableLiveData<List<FullPost>> featuredPostList;
@@ -36,9 +41,7 @@ public class ExploreViewModel extends ViewModel {
         return internetAvailable;
     }
 
-    public void updateData(Double lastCreationDate){
-        exploreRepo.updateData(lastCreationDate);
-    }
+
 
     public void refresh(){
         exploreRepo.refreshData();

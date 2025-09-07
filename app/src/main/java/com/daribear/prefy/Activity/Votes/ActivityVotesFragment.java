@@ -25,28 +25,46 @@ import com.daribear.prefy.Utils.NoInternetDropDown;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment displaying the list of vote activities.
+ * Observes vote activity data and internet availability via ActivityViewModel.
+ * Handles UI states: loading, no data, and no internet.
+ */
+public class ActivityVotesFragment extends Fragment {
 
-public class ActivityVotesFragment extends Fragment{
+    // UI components
     private ProgressBar progressBar;
     private RelativeLayout noActivity;
-    private Boolean destroyed;
-    private ActivityGatewayAdaptor gateway;
-    private ArrayList<VoteActivity> voteActivityList;
-    private Boolean internetAvailable;
     private TextView noInternet;
-    private Boolean dataRefreshing, initDataSet = false;
-    private ActivityViewModel viewModel;
     private RecyclerView recView;
+
+    // State tracking
+    private Boolean destroyed;
+    private Boolean internetAvailable;
+    private Boolean dataRefreshing;
+    private Boolean initDataSet = false;
+
+    // Adapter for displaying vote activity items
+    private ActivityGatewayAdaptor gateway;
+
+    // Data
+    private ArrayList<VoteActivity> voteActivityList;
+    private ActivityViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate layout and initialise views & data
         View view = inflater.inflate(R.layout.fragment_activity_votes, container, false);
         getViews(view);
         getData(view);
         return view;
     }
 
+    /**
+     * Initialise all views and the adapter.
+     * @param view Fragment root view
+     */
     private void getViews(View view){
         destroyed = false;
         noActivity = view.findViewById(R.id.ActivityVotesNoItems);
@@ -59,10 +77,19 @@ public class ActivityVotesFragment extends Fragment{
         gateway.displayEmptyVote(new ArrayList<>());
     }
 
+    /**
+     * Resets the activity clear counter for votes in the backend.
+     * @param appContext Application context
+     */
     private void resetActivity(Context appContext){
         UploadController.saveActivityClear(appContext, "Votes");
     }
 
+    /**
+     * Initialises the ViewModel and observers for vote data, internet availability,
+     * and data refreshing state.
+     * @param view Fragment root view
+     */
     private void getData(View view){
         resetActivity(view.getContext().getApplicationContext());
         viewModel = new ViewModelProvider(ActivityVotesFragment.this).get(ActivityViewModel.class);
@@ -71,6 +98,8 @@ public class ActivityVotesFragment extends Fragment{
         if (internetAvailable == null){
             internetAvailable = false;
         }
+
+        // Observe vote activity list updates
         viewModel.getVoteData().observe(getViewLifecycleOwner(), new Observer<List<VoteActivity>>() {
             @Override
             public void onChanged(List<VoteActivity> voteActivities) {
@@ -80,6 +109,8 @@ public class ActivityVotesFragment extends Fragment{
                 }
             }
         });
+
+        // Observe internet availability changes
         viewModel.getInternetAvailable().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -88,6 +119,8 @@ public class ActivityVotesFragment extends Fragment{
                 }
             }
         });
+
+        // Observe data refreshing state
         viewModel.getDataRefreshing().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
@@ -98,8 +131,11 @@ public class ActivityVotesFragment extends Fragment{
                 }
             }
         });
-
     }
+
+    /**
+     * Updates UI to indicate that data is currently refreshing.
+     */
     private void dataRefreshing(){
         dataRefreshing = true;
         if (!initDataSet) {
@@ -109,6 +145,11 @@ public class ActivityVotesFragment extends Fragment{
             noActivity.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * Updates UI when data is not refreshing.
+     * Shows no internet message if offline.
+     */
     private void dataNotRefreshing(){
         dataRefreshing = false;
         if (!internetAvailable){
@@ -116,7 +157,9 @@ public class ActivityVotesFragment extends Fragment{
         }
     }
 
-
+    /**
+     * Displays a "no internet" message and sets a click listener to retry.
+     */
     private void noInternet(){
         if (!destroyed) {
             if (!initDataSet) {
@@ -129,8 +172,6 @@ public class ActivityVotesFragment extends Fragment{
                     public void onClick(View v) {
                         progressBar.setVisibility(View.VISIBLE);
                         noInternet.setVisibility(View.GONE);
-                        //viewModel.refreshData();
-
                         RefreshInternet.RefreshInternet(getContext());
                     }
                 });
@@ -139,7 +180,10 @@ public class ActivityVotesFragment extends Fragment{
         }
     }
 
-
+    /**
+     * Updates the RecyclerView with the current vote activity data.
+     * Handles empty and non-empty states.
+     */
     private void setData(){
         if (!destroyed){
             noInternet.setVisibility(View.GONE);
@@ -155,6 +199,9 @@ public class ActivityVotesFragment extends Fragment{
         }
     }
 
+    /**
+     * Re-initialises ViewModel data. Can be called to force refresh.
+     */
     public void FullDataRefresh(){
         if (!destroyed){
             if (viewModel != null){
@@ -163,13 +210,13 @@ public class ActivityVotesFragment extends Fragment{
         }
     }
 
-
+    /**
+     * Clean up adapter and mark fragment as destroyed.
+     */
     @Override
     public void onDestroyView() {
         gateway.destroyView();
         destroyed = true;
         super.onDestroyView();
     }
-
-
 }

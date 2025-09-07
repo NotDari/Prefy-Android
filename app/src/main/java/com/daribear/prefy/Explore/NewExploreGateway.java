@@ -13,7 +13,9 @@ import com.daribear.prefy.customClasses.Posts.FullPost;
 
 import java.util.List;
 
-
+/**
+ * The gateway to the explore recycler view.
+ */
 public class NewExploreGateway implements ExploreRecentUpdateInterface{
     private RecyclerView recView;
     private View view;
@@ -33,7 +35,9 @@ public class NewExploreGateway implements ExploreRecentUpdateInterface{
         this.parentActivity = parentActivity;
     }
 
-
+    /**
+     * Sets up and displays the RecyclerView with a 3-column grid layout.
+     */
     public void displayView(){
         adaptor = new ExploreRecAdaptor(parentActivity);
         pageNumber = 0;
@@ -62,6 +66,10 @@ public class NewExploreGateway implements ExploreRecentUpdateInterface{
         initScroll();
     }
 
+
+    /**
+     * Initializes scroll listener to trigger data updates when near the end of the list.
+     */
     private void initScroll(){
         scrollUpdateLoading = true;
         scrollViewOffset = 0;
@@ -94,19 +102,29 @@ public class NewExploreGateway implements ExploreRecentUpdateInterface{
     }
 
 
-
+    /**
+     * Populates the adapter with initial explore post data.
+     */
     public void initData(ExplorePostSet explorePostSet){
         adaptor.initData(explorePostSet);
         this.pageNumber = 1;
         scrollUpdateLoading = false;
     }
 
+    /**
+     * Loads additional posts from the server for the given page number.
+     * @param pageNumber the page number to fetch
+     */
     public void updateData(Integer pageNumber){
         ExploreRecentPostUpdater executor = new ExploreRecentPostUpdater(18, pageNumber, this);
         executor.initExecutor();
     }
 
 
+    /**
+     * Updates the featured posts in the adapter.
+     * @param fullFeaturedPostList list of featured posts
+     */
     public void alterFeaturedPosts(List<FullPost> fullFeaturedPostList){
        adaptor.alterFeaturedPosts(fullFeaturedPostList);
     }

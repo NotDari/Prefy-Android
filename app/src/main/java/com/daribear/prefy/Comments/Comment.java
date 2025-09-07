@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * The data entity class which represents a comment.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +28,10 @@ public class Comment implements Parcelable {
     private Long postId;
     private User user;
 
-
+    /**
+     * Creates a comment from a parcel
+     * @param in parcel to create the comment from
+     */
     protected Comment(Parcel in) {
         if (in.readByte() == 0) {
             creationDate = null;
@@ -40,7 +46,9 @@ public class Comment implements Parcelable {
         postId = in.readLong();
         user = in.readParcelable(User.class.getClassLoader());
     }
-
+    /**
+     * Parcelable.Creator implementation required for Android parcelable support.
+     */
     public static final Creator<Comment> CREATOR = new Creator<Comment>() {
         @Override
         public Comment createFromParcel(Parcel in) {
@@ -58,6 +66,11 @@ public class Comment implements Parcelable {
         return 0;
     }
 
+    /**
+     * Turns the instance of this class into a parcel
+     * @param dest destination parcel to write into
+     * @param flags flags for the parcel
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (creationDate == null) {

@@ -30,6 +30,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ * Controller for the explore header section.
+ * Works with posts, categories and search functionality.
+ */
 public class ExploreHeaderController {
     private View view;
     private List<FullPost> fullFeaturedPosts;
@@ -53,6 +58,10 @@ public class ExploreHeaderController {
     }
 
 
+
+    /**
+     * Initialise header components: sponsored posts, categories and search
+     */
     private void init(){
         getViews();
         initSponsoredPage();
@@ -61,6 +70,9 @@ public class ExploreHeaderController {
         initCategories();
     }
 
+    /**
+     * Get all view references from the layout
+     */
     private void getViews(){
         searchButton = view.findViewById(R.id.ExploreHostSearchButton);
         featured1 = view.findViewById(R.id.ExploreSponsoredItemsImage1);
@@ -93,6 +105,9 @@ public class ExploreHeaderController {
         });
     }
 
+    /**
+     * Initialise sponsored posts layout and sizing
+     */
     private void initSponsoredPage(){
         ConstraintLayout sponsoredImageConstraint = view.findViewById(R.id.ExploreSponsoredItemsLayout);
         ArrayList<ImageView> sponsoredImageArrayList = new ArrayList<>();
@@ -100,6 +115,8 @@ public class ExploreHeaderController {
         ImageView sponsoredImage1 = view.findViewById(R.id.ExploreSponsoredItemsImage1);ImageView sponsoredImage2 = view.findViewById(R.id.ExploreSponsoredItemsImage2);ImageView sponsoredImage3 = view.findViewById(R.id.ExploreSponsoredItemsImage3);ImageView sponsoredImage4 = view.findViewById(R.id.ExploreSponsoredItemsImage4);ImageView sponsoredImage5 = view.findViewById(R.id.ExploreSponsoredItemsImage5);
         //Also Add the images to the arrayList to initialise
         //ImageView sponsoredImage6 = view.findViewById(R.id.ExploreSponsoredItemsImage6);ImageView sponsoredImage7 = view.findViewById(R.id.ExploreSponsoredItemsImage7);
+
+        //add all sponsored pages
         sponsoredImageArrayList.addAll(Arrays.asList(sponsoredImage1, sponsoredImage2, sponsoredImage3, sponsoredImage4, sponsoredImage5));
         sponsoredImageConstraint.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -126,14 +143,19 @@ public class ExploreHeaderController {
         });
     }
 
+    /**
+     * Initialise the categories section in the header
+     */
     private void initCategories(){
         Context applicationContext = view.getContext().getApplicationContext();
         imageWidth = 0;
 
         //categoryFirstImage.setImageDrawable(categoryClass.getFirstChoiceDrawable());
+        //set more arrow drawable
         Drawable viewMoreDrawable = AppCompatResources.getDrawable(applicationContext, R.drawable.ic_baseline_keyboard_arrow_right_24);
         categoryThirdImage.setImageDrawable(viewMoreDrawable);
         Utils utils = new Utils(applicationContext);
+        // adjust arrow tint based on dark mode
         if (categoryThirdImage.getDrawable() != null){
             if (utils.loadBoolean(applicationContext.getString(R.string.dark_mode_pref),false)){
                 categoryThirdImage.getDrawable().setTint(applicationContext.getResources().getColor(R.color.white));
@@ -142,16 +164,18 @@ public class ExploreHeaderController {
             }
         }
 
-
+        //set category names
         categoryFirstText.setText(categoryClass.getFirstChoiceName());
         categorySecondText.setText(categoryClass.getSecondChoiceName());
         categoryThirdText.setText("More");
+        //adjust third category text color based on dark mode
         if (utils.loadBoolean(applicationContext.getString(R.string.dark_mode_pref),false)){
             categoryThirdText.setTextColor(applicationContext.getResources().getColor(R.color.white));
         } else {
             categoryThirdText.setTextColor(applicationContext.getResources().getColor(R.color.text_color));
         }
 
+        //adjust categories layout size dynamically to fit screens
 
         categoriesLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
@@ -194,6 +218,7 @@ public class ExploreHeaderController {
                 secondMarginLP.setMargins(imageMargin, 0, imageMargin, 0);
                 thirdMarginLP.setMargins(imageMargin, 0, 0, 0);
 
+                //load category images using Glide
                 Glide.with(categoryFirstImage)
                         .load(categoryClass.getFirstChoiceDrawable())
                         .priority(Priority.IMMEDIATE)
@@ -239,6 +264,9 @@ public class ExploreHeaderController {
         });
     }
 
+    /**
+     * Display featured posts images dynamically based on how many posts exist
+     */
     private void changeImageVisibilities() {
         switch (fullFeaturedPosts.size()) {
             case 0:
@@ -352,9 +380,13 @@ public class ExploreHeaderController {
                 noSponsoredPostsText.setVisibility(View.GONE);
                 break;
         }
+        //asigns click detection to each image
         setUpFeaturedClicks();
     }
 
+    /**
+     * Assign click detection to each featured post to open dialog
+     */
     private void setUpFeaturedClicks(){
         featured1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -388,12 +420,17 @@ public class ExploreHeaderController {
         });
     }
 
+    /**
+     * Open dialog for selected featured post
+     */
     private void FeaturedClick(Integer numberClicked){
         ExplorePostDialog explorePostDialog = new ExplorePostDialog(parentActivity, fullFeaturedPosts.get(numberClicked - 1), parentActivity);
         explorePostDialog.initDialog();
     }
 
-
+    /**
+     * load image into ImageView using Glide
+     */
     private void imageGlide(String imageLink, ImageView imageView){
             if (imageLink != null){
                 Glide.with(imageView)
@@ -402,8 +439,11 @@ public class ExploreHeaderController {
                         .into(imageView);
             }
 
-        }
+    }
 
+    /**
+     * Update categories dynamically (called when user changes preferences)
+     */
     public void updateCategories(CategoryClass categoryClass){
         this.categoryClass = categoryClass;
         categoryFirstText.setText(categoryClass.getFirstChoiceName());
@@ -420,7 +460,9 @@ public class ExploreHeaderController {
                 .into(categorySecondImage);
     }
 
-
+    /**
+     * Update the list of featured posts and refresh display
+     */
     public void alterFeaturedPosts(List<FullPost> fullFeaturedPosts){
         this.fullFeaturedPosts = fullFeaturedPosts;
         changeImageVisibilities();

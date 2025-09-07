@@ -3,9 +3,16 @@ package com.daribear.prefy.Utils;
 import com.daribear.prefy.Profile.User;
 import com.daribear.prefy.customClasses.Posts.StandardPost;
 
+/**
+ * Helper class to create blank objects
+ */
 public class DefaultCreator {
 
 
+    /**
+     * Creates a blank user
+     * @return created blank user
+     */
     public static User createBlankUser(){
         User user = new User();
         user.setFullname("Deleted User");
@@ -22,6 +29,10 @@ public class DefaultCreator {
         return user;
     }
 
+    /**
+     * Creates a blank standard post
+     * @return blank standard post.
+     */
     public static StandardPost createBlankStandardPost(){
         StandardPost standardPost = new StandardPost();
         standardPost.setPostId(-1L);

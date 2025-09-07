@@ -22,6 +22,9 @@ import java.util.concurrent.Executors;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Class which handles the PlayIntegrity api requests.
+ */
 public class PlayIntegrity {
     String nonce;
     @Getter
@@ -42,6 +45,10 @@ public class PlayIntegrity {
         return instance;
     }
 
+    /**
+     * Initate the thread to get the response
+     * @param appContext context to use
+     */
     public void getResponse(Context appContext){
         integrityManager = IntegrityManagerFactory.create(appContext);
         Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -53,6 +60,9 @@ public class PlayIntegrity {
 
     }
 
+    /**
+     * Send the request to the play integrity api
+     */
     private void sendRequest(){
         if (GetInternet.isInternetAvailable()) {
             Task<IntegrityTokenResponse> integrityTokenResponse = integrityManager.requestIntegrityToken(IntegrityTokenRequest.builder().setNonce(nonce).setCloudProjectNumber(453170257829L).build());
@@ -82,6 +92,10 @@ public class PlayIntegrity {
         }
     }
 
+    /**
+     * generate a random nonce using securerandom
+     * @return a random nonce
+     */
     private String generateNonce(){
         final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -96,6 +110,9 @@ public class PlayIntegrity {
         return sb.toString();
     }
 
+    /**
+     * Creates a small delay
+     */
     private void pauseTimer(){
         SystemClock.sleep(250);
         sendRequest();

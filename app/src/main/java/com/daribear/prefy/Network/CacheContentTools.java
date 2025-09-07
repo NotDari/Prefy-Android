@@ -9,8 +9,16 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ * Helper class to get/insert different classes from the cache database.
+ */
 public class CacheContentTools {
 
+    /**
+     * Converts a standard post into ContentValues, which can be used to insert into the database.
+     * @param standardPost the post
+     * @return the ContentValues created.
+     */
     public static ContentValues getStandardPostContent(StandardPost standardPost){
         ContentValues standardPostContent = new ContentValues();
         standardPostContent.put("userId", standardPost.getUserId());
@@ -25,6 +33,12 @@ public class CacheContentTools {
         standardPostContent.put("currentVote", standardPost.getCurrentVote());
         return standardPostContent;
     }
+
+    /**
+     * Converts a user into ContentValues, which can be used to insert into the database.
+     * @param user the user
+     * @return the ContentValues created.
+     */
     public static ContentValues getUserContent(User user){
         ContentValues userContent = new ContentValues();
         userContent.put("username", user.getUsername());
@@ -47,6 +61,11 @@ public class CacheContentTools {
         return userContent;
     }
 
+    /**
+     * Gets a list of users from a database cursor.
+     * @param userCursor the cursor to get the list of users from
+     * @return the list of users
+     */
     public static ArrayList<User> getUserList(Cursor userCursor){
         ArrayList<User> userList = new ArrayList<>();
         if (userCursor.moveToFirst()){
@@ -100,6 +119,12 @@ public class CacheContentTools {
 
         return userList;
     }
+
+    /**
+     * Converts a database cursor into a list of standard posts.
+     * @param postCursor cursor to get posts from.
+     * @return the list of posts
+     */
     public static ArrayList<StandardPost> getPostList(Cursor postCursor){
         ArrayList<StandardPost> postList = new ArrayList<>();
         if (postCursor.moveToFirst()){
@@ -135,6 +160,11 @@ public class CacheContentTools {
         return postList;
     }
 
+    /**
+     * Converts a database cursor into a list of popular posts.
+     * @param postCursor cursor to retrieve posts from
+     * @return the list of popular posts
+     */
     public static ArrayList<PopularPost> getPopularPostList(Cursor postCursor){
         ArrayList<PopularPost> postList = new ArrayList<>();
         if (postCursor.moveToFirst()){

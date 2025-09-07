@@ -16,7 +16,10 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
-
+/**
+ * The fragment which represents a users profile.
+ * Contains a recyclerview
+ */
 public class ProfilePostListFragment extends Fragment {
     private String username;
     private String profileImageLink;
@@ -43,6 +46,10 @@ public class ProfilePostListFragment extends Fragment {
         gateway.displayView();
     }
 
+    /**
+     * Creates views from the baseview
+     * @param view the baseview
+     */
     private void getViews(View view){
         ImageView backButton = view.findViewById(R.id.ProfilePostListTopBarBack);
         TextView usernameText = view.findViewById(R.id.ProfilePostListTopBarUsername);

@@ -31,6 +31,9 @@ import java.util.ArrayList;
 
 import lombok.Setter;
 
+/**
+ * The pager which handles the loading and changing of the popular posts main pager.
+ */
 public class PopularPager extends FrameLayout{
     @Setter
     private ArrayList<FullPost> postList;
@@ -72,7 +75,10 @@ public class PopularPager extends FrameLayout{
     }
 
 
-
+    /**
+     * Adds the first post in the list as a fragment on the screen.
+     * Creates the fragment and sends it the post and user data.
+     */
     private void addFragment(){
         fm = fragment.getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
@@ -94,6 +100,10 @@ public class PopularPager extends FrameLayout{
         }
     }
 
+    /**
+     * Changes the post in the pager by getting the next item in the list,
+     * creating a fragment for it and then removing the first one from the list.
+     */
     private void alterFragment(){
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.fragment_in, 0);
@@ -117,6 +127,10 @@ public class PopularPager extends FrameLayout{
             }
         }
     }
+
+    /**
+     * Removes the first item in the post list, and calls for more if there are less than 5.
+     */
     private void removePost(){
         postList.remove(0);
         popViewModel.removeItem();
@@ -126,6 +140,9 @@ public class PopularPager extends FrameLayout{
         scrollActive = false;
     }
 
+    /**
+     * Preloads the images for the next two posts using glide, for smoother transitioning
+     */
     private void preLoadImages(){
         if (postList.size() > 2) {
             String imageLink1 = postList.get(1).getStandardPost().getImageURL();
@@ -142,6 +159,10 @@ public class PopularPager extends FrameLayout{
 
     }
 
+    /**
+     * Use glide to preload an image
+     * @param link
+     */
     private void glidePreload(String link){
         if (!viewDestroyed){
             Glide.with(PopularPager.this.fragment)
@@ -151,6 +172,12 @@ public class PopularPager extends FrameLayout{
         }
     }
 
+    /**
+     * Called when the user has voted on a post. Gets the next fragment after a cooldown.
+     *
+     * @param cooldown cooldown before transitioning to the next page
+     * @param removeVote flag that confirms going to the next fragment
+     */
     public void voted(Boolean cooldown, Boolean removeVote){
         if (!scrollActive) {
             if (removeVote) {

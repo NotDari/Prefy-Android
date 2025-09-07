@@ -46,6 +46,10 @@ class sign_up_username_fragment : Fragment() {
         handlesignupUsername()
     }
 
+    /**
+     * handles the entering of a username. Once the user enters their username and tries to go to the next step.
+     * This function sends a request to the server to check that the username is available. If its ok, navigate to the next fragment.
+     */
     private fun handlesignupUsername(){
         val userNameNextButton: MaterialButton = binding.signUpNextMaterialButton
         val editText: EditText = binding.usernameEditText
@@ -132,6 +136,9 @@ class sign_up_username_fragment : Fragment() {
         }
     }
 
+    /**
+     * Show the text which allows the user to switch between registering and logging in
+     */
     private fun handleBottomText(){
             val SignUpLoginTextView = requireActivity().findViewById<RelativeLayout>(R.id.SignUpLoginTextView)
             SignUpLoginTextView.isVisible = true

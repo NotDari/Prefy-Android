@@ -27,6 +27,10 @@ import com.daribear.prefy.customClasses.Posts.StandardPost;
 
 import java.util.ArrayList;
 
+/**
+ * RecyclerView Adapter to display explore category posts
+ * handles votes, comments navigation, images and options
+ */
 public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<ExploreCategoriesPostRecAdaptor.ViewHolder> {
     private ArrayList<FullPost> postList;
 
@@ -42,6 +46,7 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         notifyDataSetChanged();
     }
 
+    // inflates view and creates viewholder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +55,7 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         return holder;
     }
 
+    //bind post data to viewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         StandardPost post = postList.get(position).getStandardPost();
@@ -71,6 +77,9 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         return postList.size();
     }
 
+    /**
+     * viewHolder class to reuse item views
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView totalVotes, usernameText, questionText, commentsText, timeSinceText;
         ConstraintLayout topbar, bottomBar;
@@ -96,6 +105,9 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         }
     }
 
+    /**
+     * Initialise Glide for post and profile images
+     */
     private void initGlide(ViewHolder holder, int position){
         if (postList.get(position).getStandardPost().getImageURL() != null) {
             Glide
@@ -117,6 +129,11 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
             defaultImage(holder);
         }
     }
+
+    /**
+     * load default user photo
+     * @param holder viewholder
+     */
     private void defaultImage(ViewHolder holder){
         Glide
                 .with(holder.profileImage)
@@ -124,12 +141,18 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
                 .into(holder.profileImage);
     }
 
+    /**
+     * initialise voting system click listeners
+     * @param holder viewHolder
+     * @param position position in adapter
+     */
     private void initVoteSystem(ViewHolder holder, int position){
         Context context = holder.itemView.getContext();
         FullPost post = postList.get(position);
         holder.leftVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //submit left vote only if not voted yet
                 if (post.getStandardPost().getCurrentVote().equals("none") || post.getStandardPost().getCurrentVote().equals("skip")){
                     VoteHandler.voteSubmitted(post.getStandardPost(), holder.imageView, holder.leftVote, holder.rightVote, "leftClick", "Categories");
                     VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getStandardPost().getPostId(), "left", "Categories");
@@ -143,6 +166,7 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         holder.rightVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //submit right vote only if not voted yet
                 if (post.getStandardPost().getCurrentVote().equals("none") || post.getStandardPost().getCurrentVote().equals("skip")){
                     VoteHandler.voteSubmitted(post.getStandardPost(), holder.imageView, holder.leftVote, holder.rightVote, "rightClick", "Categories");
                     VoteHandler.saveVote(view.getContext().getApplicationContext(),post.getStandardPost().getPostId(), "right", "Categories");
@@ -153,6 +177,12 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
             }
         });
     }
+
+    /**
+     * Setup comment click listener to navigate to comment fragment
+     * @param holder viewHolder
+     * @param position position in adapter
+     */
     private void initCommentsClick(ViewHolder holder, int position){
         holder.commentsText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +195,11 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         });
     }
 
+    /**
+     * initialise options button for post dropdown
+     * @param holder viewHolder
+     * @param position position in adapter
+     */
     private void initOptions(ViewHolder holder, int position){
         PostDropDownDialog dialog = new PostDropDownDialog(holder.optionsButton.getContext(), activity, null, null);
         holder.optionsButton.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +215,11 @@ public class ExploreCategoriesPostRecAdaptor extends RecyclerView.Adapter<Explor
         });
     }
 
+    /**
+     * adjust bottomBar height to match topbar height
+     * @param topbar constraintLayout topbar
+     * @param bottomBar constraintLayout bottomBar
+     */
     private void getBarHeights(ConstraintLayout topbar, ConstraintLayout bottomBar){
         topbar.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {

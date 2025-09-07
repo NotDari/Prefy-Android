@@ -25,6 +25,12 @@ import com.daribear.prefy.Comments.CommentReplyClicked;
 import com.daribear.prefy.R;
 import com.daribear.prefy.Utils.GeneralUtils.dateSinceSystem;
 
+/**
+ * A class representing a reply for a comment as a view.
+ *
+ * Acts as a layout
+ * Has listeners to direct to the users profile or more
+ */
 public class CommentReplyItem extends FrameLayout implements CommentDeleted {
     private Comment comment;
 
@@ -66,6 +72,9 @@ public class CommentReplyItem extends FrameLayout implements CommentDeleted {
         setViews();
     }
 
+    /**
+     * Get the views
+     */
     private void getViews(){
         usernameText = findViewById(R.id.CommentReplyItemUsername);
         commentText = findViewById(R.id.CommentReplyItemCommentText);
@@ -76,6 +85,11 @@ public class CommentReplyItem extends FrameLayout implements CommentDeleted {
 
         handleViews();
     }
+
+    /**
+     * Set listeners for the more button and the profile image.
+     * Profile image directs to the user profile.
+     */
     private void handleViews(){
         moreButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -95,6 +109,12 @@ public class CommentReplyItem extends FrameLayout implements CommentDeleted {
         });
     }
 
+    /**
+     * Adds values to the views.
+     * Adds text to the textviews,
+     * sets the comment username, time since creation and comment text
+     * Calls the initglide() to create the userprofile
+     */
     private void setViews(){
         SpannableStringBuilder builder = new SpannableStringBuilder();
         if (comment.getReplyUsername() != null){
@@ -110,6 +130,10 @@ public class CommentReplyItem extends FrameLayout implements CommentDeleted {
         initGlide();
     }
 
+    /**
+     * loads the users profile image with Glide
+     * falls back to placeholder if none
+     */
     private void initGlide(){
         String image = comment.getUser().getProfileImageURL();
         if (image != null){
@@ -124,7 +148,11 @@ public class CommentReplyItem extends FrameLayout implements CommentDeleted {
         }
     }
 
-
+    /**
+     * called when delete option is clicked in popup
+     * notifies delegate that this reply item was deleted
+     * @param commentId commentId to be deleted
+     */
     @Override
     public void deleteClicked(Long commentId) {
         commentReplyDeletedDelegate.deletedReply(CommentReplyItem.this);

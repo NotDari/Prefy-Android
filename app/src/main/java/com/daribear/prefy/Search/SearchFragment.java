@@ -25,7 +25,11 @@ import com.daribear.prefy.Utils.NoInternetDropDown;
 
 import java.util.ArrayList;
 
-
+/**
+ * Fragment that handles the user search screen.
+ * Manages search input, displays results in a RecyclerView,
+ * and handles "no results" or "no internet" states.
+ */
 public class SearchFragment extends Fragment {
     private ImageView backButton;
     private ProgressBar progressBar;
@@ -49,7 +53,10 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Get list of views
+     * @param view baseview
+     */
     private void getViews(View view){
         viewDestroyed = false;
         backButton= view.findViewById(R.id.SearchTopBarBack);
@@ -60,6 +67,10 @@ public class SearchFragment extends Fragment {
         recView = view.findViewById(R.id.SearchRecyclerView);
     }
 
+    /**
+     * Sets up all the sub views
+     * @param view baseview
+     */
     private void setUp(View view){
         resizeSearch(view);
         initEmptyRecView(view);
@@ -69,6 +80,10 @@ public class SearchFragment extends Fragment {
         initEditTextListener();
     }
 
+    /**
+     * Resize the search, according to the screen size.
+     * @param view baseview
+     */
     private void resizeSearch(View view){
         EditText searchResize = view.findViewById(R.id.SearchEditText);
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -79,11 +94,12 @@ public class SearchFragment extends Fragment {
         if (searchResize.getLayoutParams().height < newheight){
             searchResize.getLayoutParams().height = newheight;
         }
-
-
-
     }
 
+    /**
+     * Get the search data, checking if its in progress or if there is no internet.
+     * If there are no results, show specific text.
+     */
     private void getData(){
         searchViewModel = new SearchViewModel();
         searchViewModel.init();
@@ -124,20 +140,10 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void getInitialData(View view){
-        Integer limit = Integer.parseInt(view.getContext().getString(R.string.Search_Load_Count));
-        topList = new ArrayList<>();
-        textSearchActive = false;
-        firstTopDone = false;
-        dataRefreshing = false;
-        progressBar.setVisibility(View.VISIBLE);
-        noInternetText.setVisibility(View.GONE);
-        noResultsText.setVisibility(View.GONE);
-        fetchingData = true;
-       // SearchTopUsersRetriever topExecutor = new SearchTopUsersRetriever(null, 15, this, false);
-        //topExecutor.initExecutor();
-    }
 
+    /**
+     * Make the back button pop the stack.
+     */
     private void initBackButton(){
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +153,10 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    /**
+     * Create the empty recycle view
+     * @param view
+     */
     private void initEmptyRecView(View view){
         searchGateway = new SearchGateway(R.id.SearchRecyclerView, view, view.getContext(), getActivity());
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -156,16 +166,10 @@ public class SearchFragment extends Fragment {
         searchGateway.setType("Top");
     }
 
-    private void setInitialData(ArrayList<User> searchUserArrayList){
-        firstTopDone = true;
-        searchGateway.setInitialData(searchUserArrayList);
-        recView.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        noResultsText.setVisibility(View.GONE);
-    }
 
-
-
+    /**
+     * Create the edit text which listens for the user's search input.
+     */
     private void initEditTextListener(){
         activeText = "";
 
@@ -194,29 +198,9 @@ public class SearchFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void initSearch(String text){
-        this.activeText = text;
-        noInternetText.setVisibility(View.GONE);
-        noResultsText.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        searchGateway.resetData();
-        searchGateway.setType("String");
-        fetchingData = true;
-        //SearchDataRetriever dataExecutor = new SearchDataRetriever(text, null, false,  this, 15);
-        //dataExecutor.initExecutor();
-    }
-
-    private void setData(ArrayList<User> searchUserArrayList){
-        recView.setVisibility(View.VISIBLE);
-        if (searchUserArrayList.size() == 0){
-            noResultsText.setVisibility(View.VISIBLE);
-        }else{
-            searchGateway.updateData(searchUserArrayList);
-        }
-        noInternetText.setVisibility(View.GONE);
-        progressBar.setVisibility(View.GONE);
-    }
-
+    /**
+     * Shows the correct layout if there is no internet.
+     */
     private void noInternet(){
         if (!viewDestroyed && !fetchingData) {
             fetchingData = true;
@@ -240,6 +224,9 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    /**
+     * Internet access has been restored, so hide no internet text.
+     */
     private void internetBack(){
         recView.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
